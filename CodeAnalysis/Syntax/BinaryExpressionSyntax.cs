@@ -1,4 +1,4 @@
-namespace Rhino.CodeAnalysis;
+namespace Rhino.CodeAnalysis.Syntax;
 
 public sealed class BinaryExpressionSyntax : ExpressionSyntax {
     public BinaryExpressionSyntax(ExpressionSyntax left, SyntaxToken operatorToken, ExpressionSyntax right) {

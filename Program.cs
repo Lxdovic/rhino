@@ -1,4 +1,5 @@
 ﻿using Rhino.CodeAnalysis;
+using Rhino.CodeAnalysis.Syntax;
 
 namespace Rhino;
 

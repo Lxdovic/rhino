@@ -1,4 +1,4 @@
-namespace Rhino.CodeAnalysis;
+namespace Rhino.CodeAnalysis.Syntax;
 
 public enum SyntaxKind {
     BadToken,

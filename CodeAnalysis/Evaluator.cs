@@ -1,3 +1,5 @@
+using Rhino.CodeAnalysis.Syntax;
+
 namespace Rhino.CodeAnalysis;
 
 public sealed class Evaluator {

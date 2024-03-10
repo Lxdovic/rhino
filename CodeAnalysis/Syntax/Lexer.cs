@@ -1,4 +1,4 @@
-namespace Rhino.CodeAnalysis;
+namespace Rhino.CodeAnalysis.Syntax;
 
 internal sealed class Lexer {
     private readonly List<string> _diagnostics = new();

@@ -1,4 +1,4 @@
-namespace Rhino.CodeAnalysis;
+namespace Rhino.CodeAnalysis.Syntax;
 
 internal static class SyntaxFacts {
     public static int GetBinaryOperatorPrecedence(this SyntaxKind kind) {

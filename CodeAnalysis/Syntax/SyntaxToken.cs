@@ -1,4 +1,4 @@
-namespace Rhino.CodeAnalysis;
+namespace Rhino.CodeAnalysis.Syntax;
 
 public class SyntaxToken : SyntaxNode {
     public SyntaxToken(SyntaxKind kind, int position, string? text = null, object? value = null) {
