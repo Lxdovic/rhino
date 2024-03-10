@@ -2,7 +2,7 @@
 
 namespace Rhino;
 
-internal class Program {
+internal static class Program {
     private static void Main(string[] args) {
         var showTree = false;
 
@@ -26,12 +26,9 @@ internal class Program {
             var syntraxTree = SyntaxTree.Parse(line);
 
             if (showTree) {
-                var color = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-
                 PrettyPrint(syntraxTree.Root);
-
-                Console.ForegroundColor = color;
+                Console.ResetColor();
             }
 
             if (!syntraxTree.Diagnostics.Any()) {
@@ -41,10 +38,9 @@ internal class Program {
             }
 
             else {
-                var color = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.DarkRed;
                 foreach (var diagnostic in syntraxTree.Diagnostics) Console.WriteLine(diagnostic);
-                Console.ForegroundColor = color;
+                Console.ResetColor();
             }
         }
     }

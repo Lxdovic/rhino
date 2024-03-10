@@ -1,17 +1,17 @@
 namespace Rhino.CodeAnalysis;
 
-internal enum SyntaxKind {
-    NumberToken,
+public enum SyntaxKind {
+    BadToken,
+    EndOfFileToken,
     WhiteSpaceToken,
+    NumberToken,
     PlusToken,
     MinusToken,
     StarToken,
     SlashToken,
     OpenParenthesisToken,
     CloseParenthesisToken,
-    BadToken,
-    EndOfFileToken,
-    NumberExpression,
+    LiteralExpression,
     BinaryExpression,
     ParenthesizedExpression
 }

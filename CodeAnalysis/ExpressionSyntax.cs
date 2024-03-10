@@ -1,4 +1,4 @@
 namespace Rhino.CodeAnalysis;
 
-internal abstract class ExpressionSyntax : SyntaxNode {
+public abstract class ExpressionSyntax : SyntaxNode {
 }
