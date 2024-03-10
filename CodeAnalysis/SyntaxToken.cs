@@ -1,11 +1,11 @@
 namespace Rhino.CodeAnalysis;
 
 public class SyntaxToken : SyntaxNode {
-    public SyntaxToken(SyntaxKind kind, int position, string text, object value) {
+    public SyntaxToken(SyntaxKind kind, int position, string? text = null, object? value = null) {
         Kind = kind;
         Position = position;
-        Text = text;
-        Value = value;
+        Text = text!;
+        Value = value!;
     }
 
     public override SyntaxKind Kind { get; }

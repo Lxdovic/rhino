@@ -80,7 +80,7 @@ internal sealed class Parser {
         if (Current.Kind == kind) return NextToken();
 
         _diagnostics.Add($"ERROR: unexpected token <{Current.Kind}>, expected <{kind}>");
-        return new SyntaxToken(kind, Current.Position, null, null);
+        return new SyntaxToken(kind, Current.Position);
     }
 
     private ExpressionSyntax ParsePrimaryExpression() {

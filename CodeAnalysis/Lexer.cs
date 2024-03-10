@@ -24,7 +24,7 @@ internal sealed class Lexer {
     }
 
     public SyntaxToken Lex() {
-        if (_position >= _text.Length) return new SyntaxToken(SyntaxKind.EndOfFileToken, _position, "\0", null);
+        if (_position >= _text.Length) return new SyntaxToken(SyntaxKind.EndOfFileToken, _position, "\0");
 
         if (char.IsDigit(Current)) {
             var start = _position;
@@ -52,16 +52,16 @@ internal sealed class Lexer {
         }
 
         switch (Current) {
-            case '+': return new SyntaxToken(SyntaxKind.PlusToken, _position++, "+", null);
-            case '-': return new SyntaxToken(SyntaxKind.MinusToken, _position++, "-", null);
-            case '*': return new SyntaxToken(SyntaxKind.StarToken, _position++, "*", null);
-            case '/': return new SyntaxToken(SyntaxKind.SlashToken, _position++, "/", null);
-            case '(': return new SyntaxToken(SyntaxKind.OpenParenthesisToken, _position++, "(", null);
-            case ')': return new SyntaxToken(SyntaxKind.CloseParenthesisToken, _position++, ")", null);
+            case '+': return new SyntaxToken(SyntaxKind.PlusToken, _position++, "+");
+            case '-': return new SyntaxToken(SyntaxKind.MinusToken, _position++, "-");
+            case '*': return new SyntaxToken(SyntaxKind.StarToken, _position++, "*");
+            case '/': return new SyntaxToken(SyntaxKind.SlashToken, _position++, "/");
+            case '(': return new SyntaxToken(SyntaxKind.OpenParenthesisToken, _position++, "(");
+            case ')': return new SyntaxToken(SyntaxKind.CloseParenthesisToken, _position++, ")");
             default:
                 _diagnostics.Add($"ERROR: bad character input: '{Current}'");
 
-                return new SyntaxToken(SyntaxKind.BadToken, _position++, _text.Substring(_position - 1, 1), null);
+                return new SyntaxToken(SyntaxKind.BadToken, _position++, _text.Substring(_position - 1, 1));
         }
     }
 }
