@@ -13,5 +13,6 @@ public enum SyntaxKind {
     CloseParenthesisToken,
     LiteralExpression,
     BinaryExpression,
+    UnaryExpression,
     ParenthesizedExpression
 }
