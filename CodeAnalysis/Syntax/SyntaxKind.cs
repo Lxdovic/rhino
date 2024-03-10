@@ -11,6 +11,11 @@ public enum SyntaxKind {
     SlashToken,
     OpenParenthesisToken,
     CloseParenthesisToken,
+    IdentifierToken,
+
+    FalseKeyword,
+    TrueKeyword,
+
     LiteralExpression,
     BinaryExpression,
     UnaryExpression,

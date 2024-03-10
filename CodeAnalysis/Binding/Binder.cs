@@ -57,6 +57,7 @@ internal sealed class Binder {
         if (boundOperatorKind == null) {
             _diagnostics.Add(
                 $"Unary operator <{syntax.OperatorToken.Text}> is not defined for type <{boundOperand.Type}>");
+
             return boundOperand;
         }
 
@@ -65,7 +66,6 @@ internal sealed class Binder {
 
     private BoundUnaryOperatorKind? BindUnaryOperatorKind(SyntaxKind kind, Type operandType) {
         if (operandType != typeof(int)) return null;
-        // if (operandType != typeof(int)) throw new Exception($"Unary operator must be int <{kind}>");
 
         switch (kind) {
             case SyntaxKind.PlusToken:
@@ -78,7 +78,7 @@ internal sealed class Binder {
     }
 
     private BoundExpression BindLiteralExpression(LiteralExpressionSyntax syntax) {
-        var value = syntax.LiteralToken.Value as int? ?? 0;
+        var value = syntax.Value ?? 0;
 
         return new BoundLitteralExpression(value);
     }

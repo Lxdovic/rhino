@@ -25,14 +25,15 @@ internal static class Program {
                 continue;
             }
 
-            var syntraxTree = SyntaxTree.Parse(line);
+            var syntaxTree = SyntaxTree.Parse(line);
             var binder = new Binder();
-            var boundExpression = binder.BindExpression(syntraxTree.Root);
-            var diagnostics = syntraxTree.Diagnostics.Concat(binder.Diagnostics).ToArray();
+            var boundExpression = binder.BindExpression(syntaxTree.Root);
+            var diagnostics = syntaxTree.Diagnostics.Concat(binder.Diagnostics).ToArray();
+
 
             if (showTree) {
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                PrettyPrint(syntraxTree.Root);
+                PrettyPrint(syntaxTree.Root);
                 Console.ResetColor();
             }
 
@@ -45,7 +46,7 @@ internal static class Program {
 
             else {
                 Console.ForegroundColor = ConsoleColor.DarkRed;
-                foreach (var diagnostic in syntraxTree.Diagnostics) Console.WriteLine(diagnostic);
+                foreach (var diagnostic in diagnostics) Console.WriteLine(diagnostic);
                 Console.ResetColor();
             }
         }

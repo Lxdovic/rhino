@@ -17,7 +17,7 @@ internal sealed class Parser {
         } while (token.Kind != SyntaxKind.EndOfFileToken);
 
         _tokens = tokens.ToArray();
-        _diagnostics.AddRange(lexer.Disagnostics);
+        _diagnostics.AddRange(lexer.Diagnostics);
     }
 
     private SyntaxToken Current => Peek(0);
@@ -72,19 +72,29 @@ internal sealed class Parser {
         if (Current.Kind == kind) return NextToken();
 
         _diagnostics.Add($"ERROR: unexpected token <{Current.Kind}>, expected <{kind}>");
-        return new SyntaxToken(kind, Current.Position);
+        return new SyntaxToken(kind, Current.Position, null, null);
     }
 
     private ExpressionSyntax ParsePrimaryExpression() {
-        if (Current.Kind == SyntaxKind.OpenParenthesisToken) {
-            var left = NextToken();
-            var expression = ParseExpression();
-            var right = MatchToken(SyntaxKind.CloseParenthesisToken);
-            return new ParenthesizedExpressionSyntax(left, expression, right);
+        switch (Current.Kind) {
+            case SyntaxKind.OpenParenthesisToken: {
+                var left = NextToken();
+                var expression = ParseExpression();
+                var right = MatchToken(SyntaxKind.CloseParenthesisToken);
+                return new ParenthesizedExpressionSyntax(left, expression, right);
+            }
+            case SyntaxKind.TrueKeyword:
+            case SyntaxKind.FalseKeyword: {
+                var keywordToken = NextToken();
+                var value = Current.Kind == SyntaxKind.TrueKeyword;
+
+                return new LiteralExpressionSyntax(keywordToken, value);
+            }
+            default: {
+                var numberToken = MatchToken(SyntaxKind.NumberToken);
+
+                return new LiteralExpressionSyntax(numberToken);
+            }
         }
-
-        var numberToken = MatchToken(SyntaxKind.NumberToken);
-
-        return new LiteralExpressionSyntax(numberToken);
     }
 }
