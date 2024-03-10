@@ -37,6 +37,8 @@ internal sealed class Evaluator {
                 BoundBinaryOperatorKind.Division => (int)left / (int)right,
                 BoundBinaryOperatorKind.LogicalAnd => (bool)left && (bool)right,
                 BoundBinaryOperatorKind.LogicalOr => (bool)left || (bool)right,
+                BoundBinaryOperatorKind.Equals => Equals(left, right),
+                BoundBinaryOperatorKind.NotEquals => !Equals(left, right),
                 _ => throw new Exception($"Unexpected binary operator <{b.Op.Kind}>")
             };
         }

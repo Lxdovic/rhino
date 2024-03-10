@@ -15,6 +15,8 @@ public enum SyntaxKind {
     BangToken,
     AmpersandAmpersandToken,
     PipePipeToken,
+    EqualsEqualsToken,
+    BangEqualsToken,
 
     FalseKeyword,
     TrueKeyword,

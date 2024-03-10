@@ -8,25 +8,33 @@ internal sealed class BoundBinaryOperator {
         new(SyntaxKind.MinusToken, BoundBinaryOperatorKind.Subtraction, typeof(int)),
         new(SyntaxKind.StarToken, BoundBinaryOperatorKind.Multiplication, typeof(int)),
         new(SyntaxKind.SlashToken, BoundBinaryOperatorKind.Division, typeof(int)),
+        new(SyntaxKind.EqualsEqualsToken, BoundBinaryOperatorKind.Equals, typeof(int), typeof(bool)),
+        new(SyntaxKind.BangEqualsToken, BoundBinaryOperatorKind.NotEquals, typeof(int), typeof(bool)),
         new(SyntaxKind.AmpersandAmpersandToken, BoundBinaryOperatorKind.LogicalAnd, typeof(bool)),
-        new(SyntaxKind.PipePipeToken, BoundBinaryOperatorKind.LogicalOr, typeof(bool))
+        new(SyntaxKind.PipePipeToken, BoundBinaryOperatorKind.LogicalOr, typeof(bool)),
+        new(SyntaxKind.EqualsEqualsToken, BoundBinaryOperatorKind.Equals, typeof(bool)),
+        new(SyntaxKind.BangEqualsToken, BoundBinaryOperatorKind.NotEquals, typeof(bool))
     };
 
     private BoundBinaryOperator(SyntaxKind syntaxKind, BoundBinaryOperatorKind kind, Type type) :
         this(syntaxKind, kind, type, type, type) {
     }
 
+    private BoundBinaryOperator(SyntaxKind syntaxKind, BoundBinaryOperatorKind kind, Type operandType,
+        Type resultType) :
+        this(syntaxKind, kind, operandType, operandType, resultType) {
+    }
 
     private BoundBinaryOperator(SyntaxKind syntaxKind, BoundBinaryOperatorKind kind, Type leftType, Type rightType,
-        Type resultType) {
-        ResultType = resultType;
+        Type type) {
+        Type = type;
         SyntaxKind = syntaxKind;
         Kind = kind;
         LeftType = leftType;
         RightType = rightType;
     }
 
-    public Type ResultType { get; }
+    public Type Type { get; }
     public SyntaxKind SyntaxKind { get; }
     public BoundBinaryOperatorKind Kind { get; }
     public Type LeftType { get; }

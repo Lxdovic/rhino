@@ -13,15 +13,15 @@ internal sealed class BoundUnaryOperator {
         kind, operandType, operandType) {
     }
 
-    private BoundUnaryOperator(SyntaxKind syntaxKind, BoundUnaryOperatorKind kind, Type operandType, Type resultType) {
+    private BoundUnaryOperator(SyntaxKind syntaxKind, BoundUnaryOperatorKind kind, Type operandType, Type type) {
         OperandType = operandType;
-        ResultType = resultType;
+        Type = type;
         SyntaxKind = syntaxKind;
         Kind = kind;
     }
 
     public Type OperandType { get; }
-    public Type ResultType { get; }
+    public Type Type { get; }
     public SyntaxKind SyntaxKind { get; }
     public BoundUnaryOperatorKind Kind { get; }
 
