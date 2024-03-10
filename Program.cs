@@ -1,4 +1,5 @@
 ﻿using Rhino.CodeAnalysis;
+using Rhino.CodeAnalysis.Binding;
 using Rhino.CodeAnalysis.Syntax;
 
 namespace Rhino;
@@ -25,6 +26,9 @@ internal static class Program {
             }
 
             var syntraxTree = SyntaxTree.Parse(line);
+            var binder = new Binder();
+            var boundExpression = binder.BindExpression(syntraxTree.Root);
+            var diagnostics = syntraxTree.Diagnostics.Concat(binder.Diagnostics).ToArray();
 
             if (showTree) {
                 Console.ForegroundColor = ConsoleColor.DarkGray;
@@ -32,8 +36,9 @@ internal static class Program {
                 Console.ResetColor();
             }
 
-            if (!syntraxTree.Diagnostics.Any()) {
-                var evaluator = new Evaluator(syntraxTree.Root);
+
+            if (!diagnostics.Any()) {
+                var evaluator = new Evaluator(boundExpression);
                 var result = evaluator.Evaluate();
                 Console.WriteLine(result);
             }
