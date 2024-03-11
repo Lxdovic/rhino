@@ -12,6 +12,7 @@ public class SyntaxToken : SyntaxNode {
     public int Position { get; }
     public string Text { get; }
     public object Value { get; }
+    public TextSpan Span => new(Position, Text.Length);
 
     public override IEnumerable<SyntaxNode> GetChildren() {
         return Enumerable.Empty<SyntaxNode>();

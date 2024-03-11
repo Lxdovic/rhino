@@ -1,11 +1,11 @@
 namespace Rhino.CodeAnalysis;
 
 public sealed class EvaluationResult {
-    public EvaluationResult(IEnumerable<string> diagnostics, object value) {
+    public EvaluationResult(IEnumerable<Diagnostic> diagnostics, object value) {
         Diagnostics = diagnostics.ToArray();
         Value = value;
     }
 
-    public IEnumerable<string> Diagnostics { get; }
+    public IEnumerable<Diagnostic> Diagnostics { get; }
     public object Value { get; }
 }

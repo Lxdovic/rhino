@@ -1,7 +1,7 @@
 namespace Rhino.CodeAnalysis.Syntax;
 
 internal sealed class Parser {
-    private readonly List<string> _diagnostics = new();
+    private readonly DiagnosticBag _diagnostics = new();
     private readonly SyntaxToken[] _tokens;
     private int _position;
 
@@ -22,7 +22,7 @@ internal sealed class Parser {
 
     private SyntaxToken Current => Peek(0);
 
-    public IEnumerable<string> Diagnostics => _diagnostics;
+    public DiagnosticBag Diagnostics => _diagnostics;
 
     private SyntaxToken Peek(int offset) {
         var index = _position + offset;
@@ -71,7 +71,7 @@ internal sealed class Parser {
     private SyntaxToken MatchToken(SyntaxKind kind) {
         if (Current.Kind == kind) return NextToken();
 
-        _diagnostics.Add($"ERROR: unexpected token <{Current.Kind}>, expected <{kind}>");
+        _diagnostics.ReportUnexpectedToken(Current.Span, Current.Kind, kind);
         return new SyntaxToken(kind, Current.Position, null, null);
     }
 
