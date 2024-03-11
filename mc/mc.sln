@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# 
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mc", "mc.csproj", "{F30AE785-5F44-4D06-92C3-AE416233E0BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino", "..\Rhino\Rhino.csproj", "{0FEDABC6-86E8-4321-AD29-9D8E40599634}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F30AE785-5F44-4D06-92C3-AE416233E0BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F30AE785-5F44-4D06-92C3-AE416233E0BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F30AE785-5F44-4D06-92C3-AE416233E0BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F30AE785-5F44-4D06-92C3-AE416233E0BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FEDABC6-86E8-4321-AD29-9D8E40599634}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FEDABC6-86E8-4321-AD29-9D8E40599634}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FEDABC6-86E8-4321-AD29-9D8E40599634}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FEDABC6-86E8-4321-AD29-9D8E40599634}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

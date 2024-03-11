@@ -3,6 +3,11 @@ using Rhino.CodeAnalysis.Binding;
 namespace Rhino.CodeAnalysis;
 
 internal sealed class Evaluator {
+
+   
+    
+   
+    
     private readonly BoundExpression _root;
 
     public Evaluator(BoundExpression root) {
