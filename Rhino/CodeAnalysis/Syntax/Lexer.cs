@@ -79,13 +79,16 @@ internal sealed class Lexer {
                     _position += 2;
                     return new SyntaxToken(SyntaxKind.PipePipeToken, start, "||", null);
                 }
+                
                 break;
             case '=':
                 if (LookAhead == '=') {
                     _position += 2;
                     return new SyntaxToken(SyntaxKind.EqualsEqualsToken, start, "==", null);
                 }
-                break;  
+                
+                _position += 1;
+                return new SyntaxToken(SyntaxKind.EqualsToken, start, "=", null);
             case '!':
                 if (LookAhead == '=') {
                     _position += 2;
