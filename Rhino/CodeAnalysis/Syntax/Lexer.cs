@@ -37,8 +37,7 @@ internal sealed class Lexer {
             var text = _text.Substring(start, length);
             if (!int.TryParse(text, out var value))
                 _diagnostics.ReportInvalidNumber(new TextSpan(start, length), _text, typeof(int));
-
-
+            
             return new SyntaxToken(SyntaxKind.NumberToken, start, text, value);
         }
 
