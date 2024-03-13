@@ -13,7 +13,12 @@ internal sealed class BoundBinaryOperator {
         new(SyntaxKind.AmpersandAmpersandToken, BoundBinaryOperatorKind.LogicalAnd, typeof(bool)),
         new(SyntaxKind.PipePipeToken, BoundBinaryOperatorKind.LogicalOr, typeof(bool)),
         new(SyntaxKind.EqualsEqualsToken, BoundBinaryOperatorKind.Equals, typeof(bool)),
-        new(SyntaxKind.BangEqualsToken, BoundBinaryOperatorKind.NotEquals, typeof(bool))
+        new(SyntaxKind.BangEqualsToken, BoundBinaryOperatorKind.NotEquals, typeof(bool)),
+        new(SyntaxKind.BinaryAndToken, BoundBinaryOperatorKind.BinaryAnd, typeof(int)),
+        new(SyntaxKind.BinaryOrToken, BoundBinaryOperatorKind.BinaryOr, typeof(int)),
+        new(SyntaxKind.HatToken, BoundBinaryOperatorKind.BinaryXor, typeof(int)),
+        new(SyntaxKind.LessThanLessThanToken, BoundBinaryOperatorKind.BinaryLeftShift, typeof(int)),
+        new(SyntaxKind.GreaterThanGreaterThanToken, BoundBinaryOperatorKind.BinaryRightShift, typeof(int))
     };
 
     private BoundBinaryOperator(SyntaxKind syntaxKind, BoundBinaryOperatorKind kind, Type type) :

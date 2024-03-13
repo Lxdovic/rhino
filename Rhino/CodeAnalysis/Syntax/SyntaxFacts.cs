@@ -8,6 +8,11 @@ internal static class SyntaxFacts {
                 return 5;
             case SyntaxKind.PlusToken:
             case SyntaxKind.MinusToken:
+            case SyntaxKind.BinaryAndToken:
+            case SyntaxKind.BinaryOrToken:
+            case SyntaxKind.HatToken:
+            case SyntaxKind.LessThanLessThanToken:
+            case SyntaxKind.GreaterThanGreaterThanToken:
                 return 4;
             case SyntaxKind.EqualsEqualsToken:
             case SyntaxKind.BangEqualsToken:

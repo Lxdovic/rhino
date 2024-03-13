@@ -42,7 +42,6 @@ internal sealed class Parser {
     }
     
     private ExpressionSyntax ParseAssignmentExpression() {
-        
         if (Peek(0).Kind == SyntaxKind.IdentifierToken && Peek(1).Kind == SyntaxKind.EqualsToken) {
             var identifierToken = NextToken();
             var operatorToken = NextToken();
