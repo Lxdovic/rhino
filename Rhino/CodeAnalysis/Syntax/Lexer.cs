@@ -72,14 +72,17 @@ internal sealed class Lexer {
                     _position += 2;
                     return new SyntaxToken(SyntaxKind.AmpersandAmpersandToken, start, "&&", null);
                 }
-                break;
+                
+                _position++;
+                return new SyntaxToken(SyntaxKind.BinaryAndToken, start, "&", null);
             case '|':
                 if (LookAhead == '|') {
                     _position += 2;
                     return new SyntaxToken(SyntaxKind.PipePipeToken, start, "||", null);
                 }
                 
-                break;
+                _position++;
+                return new SyntaxToken(SyntaxKind.BinaryOrToken, start, "|", null);
             case '=':
                 if (LookAhead == '=') {
                     _position += 2;
@@ -96,6 +99,23 @@ internal sealed class Lexer {
 
                 _position += 1;
                 return new SyntaxToken(SyntaxKind.BangToken, start, "!", null);
+            case '^':
+                _position++;
+                return new SyntaxToken(SyntaxKind.HatToken, start, "^", null);
+            case '<':
+                if (LookAhead == '<') {
+                    _position += 2;
+                    return new SyntaxToken(SyntaxKind.LessThanLessThanToken, start, "<<", null);
+                }
+
+                break;
+            case '>':
+                if (LookAhead == '>') {
+                    _position += 2;
+                    return new SyntaxToken(SyntaxKind.GreaterThanGreaterThanToken, start, ">>", null);
+                }
+                
+                break;
         }
 
         _diagnostics.ReportBadCharacter(_position, Current);
