@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# 
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mc", ".\mc\mc.csproj", "{F30AE785-5F44-4D06-92C3-AE416233E0BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Tests", "Rhino.Tests\Rhino.Tests.csproj", "{81AD6D7C-308D-4778-9258-912E41D97EC4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino", "Rhino\Rhino.csproj", "{182661F3-3E57-41A0-9468-A5DAA74BCA6D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F30AE785-5F44-4D06-92C3-AE416233E0BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F30AE785-5F44-4D06-92C3-AE416233E0BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F30AE785-5F44-4D06-92C3-AE416233E0BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F30AE785-5F44-4D06-92C3-AE416233E0BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81AD6D7C-308D-4778-9258-912E41D97EC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81AD6D7C-308D-4778-9258-912E41D97EC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81AD6D7C-308D-4778-9258-912E41D97EC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81AD6D7C-308D-4778-9258-912E41D97EC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{182661F3-3E57-41A0-9468-A5DAA74BCA6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{182661F3-3E57-41A0-9468-A5DAA74BCA6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{182661F3-3E57-41A0-9468-A5DAA74BCA6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{182661F3-3E57-41A0-9468-A5DAA74BCA6D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
