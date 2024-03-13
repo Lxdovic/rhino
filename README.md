@@ -17,3 +17,46 @@ Allows you to make simple arithmetic expressions like `1 + 2 * 3` and `(1 + 2) *
 - `*` Multiplication
 - `/` Division
 - `(` and `)` Parentheses
+- `&&` Logical AND
+- `||` Logical OR
+- `!` Logical NOT
+- `==` Equality
+- `!=` Inequality
+- `=` Assignment
+- `&` Bitwise AND
+- `|` Bitwise OR
+- `^` Bitwise XOR
+- `<<` Bitwise Left Shift
+- `>>` Bitwise Right Shift
+
+#### Examples:
+
+```sh
+> 1 + 2 * 3
+7
+```
+
+```sh
+> (1 + 2) * 3
+9
+```
+
+```sh
+> a = 1
+1
+> b = 2
+2
+> c = a + b
+3
+```
+
+```sh
+> a = 7
+7
+> b = 3
+3
+> a ^ b
+4
+```
+
+```sh
