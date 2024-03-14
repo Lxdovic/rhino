@@ -80,7 +80,7 @@ public class LexerTests {
         if (t1Kind == SyntaxKind.PipeToken && t2Kind == SyntaxKind.PipePipeToken)
             return true;
 
-        if (t1Kind == SyntaxKind.AmpersandToken && t2Kind == SyntaxKind.AmpersandAmpersandToken)
+        if (t1Kind == SyntaxKind.AmpersandToken && t2Kind == SyntaxKind.AmpersandToken)
             return true;
 
         if (t1Kind == SyntaxKind.PipeToken && t2Kind == SyntaxKind.PipeToken)
