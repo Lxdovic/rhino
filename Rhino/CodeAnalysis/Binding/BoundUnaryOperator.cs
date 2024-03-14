@@ -6,12 +6,12 @@ internal sealed class BoundUnaryOperator {
     private static readonly BoundUnaryOperator[] _operators = {
         new(SyntaxKind.BangToken, BoundUnaryOperatorKind.LogicalNegation, typeof(bool)),
         new(SyntaxKind.PlusToken, BoundUnaryOperatorKind.Identity, typeof(int)),
-        new(SyntaxKind.MinusToken, BoundUnaryOperatorKind.Negation, typeof(int))
+        new(SyntaxKind.MinusToken, BoundUnaryOperatorKind.Negation, typeof(int)),
+        new(SyntaxKind.TildeToken, BoundUnaryOperatorKind.BitwiseNegation, typeof(int))
     };
 
     private BoundUnaryOperator(SyntaxKind syntaxKind, BoundUnaryOperatorKind kind, Type operandType) : this(syntaxKind,
-        kind, operandType, operandType) {
-    }
+        kind, operandType, operandType) { }
 
     private BoundUnaryOperator(SyntaxKind syntaxKind, BoundUnaryOperatorKind kind, Type operandType, Type type) {
         OperandType = operandType;

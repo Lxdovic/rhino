@@ -1,7 +1,6 @@
 namespace Rhino.CodeAnalysis.Syntax;
 
 internal sealed class Lexer {
-    private readonly DiagnosticBag _diagnostics = new();
     private readonly string _text;
     private int _position;
 
@@ -9,7 +8,7 @@ internal sealed class Lexer {
         _text = text;
     }
 
-    public DiagnosticBag Diagnostics => _diagnostics;
+    public DiagnosticBag Diagnostics { get; } = new();
 
     private char Current => Peek(0);
     private char LookAhead => Peek(1);
@@ -29,15 +28,15 @@ internal sealed class Lexer {
         if (_position >= _text.Length) return new SyntaxToken(SyntaxKind.EndOfFileToken, _position, "\0", null);
 
         var start = _position;
-        
+
         if (char.IsDigit(Current)) {
             while (char.IsDigit(Current)) Next();
 
             var length = _position - start;
             var text = _text.Substring(start, length);
             if (!int.TryParse(text, out var value))
-                _diagnostics.ReportInvalidNumber(new TextSpan(start, length), _text, typeof(int));
-            
+                Diagnostics.ReportInvalidNumber(new TextSpan(start, length), _text, typeof(int));
+
             return new SyntaxToken(SyntaxKind.NumberToken, start, text, value);
         }
 
@@ -72,7 +71,7 @@ internal sealed class Lexer {
                     _position += 2;
                     return new SyntaxToken(SyntaxKind.AmpersandAmpersandToken, start, "&&", null);
                 }
-                
+
                 _position++;
                 return new SyntaxToken(SyntaxKind.BinaryAndToken, start, "&", null);
             case '|':
@@ -80,7 +79,7 @@ internal sealed class Lexer {
                     _position += 2;
                     return new SyntaxToken(SyntaxKind.PipePipeToken, start, "||", null);
                 }
-                
+
                 _position++;
                 return new SyntaxToken(SyntaxKind.BinaryOrToken, start, "|", null);
             case '=':
@@ -88,7 +87,7 @@ internal sealed class Lexer {
                     _position += 2;
                     return new SyntaxToken(SyntaxKind.EqualsEqualsToken, start, "==", null);
                 }
-                
+
                 _position += 1;
                 return new SyntaxToken(SyntaxKind.EqualsToken, start, "=", null);
             case '!':
@@ -102,6 +101,9 @@ internal sealed class Lexer {
             case '^':
                 _position++;
                 return new SyntaxToken(SyntaxKind.HatToken, start, "^", null);
+            case '~':
+                _position++;
+                return new SyntaxToken(SyntaxKind.TildeToken, start, "~", null);
             case '<':
                 if (LookAhead == '<') {
                     _position += 2;
@@ -114,11 +116,11 @@ internal sealed class Lexer {
                     _position += 2;
                     return new SyntaxToken(SyntaxKind.GreaterThanGreaterThanToken, start, ">>", null);
                 }
-                
+
                 break;
         }
 
-        _diagnostics.ReportBadCharacter(_position, Current);
+        Diagnostics.ReportBadCharacter(_position, Current);
         return new SyntaxToken(SyntaxKind.BadToken, _position++, _text.Substring(_position - 1, 1), null);
     }
 }

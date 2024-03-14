@@ -31,6 +31,7 @@ internal static class SyntaxFacts {
             case SyntaxKind.PlusToken:
             case SyntaxKind.MinusToken:
             case SyntaxKind.BangToken:
+            case SyntaxKind.TildeToken:
                 return 6;
             default:
                 return 0;

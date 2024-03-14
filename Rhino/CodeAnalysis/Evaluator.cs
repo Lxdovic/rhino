@@ -17,14 +17,14 @@ internal sealed class Evaluator {
 
     private object EvaluateExpression(BoundExpression node) {
         if (node is BoundLitteralExpression n) return n.Value;
-        
+
         if (node is BoundVariableExpression v) return _variables[v.Variable];
-        
+
         if (node is BoundAssignmentExpression a) {
             var value = EvaluateExpression(a.Expression);
-            
+
             _variables[a.Variable] = value;
-            
+
             return value;
         }
 
@@ -34,6 +34,7 @@ internal sealed class Evaluator {
             if (u.Op.Kind == BoundUnaryOperatorKind.Identity) return (int)operand;
             if (u.Op.Kind == BoundUnaryOperatorKind.Negation) return -(int)operand;
             if (u.Op.Kind == BoundUnaryOperatorKind.LogicalNegation) return !(bool)operand;
+            if (u.Op.Kind == BoundUnaryOperatorKind.BitwiseNegation) return ~(int)operand;
 
             throw new Exception($"Unexpected unary operator <{u.Op.Kind}>");
         }

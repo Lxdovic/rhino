@@ -23,6 +23,7 @@ public enum SyntaxKind {
     HatToken,
     LessThanLessThanToken,
     GreaterThanGreaterThanToken,
+    TildeToken,
 
     FalseKeyword,
     TrueKeyword,
