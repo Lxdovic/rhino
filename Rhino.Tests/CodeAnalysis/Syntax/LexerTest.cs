@@ -73,6 +73,19 @@ public class LexerTest {
 
         if (t1Kind == SyntaxKind.EqualsToken && t2Kind == SyntaxKind.EqualsEqualsToken)
             return true;
+        
+        if (t1Kind == SyntaxKind.BinaryAndToken && t2Kind == SyntaxKind.AmpersandAmpersandToken)
+            return true;
+        
+        if (t1Kind == SyntaxKind.BinaryOrToken && t2Kind == SyntaxKind.PipePipeToken)
+            return true;
+        
+        if (t1Kind == SyntaxKind.BinaryAndToken && t2Kind == SyntaxKind.BinaryAndToken)
+            return true;
+        
+        if (t1Kind == SyntaxKind.BinaryOrToken && t2Kind == SyntaxKind.BinaryOrToken)
+            return true;
+
 
         return false;
     }
@@ -109,11 +122,11 @@ public class LexerTest {
             (SyntaxKind.CloseParenthesisToken, ")"),
             (SyntaxKind.FalseKeyword, "false"),
             (SyntaxKind.TrueKeyword, "true"),
-            // (SyntaxKind.BinaryAndToken, "&"),
-            // (SyntaxKind.BinaryOrToken, "|"),
-            // (SyntaxKind.HatToken, "^"),
-            // (SyntaxKind.LessThanLessThanToken, "<<"),
-            // (SyntaxKind.GreaterThanGreaterThanToken, ">>"),
+            (SyntaxKind.BinaryAndToken, "&"),
+            (SyntaxKind.BinaryOrToken, "|"),
+            (SyntaxKind.HatToken, "^"),
+            (SyntaxKind.LessThanLessThanToken, "<<"),
+            (SyntaxKind.GreaterThanGreaterThanToken, ">>"),
 
             (SyntaxKind.NumberToken, "1"),
             (SyntaxKind.NumberToken, "123"),
