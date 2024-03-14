@@ -1,6 +1,8 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=8c8e9ef9_002Dbd2a_002D4666_002D8eff_002D72128ca25d65/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Test1" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
-    &lt;TestId&gt;xUnit::81AD6D7C-308D-4778-9258-912E41D97EC4::net8.0::Rhino.Tests.UnitTest1&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::81AD6D7C-308D-4778-9258-912E41D97EC4::net8.0::Rhino.Tests.CodeAnalysis.Syntax.LexerTest.LexerLexesToken&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::81AD6D7C-308D-4778-9258-912E41D97EC4::net8.0::Rhino.Tests.CodeAnalysis.Syntax.LexerTest.LexerLexesTokenPairs&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::81AD6D7C-308D-4778-9258-912E41D97EC4::net8.0::Rhino.Tests.CodeAnalysis.Syntax.LexerTest.LexerLexesTokenPairsWithSeparator&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
