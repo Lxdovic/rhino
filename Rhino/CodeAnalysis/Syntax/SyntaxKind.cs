@@ -18,11 +18,14 @@ public enum SyntaxKind {
     EqualsToken,
     EqualsEqualsToken,
     BangEqualsToken,
-    BinaryAndToken,
-    BinaryOrToken,
+    AmpersandToken,
+    PipeToken,
     HatToken,
     LessThanLessThanToken,
     GreaterThanGreaterThanToken,
+    TildeToken,
+    GreaterThanOrEqualsToken,
+    LessThanOrEqualsToken,
 
     FalseKeyword,
     TrueKeyword,
@@ -32,5 +35,5 @@ public enum SyntaxKind {
     UnaryExpression,
     ParenthesizedExpression,
     NameExpression,
-    AssignmentExpression,
+    AssignmentExpression
 }

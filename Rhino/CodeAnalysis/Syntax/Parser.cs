@@ -1,7 +1,6 @@
 namespace Rhino.CodeAnalysis.Syntax;
 
 internal sealed class Parser {
-    private readonly DiagnosticBag _diagnostics = new();
     private readonly SyntaxToken[] _tokens;
     private int _position;
 
@@ -17,12 +16,12 @@ internal sealed class Parser {
         } while (token.Kind != SyntaxKind.EndOfFileToken);
 
         _tokens = tokens.ToArray();
-        _diagnostics.AddRange(lexer.Diagnostics);
+        Diagnostics.AddRange(lexer.Diagnostics);
     }
 
     private SyntaxToken Current => Peek(0);
 
-    public DiagnosticBag Diagnostics => _diagnostics;
+    public DiagnosticBag Diagnostics { get; } = new();
 
     private SyntaxToken Peek(int offset) {
         var index = _position + offset;
@@ -34,13 +33,13 @@ internal sealed class Parser {
         var expression = ParseExpression();
         var endOfFileToken = MatchToken(SyntaxKind.EndOfFileToken);
 
-        return new SyntaxTree(_diagnostics, expression, endOfFileToken);
+        return new SyntaxTree(Diagnostics, expression, endOfFileToken);
     }
-    
+
     private ExpressionSyntax ParseExpression() {
         return ParseAssignmentExpression();
     }
-    
+
     private ExpressionSyntax ParseAssignmentExpression() {
         if (Peek(0).Kind == SyntaxKind.IdentifierToken && Peek(1).Kind == SyntaxKind.EqualsToken) {
             var identifierToken = NextToken();
@@ -86,8 +85,8 @@ internal sealed class Parser {
     private SyntaxToken MatchToken(SyntaxKind kind) {
         if (Current.Kind == kind) return NextToken();
 
-        _diagnostics.ReportUnexpectedToken(Current.Span, Current.Kind, kind);
-        return new SyntaxToken(kind, Current.Position, null, null);
+        Diagnostics.ReportUnexpectedToken(Current.Span, Current.Kind, kind);
+        return new SyntaxToken(kind, Current.Position);
     }
 
     private ExpressionSyntax ParsePrimaryExpression() {
@@ -110,7 +109,7 @@ internal sealed class Parser {
 
                 return new NameExpressionSyntax(identifierToken);
             }
-            
+
             default: {
                 var numberToken = MatchToken(SyntaxKind.NumberToken);
 

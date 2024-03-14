@@ -17,14 +17,14 @@ internal sealed class Evaluator {
 
     private object EvaluateExpression(BoundExpression node) {
         if (node is BoundLitteralExpression n) return n.Value;
-        
+
         if (node is BoundVariableExpression v) return _variables[v.Variable];
-        
+
         if (node is BoundAssignmentExpression a) {
             var value = EvaluateExpression(a.Expression);
-            
+
             _variables[a.Variable] = value;
-            
+
             return value;
         }
 
@@ -34,6 +34,7 @@ internal sealed class Evaluator {
             if (u.Op.Kind == BoundUnaryOperatorKind.Identity) return (int)operand;
             if (u.Op.Kind == BoundUnaryOperatorKind.Negation) return -(int)operand;
             if (u.Op.Kind == BoundUnaryOperatorKind.LogicalNegation) return !(bool)operand;
+            if (u.Op.Kind == BoundUnaryOperatorKind.BitwiseNegation) return ~(int)operand;
 
             throw new Exception($"Unexpected unary operator <{u.Op.Kind}>");
         }
@@ -51,11 +52,13 @@ internal sealed class Evaluator {
                 BoundBinaryOperatorKind.LogicalOr => (bool)left || (bool)right,
                 BoundBinaryOperatorKind.Equals => Equals(left, right),
                 BoundBinaryOperatorKind.NotEquals => !Equals(left, right),
-                BoundBinaryOperatorKind.BinaryAnd => (int)left & (int)right,
-                BoundBinaryOperatorKind.BinaryOr => (int)left | (int)right,
-                BoundBinaryOperatorKind.BinaryXor => (int)left ^ (int)right,
-                BoundBinaryOperatorKind.BinaryLeftShift => (int)left << (int)right,
-                BoundBinaryOperatorKind.BinaryRightShift => (int)left >> (int)right,
+                BoundBinaryOperatorKind.BitwiseAnd => (int)left & (int)right,
+                BoundBinaryOperatorKind.BitwiseOr => (int)left | (int)right,
+                BoundBinaryOperatorKind.BitwiseXor => (int)left ^ (int)right,
+                BoundBinaryOperatorKind.BitwiseLeftShift => (int)left << (int)right,
+                BoundBinaryOperatorKind.BitwiseRightShift => (int)left >> (int)right,
+                BoundBinaryOperatorKind.GreaterEquals => (int)left >= (int)right,
+                BoundBinaryOperatorKind.LessEquals => (int)left <= (int)right,
                 _ => throw new Exception($"Unexpected binary operator <{b.Op.Kind}>")
             };
         }

@@ -8,14 +8,16 @@ internal static class SyntaxFacts {
                 return 5;
             case SyntaxKind.PlusToken:
             case SyntaxKind.MinusToken:
-            case SyntaxKind.BinaryAndToken:
-            case SyntaxKind.BinaryOrToken:
+            case SyntaxKind.AmpersandToken:
+            case SyntaxKind.PipeToken:
             case SyntaxKind.HatToken:
             case SyntaxKind.LessThanLessThanToken:
             case SyntaxKind.GreaterThanGreaterThanToken:
                 return 4;
             case SyntaxKind.EqualsEqualsToken:
             case SyntaxKind.BangEqualsToken:
+            case SyntaxKind.GreaterThanOrEqualsToken:
+            case SyntaxKind.LessThanOrEqualsToken:
                 return 3;
             case SyntaxKind.AmpersandAmpersandToken:
                 return 2;
@@ -31,6 +33,7 @@ internal static class SyntaxFacts {
             case SyntaxKind.PlusToken:
             case SyntaxKind.MinusToken:
             case SyntaxKind.BangToken:
+            case SyntaxKind.TildeToken:
                 return 6;
             default:
                 return 0;

@@ -14,21 +14,21 @@ internal sealed class BoundBinaryOperator {
         new(SyntaxKind.PipePipeToken, BoundBinaryOperatorKind.LogicalOr, typeof(bool)),
         new(SyntaxKind.EqualsEqualsToken, BoundBinaryOperatorKind.Equals, typeof(bool)),
         new(SyntaxKind.BangEqualsToken, BoundBinaryOperatorKind.NotEquals, typeof(bool)),
-        new(SyntaxKind.BinaryAndToken, BoundBinaryOperatorKind.BinaryAnd, typeof(int)),
-        new(SyntaxKind.BinaryOrToken, BoundBinaryOperatorKind.BinaryOr, typeof(int)),
-        new(SyntaxKind.HatToken, BoundBinaryOperatorKind.BinaryXor, typeof(int)),
-        new(SyntaxKind.LessThanLessThanToken, BoundBinaryOperatorKind.BinaryLeftShift, typeof(int)),
-        new(SyntaxKind.GreaterThanGreaterThanToken, BoundBinaryOperatorKind.BinaryRightShift, typeof(int))
+        new(SyntaxKind.AmpersandToken, BoundBinaryOperatorKind.BitwiseAnd, typeof(int)),
+        new(SyntaxKind.PipeToken, BoundBinaryOperatorKind.BitwiseOr, typeof(int)),
+        new(SyntaxKind.HatToken, BoundBinaryOperatorKind.BitwiseXor, typeof(int)),
+        new(SyntaxKind.LessThanLessThanToken, BoundBinaryOperatorKind.BitwiseLeftShift, typeof(int)),
+        new(SyntaxKind.GreaterThanGreaterThanToken, BoundBinaryOperatorKind.BitwiseRightShift, typeof(int)),
+        new(SyntaxKind.GreaterThanOrEqualsToken, BoundBinaryOperatorKind.GreaterEquals, typeof(int)),
+        new(SyntaxKind.LessThanOrEqualsToken, BoundBinaryOperatorKind.LessEquals, typeof(int))
     };
 
     private BoundBinaryOperator(SyntaxKind syntaxKind, BoundBinaryOperatorKind kind, Type type) :
-        this(syntaxKind, kind, type, type, type) {
-    }
+        this(syntaxKind, kind, type, type, type) { }
 
     private BoundBinaryOperator(SyntaxKind syntaxKind, BoundBinaryOperatorKind kind, Type operandType,
         Type resultType) :
-        this(syntaxKind, kind, operandType, operandType, resultType) {
-    }
+        this(syntaxKind, kind, operandType, operandType, resultType) { }
 
     private BoundBinaryOperator(SyntaxKind syntaxKind, BoundBinaryOperatorKind kind, Type leftType, Type rightType,
         Type type) {
@@ -45,7 +45,7 @@ internal sealed class BoundBinaryOperator {
     public Type LeftType { get; }
     public Type RightType { get; }
 
-    public static BoundBinaryOperator Bind(SyntaxKind syntaxKind, Type leftType, Type rightType) {
+    public static BoundBinaryOperator? Bind(SyntaxKind syntaxKind, Type leftType, Type rightType) {
         foreach (var op in _operators)
             if (op.SyntaxKind == syntaxKind && op.LeftType == leftType && op.RightType == rightType)
                 return op;
