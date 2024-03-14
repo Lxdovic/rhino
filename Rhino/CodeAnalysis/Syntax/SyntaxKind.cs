@@ -24,6 +24,8 @@ public enum SyntaxKind {
     LessThanLessThanToken,
     GreaterThanGreaterThanToken,
     TildeToken,
+    GreaterThanEqualsToken,
+    SmallerThanEqualsToken,
 
     FalseKeyword,
     TrueKeyword,
@@ -33,5 +35,5 @@ public enum SyntaxKind {
     UnaryExpression,
     ParenthesizedExpression,
     NameExpression,
-    AssignmentExpression,
+    AssignmentExpression
 }

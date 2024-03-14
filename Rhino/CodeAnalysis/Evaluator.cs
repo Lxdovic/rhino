@@ -57,6 +57,8 @@ internal sealed class Evaluator {
                 BoundBinaryOperatorKind.BinaryXor => (int)left ^ (int)right,
                 BoundBinaryOperatorKind.BinaryLeftShift => (int)left << (int)right,
                 BoundBinaryOperatorKind.BinaryRightShift => (int)left >> (int)right,
+                BoundBinaryOperatorKind.GreaterEquals => (int)left >= (int)right,
+                BoundBinaryOperatorKind.SmallerEquals => (int)left <= (int)right,
                 _ => throw new Exception($"Unexpected binary operator <{b.Op.Kind}>")
             };
         }

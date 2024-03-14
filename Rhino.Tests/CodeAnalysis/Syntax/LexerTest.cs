@@ -128,6 +128,8 @@ public class LexerTest {
             (SyntaxKind.LessThanLessThanToken, "<<"),
             (SyntaxKind.GreaterThanGreaterThanToken, ">>"),
             (SyntaxKind.TildeToken, "~"),
+            (SyntaxKind.SmallerThanEqualsToken, "<="),
+            (SyntaxKind.GreaterThanEqualsToken, ">="),
 
             (SyntaxKind.NumberToken, "1"),
             (SyntaxKind.NumberToken, "123"),

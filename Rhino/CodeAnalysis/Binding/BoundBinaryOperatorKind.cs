@@ -8,6 +8,8 @@ internal enum BoundBinaryOperatorKind {
     LogicalAnd,
     LogicalOr,
     Equals,
+    GreaterEquals,
+    SmallerEquals,
     NotEquals,
     BinaryAnd,
     BinaryOr,

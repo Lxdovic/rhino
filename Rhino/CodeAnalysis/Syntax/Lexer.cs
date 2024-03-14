@@ -110,11 +110,21 @@ internal sealed class Lexer {
                     return new SyntaxToken(SyntaxKind.LessThanLessThanToken, start, "<<");
                 }
 
+                if (LookAhead == '=') {
+                    _position += 2;
+                    return new SyntaxToken(SyntaxKind.SmallerThanEqualsToken, start, "<=");
+                }
+
                 break;
             case '>':
                 if (LookAhead == '>') {
                     _position += 2;
                     return new SyntaxToken(SyntaxKind.GreaterThanGreaterThanToken, start, ">>");
+                }
+
+                if (LookAhead == '=') {
+                    _position += 2;
+                    return new SyntaxToken(SyntaxKind.GreaterThanEqualsToken, start, ">=");
                 }
 
                 break;

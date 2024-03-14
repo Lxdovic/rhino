@@ -18,17 +18,17 @@ internal sealed class BoundBinaryOperator {
         new(SyntaxKind.BinaryOrToken, BoundBinaryOperatorKind.BinaryOr, typeof(int)),
         new(SyntaxKind.HatToken, BoundBinaryOperatorKind.BinaryXor, typeof(int)),
         new(SyntaxKind.LessThanLessThanToken, BoundBinaryOperatorKind.BinaryLeftShift, typeof(int)),
-        new(SyntaxKind.GreaterThanGreaterThanToken, BoundBinaryOperatorKind.BinaryRightShift, typeof(int))
+        new(SyntaxKind.GreaterThanGreaterThanToken, BoundBinaryOperatorKind.BinaryRightShift, typeof(int)),
+        new(SyntaxKind.GreaterThanEqualsToken, BoundBinaryOperatorKind.GreaterEquals, typeof(int)),
+        new(SyntaxKind.SmallerThanEqualsToken, BoundBinaryOperatorKind.SmallerEquals, typeof(int))
     };
 
     private BoundBinaryOperator(SyntaxKind syntaxKind, BoundBinaryOperatorKind kind, Type type) :
-        this(syntaxKind, kind, type, type, type) {
-    }
+        this(syntaxKind, kind, type, type, type) { }
 
     private BoundBinaryOperator(SyntaxKind syntaxKind, BoundBinaryOperatorKind kind, Type operandType,
         Type resultType) :
-        this(syntaxKind, kind, operandType, operandType, resultType) {
-    }
+        this(syntaxKind, kind, operandType, operandType, resultType) { }
 
     private BoundBinaryOperator(SyntaxKind syntaxKind, BoundBinaryOperatorKind kind, Type leftType, Type rightType,
         Type type) {

@@ -16,6 +16,8 @@ internal static class SyntaxFacts {
                 return 4;
             case SyntaxKind.EqualsEqualsToken:
             case SyntaxKind.BangEqualsToken:
+            case SyntaxKind.GreaterThanEqualsToken:
+            case SyntaxKind.SmallerThanEqualsToken:
                 return 3;
             case SyntaxKind.AmpersandAmpersandToken:
                 return 2;
