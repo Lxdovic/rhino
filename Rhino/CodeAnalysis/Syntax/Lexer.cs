@@ -73,7 +73,7 @@ internal sealed class Lexer {
                 }
 
                 _position++;
-                return new SyntaxToken(SyntaxKind.BinaryAndToken, start, "&");
+                return new SyntaxToken(SyntaxKind.AmpersandToken, start, "&");
             case '|':
                 if (LookAhead == '|') {
                     _position += 2;
@@ -81,7 +81,7 @@ internal sealed class Lexer {
                 }
 
                 _position++;
-                return new SyntaxToken(SyntaxKind.BinaryOrToken, start, "|");
+                return new SyntaxToken(SyntaxKind.PipeToken, start, "|");
             case '=':
                 if (LookAhead == '=') {
                     _position += 2;
@@ -112,7 +112,7 @@ internal sealed class Lexer {
 
                 if (LookAhead == '=') {
                     _position += 2;
-                    return new SyntaxToken(SyntaxKind.SmallerThanEqualsToken, start, "<=");
+                    return new SyntaxToken(SyntaxKind.LessThanOrEqualsToken, start, "<=");
                 }
 
                 break;
@@ -124,7 +124,7 @@ internal sealed class Lexer {
 
                 if (LookAhead == '=') {
                     _position += 2;
-                    return new SyntaxToken(SyntaxKind.GreaterThanEqualsToken, start, ">=");
+                    return new SyntaxToken(SyntaxKind.GreaterThanOrEqualsToken, start, ">=");
                 }
 
                 break;

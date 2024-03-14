@@ -9,11 +9,11 @@ internal enum BoundBinaryOperatorKind {
     LogicalOr,
     Equals,
     GreaterEquals,
-    SmallerEquals,
+    LessEquals,
     NotEquals,
-    BinaryAnd,
-    BinaryOr,
-    BinaryXor,
-    BinaryLeftShift,
-    BinaryRightShift
+    BitwiseAnd,
+    BitwiseOr,
+    BitwiseXor,
+    BitwiseLeftShift,
+    BitwiseRightShift
 }

@@ -52,13 +52,13 @@ internal sealed class Evaluator {
                 BoundBinaryOperatorKind.LogicalOr => (bool)left || (bool)right,
                 BoundBinaryOperatorKind.Equals => Equals(left, right),
                 BoundBinaryOperatorKind.NotEquals => !Equals(left, right),
-                BoundBinaryOperatorKind.BinaryAnd => (int)left & (int)right,
-                BoundBinaryOperatorKind.BinaryOr => (int)left | (int)right,
-                BoundBinaryOperatorKind.BinaryXor => (int)left ^ (int)right,
-                BoundBinaryOperatorKind.BinaryLeftShift => (int)left << (int)right,
-                BoundBinaryOperatorKind.BinaryRightShift => (int)left >> (int)right,
+                BoundBinaryOperatorKind.BitwiseAnd => (int)left & (int)right,
+                BoundBinaryOperatorKind.BitwiseOr => (int)left | (int)right,
+                BoundBinaryOperatorKind.BitwiseXor => (int)left ^ (int)right,
+                BoundBinaryOperatorKind.BitwiseLeftShift => (int)left << (int)right,
+                BoundBinaryOperatorKind.BitwiseRightShift => (int)left >> (int)right,
                 BoundBinaryOperatorKind.GreaterEquals => (int)left >= (int)right,
-                BoundBinaryOperatorKind.SmallerEquals => (int)left <= (int)right,
+                BoundBinaryOperatorKind.LessEquals => (int)left <= (int)right,
                 _ => throw new Exception($"Unexpected binary operator <{b.Op.Kind}>")
             };
         }
