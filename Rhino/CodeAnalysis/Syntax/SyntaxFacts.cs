@@ -1,6 +1,6 @@
 namespace Rhino.CodeAnalysis.Syntax;
 
-internal static class SyntaxFacts {
+public static class SyntaxFacts {
     public static int GetBinaryOperatorPrecedence(this SyntaxKind kind) {
         switch (kind) {
             case SyntaxKind.StarToken:
@@ -48,6 +48,34 @@ internal static class SyntaxFacts {
                 return SyntaxKind.FalseKeyword;
             default:
                 return SyntaxKind.IdentifierToken;
+        }
+    }
+
+    public static string? GetText(SyntaxKind kind) {
+        switch (kind) {
+            case SyntaxKind.PlusToken: return "+";
+            case SyntaxKind.MinusToken: return "-";
+            case SyntaxKind.StarToken: return "*";
+            case SyntaxKind.SlashToken: return "/";
+            case SyntaxKind.BangToken: return "!";
+            case SyntaxKind.EqualsToken: return "=";
+            case SyntaxKind.AmpersandAmpersandToken: return "&&";
+            case SyntaxKind.PipePipeToken: return "||";
+            case SyntaxKind.EqualsEqualsToken: return "==";
+            case SyntaxKind.BangEqualsToken: return "!=";
+            case SyntaxKind.OpenParenthesisToken: return "(";
+            case SyntaxKind.CloseParenthesisToken: return ")";
+            case SyntaxKind.FalseKeyword: return "false";
+            case SyntaxKind.TrueKeyword: return "true";
+            case SyntaxKind.AmpersandToken: return "&";
+            case SyntaxKind.PipeToken: return "|";
+            case SyntaxKind.HatToken: return "^";
+            case SyntaxKind.LessThanLessThanToken: return "<<";
+            case SyntaxKind.GreaterThanGreaterThanToken: return ">>";
+            case SyntaxKind.TildeToken: return "~";
+            case SyntaxKind.LessThanOrEqualsToken: return "<=";
+            case SyntaxKind.GreaterThanOrEqualsToken: return ">=";
+            default: return null;
         }
     }
 }
