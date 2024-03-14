@@ -2,7 +2,7 @@ using Rhino.CodeAnalysis.Syntax;
 
 namespace Rhino.Tests.CodeAnalysis.Syntax;
 
-public class LexerTest {
+public class LexerTests {
     [Theory]
     [MemberData(nameof(GetTokensData))]
     public void LexerLexesToken(SyntaxKind kind, string text) {
