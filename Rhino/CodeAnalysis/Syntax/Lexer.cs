@@ -25,7 +25,7 @@ internal sealed class Lexer {
     }
 
     public SyntaxToken Lex() {
-        if (_position >= _text.Length) return new SyntaxToken(SyntaxKind.EndOfFileToken, _position, "\0", null);
+        if (_position >= _text.Length) return new SyntaxToken(SyntaxKind.EndOfFileToken, _position, "\0");
 
         var start = _position;
 
@@ -55,72 +55,72 @@ internal sealed class Lexer {
             var length = _position - start;
             var text = _text.Substring(start, length);
             var kind = SyntaxFacts.GetKeywordKind(text);
-            return new SyntaxToken(kind, start, text, null);
+            return new SyntaxToken(kind, start, text);
         }
 
         switch (Current) {
-            case '+': return new SyntaxToken(SyntaxKind.PlusToken, _position++, "+", null);
-            case '-': return new SyntaxToken(SyntaxKind.MinusToken, _position++, "-", null);
-            case '*': return new SyntaxToken(SyntaxKind.StarToken, _position++, "*", null);
-            case '/': return new SyntaxToken(SyntaxKind.SlashToken, _position++, "/", null);
-            case '(': return new SyntaxToken(SyntaxKind.OpenParenthesisToken, _position++, "(", null);
+            case '+': return new SyntaxToken(SyntaxKind.PlusToken, _position++, "+");
+            case '-': return new SyntaxToken(SyntaxKind.MinusToken, _position++, "-");
+            case '*': return new SyntaxToken(SyntaxKind.StarToken, _position++, "*");
+            case '/': return new SyntaxToken(SyntaxKind.SlashToken, _position++, "/");
+            case '(': return new SyntaxToken(SyntaxKind.OpenParenthesisToken, _position++, "(");
             case ')':
-                return new SyntaxToken(SyntaxKind.CloseParenthesisToken, _position++, ")", null);
+                return new SyntaxToken(SyntaxKind.CloseParenthesisToken, _position++, ")");
             case '&':
                 if (LookAhead == '&') {
                     _position += 2;
-                    return new SyntaxToken(SyntaxKind.AmpersandAmpersandToken, start, "&&", null);
+                    return new SyntaxToken(SyntaxKind.AmpersandAmpersandToken, start, "&&");
                 }
 
                 _position++;
-                return new SyntaxToken(SyntaxKind.BinaryAndToken, start, "&", null);
+                return new SyntaxToken(SyntaxKind.BinaryAndToken, start, "&");
             case '|':
                 if (LookAhead == '|') {
                     _position += 2;
-                    return new SyntaxToken(SyntaxKind.PipePipeToken, start, "||", null);
+                    return new SyntaxToken(SyntaxKind.PipePipeToken, start, "||");
                 }
 
                 _position++;
-                return new SyntaxToken(SyntaxKind.BinaryOrToken, start, "|", null);
+                return new SyntaxToken(SyntaxKind.BinaryOrToken, start, "|");
             case '=':
                 if (LookAhead == '=') {
                     _position += 2;
-                    return new SyntaxToken(SyntaxKind.EqualsEqualsToken, start, "==", null);
+                    return new SyntaxToken(SyntaxKind.EqualsEqualsToken, start, "==");
                 }
 
                 _position += 1;
-                return new SyntaxToken(SyntaxKind.EqualsToken, start, "=", null);
+                return new SyntaxToken(SyntaxKind.EqualsToken, start, "=");
             case '!':
                 if (LookAhead == '=') {
                     _position += 2;
-                    return new SyntaxToken(SyntaxKind.BangEqualsToken, start, "!=", null);
+                    return new SyntaxToken(SyntaxKind.BangEqualsToken, start, "!=");
                 }
 
                 _position += 1;
-                return new SyntaxToken(SyntaxKind.BangToken, start, "!", null);
+                return new SyntaxToken(SyntaxKind.BangToken, start, "!");
             case '^':
                 _position++;
-                return new SyntaxToken(SyntaxKind.HatToken, start, "^", null);
+                return new SyntaxToken(SyntaxKind.HatToken, start, "^");
             case '~':
                 _position++;
-                return new SyntaxToken(SyntaxKind.TildeToken, start, "~", null);
+                return new SyntaxToken(SyntaxKind.TildeToken, start, "~");
             case '<':
                 if (LookAhead == '<') {
                     _position += 2;
-                    return new SyntaxToken(SyntaxKind.LessThanLessThanToken, start, "<<", null);
+                    return new SyntaxToken(SyntaxKind.LessThanLessThanToken, start, "<<");
                 }
 
                 break;
             case '>':
                 if (LookAhead == '>') {
                     _position += 2;
-                    return new SyntaxToken(SyntaxKind.GreaterThanGreaterThanToken, start, ">>", null);
+                    return new SyntaxToken(SyntaxKind.GreaterThanGreaterThanToken, start, ">>");
                 }
 
                 break;
         }
 
         Diagnostics.ReportBadCharacter(_position, Current);
-        return new SyntaxToken(SyntaxKind.BadToken, _position++, _text.Substring(_position - 1, 1), null);
+        return new SyntaxToken(SyntaxKind.BadToken, _position++, _text.Substring(_position - 1, 1));
     }
 }
