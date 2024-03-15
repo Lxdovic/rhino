@@ -58,5 +58,3 @@ Allows you to make simple arithmetic expressions like `1 + 2 * 3` and `(1 + 2) *
 > a ^ b
 4
 ```
-
-```sh
