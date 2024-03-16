@@ -9,6 +9,16 @@ public struct TextSpan {
     public int Start { get; }
     public int Length { get; }
     public int End => Start + Length;
-    public bool OverlapsWith(TextSpan span) => Start < span.End && End > span.Start;
-    public bool Contains(TextSpan span) => Start <= span.Start && End >= span.End;
+
+    public bool OverlapsWith(TextSpan span) {
+        return Start < span.End && End > span.Start;
+    }
+
+    public bool Contains(TextSpan span) {
+        return Start <= span.Start && End >= span.End;
+    }
+
+    public static TextSpan FromBounds(int start, int end) {
+        return new TextSpan(start, end - start);
+    }
 }
