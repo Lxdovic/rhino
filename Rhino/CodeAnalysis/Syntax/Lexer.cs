@@ -2,7 +2,11 @@ namespace Rhino.CodeAnalysis.Syntax;
 
 internal sealed class Lexer {
     private readonly string _text;
+
+    private SyntaxKind _kind;
     private int _position;
+    private int _start;
+    private object _value;
 
     public Lexer(string text) {
         _text = text;
@@ -13,10 +17,6 @@ internal sealed class Lexer {
     private char Current => Peek(0);
     private char LookAhead => Peek(1);
 
-    private void Next() {
-        _position++;
-    }
-
     private char Peek(int offset) {
         var index = _position + offset;
         if (index >= _text.Length) return '\0';
@@ -25,112 +25,198 @@ internal sealed class Lexer {
     }
 
     public SyntaxToken Lex() {
-        if (_position >= _text.Length) return new SyntaxToken(SyntaxKind.EndOfFileToken, _position, "\0");
-
-        var start = _position;
-
-        if (char.IsDigit(Current)) {
-            while (char.IsDigit(Current)) Next();
-
-            var length = _position - start;
-            var text = _text.Substring(start, length);
-            if (!int.TryParse(text, out var value))
-                Diagnostics.ReportInvalidNumber(new TextSpan(start, length), _text, typeof(int));
-
-            return new SyntaxToken(SyntaxKind.NumberToken, start, text, value);
-        }
-
-        if (char.IsWhiteSpace(Current)) {
-            while (char.IsWhiteSpace(Current)) Next();
-
-            var length = _position - start;
-            var text = _text.Substring(start, length);
-            int.TryParse(text, out var value);
-            return new SyntaxToken(SyntaxKind.WhiteSpaceToken, start, text, value);
-        }
-
-        if (char.IsLetter(Current)) {
-            while (char.IsLetter(Current)) Next();
-
-            var length = _position - start;
-            var text = _text.Substring(start, length);
-            var kind = SyntaxFacts.GetKeywordKind(text);
-            return new SyntaxToken(kind, start, text);
-        }
+        _start = _position;
+        _kind = SyntaxKind.BadToken;
+        _value = null;
 
         switch (Current) {
-            case '+': return new SyntaxToken(SyntaxKind.PlusToken, _position++, "+");
-            case '-': return new SyntaxToken(SyntaxKind.MinusToken, _position++, "-");
-            case '*': return new SyntaxToken(SyntaxKind.StarToken, _position++, "*");
-            case '/': return new SyntaxToken(SyntaxKind.SlashToken, _position++, "/");
-            case '(': return new SyntaxToken(SyntaxKind.OpenParenthesisToken, _position++, "(");
+            case '\0':
+                _kind = SyntaxKind.EndOfFileToken;
+
+                break;
+            case '+':
+                _kind = SyntaxKind.PlusToken;
+                _position++;
+
+                break;
+            case '-':
+                _kind = SyntaxKind.MinusToken;
+                _position++;
+
+                break;
+            case '*':
+                _kind = SyntaxKind.StarToken;
+                _position++;
+
+                break;
+            case '/':
+                _kind = SyntaxKind.SlashToken;
+                _position++;
+
+                break;
+            case '(':
+                _kind = SyntaxKind.OpenParenthesisToken;
+                _position++;
+
+                break;
             case ')':
-                return new SyntaxToken(SyntaxKind.CloseParenthesisToken, _position++, ")");
+                _kind = SyntaxKind.CloseParenthesisToken;
+                _position++;
+
+                break;
             case '&':
-                if (LookAhead == '&') {
-                    _position += 2;
-                    return new SyntaxToken(SyntaxKind.AmpersandAmpersandToken, start, "&&");
+                _position++;
+                if (Current != '&') {
+                    _kind = SyntaxKind.AmpersandToken;
                 }
 
-                _position++;
-                return new SyntaxToken(SyntaxKind.AmpersandToken, start, "&");
+                else {
+                    _position++;
+                    _kind = SyntaxKind.AmpersandAmpersandToken;
+                }
+
+                break;
             case '|':
-                if (LookAhead == '|') {
-                    _position += 2;
-                    return new SyntaxToken(SyntaxKind.PipePipeToken, start, "||");
-                }
-
                 _position++;
-                return new SyntaxToken(SyntaxKind.PipeToken, start, "|");
+                if (Current != '|') {
+                    _kind = SyntaxKind.PipeToken;
+                }
+
+                else {
+                    _position++;
+                    _kind = SyntaxKind.PipePipeToken;
+                }
+
+                break;
             case '=':
-                if (LookAhead == '=') {
-                    _position += 2;
-                    return new SyntaxToken(SyntaxKind.EqualsEqualsToken, start, "==");
+                _position++;
+                if (Current != '=') {
+                    _kind = SyntaxKind.EqualsToken;
                 }
 
-                _position += 1;
-                return new SyntaxToken(SyntaxKind.EqualsToken, start, "=");
+                else {
+                    _kind = SyntaxKind.EqualsEqualsToken;
+                    _position++;
+                }
+
+                break;
             case '!':
-                if (LookAhead == '=') {
-                    _position += 2;
-                    return new SyntaxToken(SyntaxKind.BangEqualsToken, start, "!=");
+                _position++;
+                if (Current != '=') {
+                    _kind = SyntaxKind.BangToken;
                 }
 
-                _position += 1;
-                return new SyntaxToken(SyntaxKind.BangToken, start, "!");
+                else {
+                    _kind = SyntaxKind.BangEqualsToken;
+                    _position++;
+                }
+
+                break;
             case '^':
                 _position++;
-                return new SyntaxToken(SyntaxKind.HatToken, start, "^");
+                _kind = SyntaxKind.HatToken;
+
+                break;
             case '~':
                 _position++;
-                return new SyntaxToken(SyntaxKind.TildeToken, start, "~");
+                _kind = SyntaxKind.TildeToken;
+
+                break;
             case '<':
-                if (LookAhead == '<') {
-                    _position += 2;
-                    return new SyntaxToken(SyntaxKind.LessThanLessThanToken, start, "<<");
+                _position++;
+                if (Current == '<') {
+                    _position++;
+                    _kind = SyntaxKind.LessThanLessThanToken;
                 }
 
-                if (LookAhead == '=') {
-                    _position += 2;
-                    return new SyntaxToken(SyntaxKind.LessThanOrEqualsToken, start, "<=");
+                else if (Current == '=') {
+                    _position++;
+                    _kind = SyntaxKind.LessThanOrEqualsToken;
                 }
 
                 break;
             case '>':
-                if (LookAhead == '>') {
-                    _position += 2;
-                    return new SyntaxToken(SyntaxKind.GreaterThanGreaterThanToken, start, ">>");
+                _position++;
+                if (Current == '>') {
+                    _position++;
+                    _kind = SyntaxKind.GreaterThanGreaterThanToken;
                 }
 
-                if (LookAhead == '=') {
-                    _position += 2;
-                    return new SyntaxToken(SyntaxKind.GreaterThanOrEqualsToken, start, ">=");
+                else if (Current == '=') {
+                    _position++;
+                    _kind = SyntaxKind.GreaterThanOrEqualsToken;
+                }
+
+                break;
+            case '0':
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9':
+                ReadNumberToken();
+
+                break;
+
+            case ' ':
+            case '\t':
+            case '\n':
+            case '\r':
+                ReadWhiteSpace();
+
+                break;
+            default:
+                if (char.IsLetter(Current)) {
+                    ReadIdentifierOrKeyword();
+                }
+                else if (char.IsWhiteSpace(Current)) {
+                    ReadWhiteSpace();
+                }
+
+                else {
+                    Diagnostics.ReportBadCharacter(_position, Current);
+                    _position++;
                 }
 
                 break;
         }
 
-        Diagnostics.ReportBadCharacter(_position, Current);
-        return new SyntaxToken(SyntaxKind.BadToken, _position++, _text.Substring(_position - 1, 1));
+
+        var length = _position - _start;
+        var text = SyntaxFacts.GetText(_kind);
+
+        if (text == null) text = _text.Substring(_start, length);
+
+        return new SyntaxToken(_kind, _start, text, _value);
+    }
+
+    private void ReadIdentifierOrKeyword() {
+        while (char.IsLetter(Current)) _position++;
+
+        var length = _position - _start;
+        var text = _text.Substring(_start, length);
+        _kind = SyntaxFacts.GetKeywordKind(text);
+    }
+
+    private void ReadWhiteSpace() {
+        while (char.IsWhiteSpace(Current)) _position++;
+
+        _kind = SyntaxKind.WhiteSpaceToken;
+    }
+
+    private void ReadNumberToken() {
+        while (char.IsDigit(Current)) _position++;
+
+        var length = _position - _start;
+        var text = _text.Substring(_start, length);
+        if (!int.TryParse(text, out var value))
+            Diagnostics.ReportInvalidNumber(new TextSpan(_start, length), _text, typeof(int));
+
+        _value = value;
+        _kind = SyntaxKind.NumberToken;
     }
 }
