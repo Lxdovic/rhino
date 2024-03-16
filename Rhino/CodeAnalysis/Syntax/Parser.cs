@@ -1,12 +1,14 @@
 using System.Collections.Immutable;
+using Rhino.CodeAnalysis.Text;
 
 namespace Rhino.CodeAnalysis.Syntax;
 
 internal sealed class Parser {
+    private readonly SourceText _text;
     private readonly ImmutableArray<SyntaxToken> _tokens;
     private int _position;
 
-    public Parser(string text) {
+    public Parser(SourceText text) {
         var tokens = new List<SyntaxToken>();
         var lexer = new Lexer(text);
         SyntaxToken token;
@@ -17,6 +19,7 @@ internal sealed class Parser {
             if (token.Kind != SyntaxKind.WhiteSpaceToken && token.Kind != SyntaxKind.BadToken) tokens.Add(token);
         } while (token.Kind != SyntaxKind.EndOfFileToken);
 
+        _text = text;
         _tokens = tokens.ToImmutableArray();
         Diagnostics.AddRange(lexer.Diagnostics);
     }
@@ -35,7 +38,7 @@ internal sealed class Parser {
         var expression = ParseExpression();
         var endOfFileToken = MatchToken(SyntaxKind.EndOfFileToken);
 
-        return new SyntaxTree(Diagnostics.ToImmutableArray(), expression, endOfFileToken);
+        return new SyntaxTree(_text, Diagnostics.ToImmutableArray(), expression, endOfFileToken);
     }
 
     private ExpressionSyntax ParseExpression() {
