@@ -1,3 +1,5 @@
+using Rhino.CodeAnalysis.Text;
+
 namespace Rhino.CodeAnalysis;
 
 public class Diagnostic {
@@ -8,6 +10,8 @@ public class Diagnostic {
 
     public TextSpan Span { get; }
     public string Message { get; }
-    
-    public override string ToString() => Message;
+
+    public override string ToString() {
+        return Message;
+    }
 }

@@ -1,4 +1,4 @@
-namespace Rhino.CodeAnalysis;
+namespace Rhino.CodeAnalysis.Text;
 
 public struct TextSpan {
     public TextSpan(int start, int length) {

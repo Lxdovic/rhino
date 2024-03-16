@@ -1,3 +1,5 @@
+using Rhino.CodeAnalysis.Text;
+
 namespace Rhino.CodeAnalysis.Syntax;
 
 public class SyntaxToken : SyntaxNode {
