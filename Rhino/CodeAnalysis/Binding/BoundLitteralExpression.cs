@@ -1,7 +1,7 @@
 namespace Rhino.CodeAnalysis.Binding;
 
-internal sealed class BoundLitteralExpression : BoundExpression {
-    public BoundLitteralExpression(object value) {
+internal sealed class BoundLiteralExpression : BoundExpression {
+    public BoundLiteralExpression(object value) {
         Value = value;
     }
 

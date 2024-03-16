@@ -3,13 +3,13 @@ using Rhino.CodeAnalysis.Syntax;
 namespace Rhino.CodeAnalysis.Binding;
 
 internal sealed class Binder {
-    private readonly DiagnosticBag _diagnostics = new();
     private readonly Dictionary<VariableSymbol, object> _variables;
-    public DiagnosticBag Diagnostics => _diagnostics;
-    
-    public Binder (Dictionary<VariableSymbol, object> variables) {
+
+    public Binder(Dictionary<VariableSymbol, object> variables) {
         _variables = variables;
     }
+
+    public DiagnosticBag Diagnostics { get; } = new();
 
     public BoundExpression BindExpression(ExpressionSyntax syntax) {
         switch (syntax.Kind) {
@@ -32,17 +32,15 @@ internal sealed class Binder {
 
     private BoundExpression BindAssignmentExpression(AssignmentExpressionSyntax syntax) {
         var boundExpression = BindExpression(syntax.Expression);
-        var name=  syntax.IdentifierToken.Text;
+        var name = syntax.IdentifierToken.Text;
 
         var existingVariable = _variables.Keys.FirstOrDefault(v => v.Name == name);
-        
-        if (existingVariable != null) {
-            _variables.Remove(existingVariable);
-        }
-        
+
+        if (existingVariable != null) _variables.Remove(existingVariable);
+
         var variable = new VariableSymbol(name, boundExpression.Type);
         _variables[variable] = null;
-        
+
         return new BoundAssignmentExpression(variable, boundExpression);
     }
 
@@ -51,9 +49,9 @@ internal sealed class Binder {
         var variable = _variables.Keys.FirstOrDefault(v => v.Name == name);
 
         if (variable == null) {
-            _diagnostics.ReportUndefinedName(syntax.IdentifierToken.Span, name);
+            Diagnostics.ReportUndefinedName(syntax.IdentifierToken.Span, name);
 
-            return new BoundLitteralExpression(0);
+            return new BoundLiteralExpression(0);
         }
 
         return new BoundVariableExpression(variable);
@@ -69,8 +67,9 @@ internal sealed class Binder {
         var boundOperator = BoundBinaryOperator.Bind(syntax.OperatorToken.Kind, boundLeft.Type, boundRight.Type);
 
         if (boundOperator == null) {
-            _diagnostics.ReportUndefinedBinaryOperator(syntax.OperatorToken.Span, syntax.OperatorToken.Text, boundLeft.Type, boundRight.Type);
-            
+            Diagnostics.ReportUndefinedBinaryOperator(syntax.OperatorToken.Span, syntax.OperatorToken.Text,
+                boundLeft.Type, boundRight.Type);
+
             return boundLeft;
         }
 
@@ -82,7 +81,8 @@ internal sealed class Binder {
         var boundOperator = BoundUnaryOperator.Bind(syntax.OperatorToken.Kind, boundOperand.Type);
 
         if (boundOperator == null) {
-            _diagnostics.ReportUndefinedUnaryOperator(syntax.OperatorToken.Span, syntax.OperatorToken.Text, boundOperand.Type);
+            Diagnostics.ReportUndefinedUnaryOperator(syntax.OperatorToken.Span, syntax.OperatorToken.Text,
+                boundOperand.Type);
 
             return boundOperand;
         }
@@ -93,6 +93,6 @@ internal sealed class Binder {
     private BoundExpression BindLiteralExpression(LiteralExpressionSyntax syntax) {
         var value = syntax.Value ?? 0;
 
-        return new BoundLitteralExpression(value);
+        return new BoundLiteralExpression(value);
     }
 }
