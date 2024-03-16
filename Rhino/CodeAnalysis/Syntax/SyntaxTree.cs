@@ -1,13 +1,15 @@
+using System.Collections.Immutable;
+
 namespace Rhino.CodeAnalysis.Syntax;
 
 public sealed class SyntaxTree {
-    public SyntaxTree(IEnumerable<Diagnostic> diagnostics, ExpressionSyntax root, SyntaxToken endOfFileToken) {
-        Diagnostics = diagnostics.ToArray();
+    public SyntaxTree(ImmutableArray<Diagnostic> diagnostics, ExpressionSyntax root, SyntaxToken endOfFileToken) {
+        Diagnostics = diagnostics;
         Root = root;
         EndOfFileToken = endOfFileToken;
     }
 
-    public IReadOnlyList<Diagnostic> Diagnostics { get; }
+    public ImmutableArray<Diagnostic> Diagnostics { get; }
     public ExpressionSyntax Root { get; }
     public SyntaxToken EndOfFileToken { get; }
 
@@ -18,7 +20,7 @@ public sealed class SyntaxTree {
 
     public static IEnumerable<SyntaxToken> ParseTokens(string text) {
         var lexer = new Lexer(text);
-        
+
         while (true) {
             var token = lexer.Lex();
 
