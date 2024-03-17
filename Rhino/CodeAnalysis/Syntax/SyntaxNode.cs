@@ -31,16 +31,27 @@ public abstract class SyntaxNode {
     }
 
     private static void PrettyPrint(TextWriter writer, SyntaxNode node, string indent = "", bool isLast = true) {
+        var isToConsole = writer == Console.Out;
         var marker = isLast ? "└──" : "├──";
 
         Console.Write(indent);
-        Console.Write(marker);
+
+        if (isToConsole) {
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.Write(marker);
+            Console.ResetColor();
+        }
+
+        if (isToConsole) Console.ForegroundColor = node is SyntaxToken ? ConsoleColor.Blue : ConsoleColor.Cyan;
+
         Console.Write(node.Kind);
 
         if (node is SyntaxToken t && t.Value != null) {
             Console.Write(" ");
             Console.Write(t.Value);
         }
+
+        if (isToConsole) Console.ResetColor();
 
         Console.WriteLine();
 

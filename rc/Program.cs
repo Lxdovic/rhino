@@ -12,8 +12,11 @@ internal static class Program {
         var textBuilder = new StringBuilder();
 
         while (true) {
-            if (textBuilder.Length == 0) Console.Write("> ");
-            else Console.Write("| ");
+            Console.ForegroundColor = ConsoleColor.Green;
+            if (textBuilder.Length == 0) Console.Write("» ");
+            else Console.Write("• ");
+
+            Console.ResetColor();
 
             var input = Console.ReadLine();
             var isBlank = string.IsNullOrWhiteSpace(input);
@@ -50,7 +53,9 @@ internal static class Program {
             }
 
             if (!result.Diagnostics.Any()) {
+                Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.WriteLine(result.Value);
+                Console.ResetColor();
             }
 
             else {
