@@ -7,9 +7,9 @@ public class SourceTextTests {
     [InlineData(".", 1)]
     [InlineData(".\r\n", 2)]
     [InlineData(".\r\n\r\n", 3)]
-    public void SourceTextIncludesLastLine(string text, int numberExprectedLineCount) {
+    public void SourceTextIncludesLastLine(string text, int numberExpectedLineCount) {
         var sourceText = SourceText.From(text);
 
-        Assert.Equal(numberExprectedLineCount, sourceText.Lines.Length);
+        Assert.Equal(numberExpectedLineCount, sourceText.Lines.Length);
     }
 }
