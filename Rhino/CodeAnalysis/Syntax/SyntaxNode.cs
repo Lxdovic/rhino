@@ -36,11 +36,9 @@ public abstract class SyntaxNode {
 
         Console.Write(indent);
 
-        if (isToConsole) {
-            Console.ForegroundColor = ConsoleColor.DarkGray;
-            Console.Write(marker);
-            Console.ResetColor();
-        }
+        if (isToConsole) Console.ForegroundColor = ConsoleColor.DarkGray;
+
+        Console.Write(marker);
 
         if (isToConsole) Console.ForegroundColor = node is SyntaxToken ? ConsoleColor.Blue : ConsoleColor.Cyan;
 
