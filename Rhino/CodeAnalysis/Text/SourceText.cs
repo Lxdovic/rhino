@@ -65,9 +65,9 @@ public sealed class SourceText {
         result.Add(line);
     }
 
-    private static int GetLineBreakWidth(string text, int i) {
-        var c = text[i];
-        var l = i + 1 >= text.Length ? '\0' : text[i + 1];
+    private static int GetLineBreakWidth(string text, int position) {
+        var c = text[position];
+        var l = position + 1 >= text.Length ? '\0' : text[position + 1];
 
         if (c == '\r' && l == '\n') return 2;
         if (c == '\r' || c == '\n') return 1;
