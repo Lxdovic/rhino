@@ -4,6 +4,16 @@ My first attempt at building a compiler. With the help
 of [Immo Landwerth's tutorial series](https://www.youtube.com/playlist?list=PLRAdsfhKI4OWNOSfS7EUu5GRAVmze1t2y) on
 building a compiler
 
+## Biulding
+
+- Download and install `.NET Core 8`
+- Clone this repo and run the project
+  ```
+  git clone git@github.com:Lxdovic/rhino.git
+  cd rhino/
+  dotnet run
+  ```
+
 ## Features
 
 ### 09/03/24: Basic Lexer and Parser
