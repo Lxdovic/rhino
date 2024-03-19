@@ -4,13 +4,20 @@ My first attempt at building a compiler. With the help
 of [Immo Landwerth's tutorial series](https://www.youtube.com/playlist?list=PLRAdsfhKI4OWNOSfS7EUu5GRAVmze1t2y) on
 building a compiler
 
+## Building
+
+- Download and install `.NET Core 8`
+- Clone this repo and run the project
+  ```
+  git clone git@github.com:Lxdovic/rhino.git
+  cd rhino/
+  dotnet run
+  ```
+
 ## Features
 
-### 09/03/24: Basic Lexer and Parser
-
-Allows you to make simple arithmetic expressions like `1 + 2 * 3` and `(1 + 2) * 3`.
-
 #### Opperators:
+Allows for arithmetic expressions
 
 - `+` Addition
 - `-` Subtraction
@@ -29,32 +36,34 @@ Allows you to make simple arithmetic expressions like `1 + 2 * 3` and `(1 + 2) *
 - `<<` Bitwise Left Shift
 - `>>` Bitwise Right Shift
 
-#### Examples:
+#### Assignments:
+Allows you to declare variables
 
-```sh
-> 1 + 2 * 3
-7
+- `<identifier> = <value>`
+
+```
+» a = 10
+10
+» a ^ 6 
+12 
 ```
 
-```sh
-> (1 + 2) * 3
-9
-```
+#### Diagnostics:
+diagnostics hold every errors being thrown
 
-```sh
-> a = 1
-1
-> b = 2
-2
-> c = a + b
-3
 ```
+» a + 
+• 
 
-```sh
-> a = 7
-7
-> b = 3
-3
-> a ^ b
-4
+(line 3:1): ERROR: unexpected token <EndOfFileToken>, expected <IdentifierToken>.
+    
+
+(line 1:1): ERROR: variable 'a' doesn't exist.
+    a + 
+
+(line 3:1): ERROR: variable '' doesn't exist.
+    
+
+» 
+
 ```
