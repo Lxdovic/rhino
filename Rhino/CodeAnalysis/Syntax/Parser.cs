@@ -34,13 +34,6 @@ internal sealed class Parser {
         return _tokens[index];
     }
 
-    public SyntaxTree Parse() {
-        var expression = ParseExpression();
-        var endOfFileToken = MatchToken(SyntaxKind.EndOfFileToken);
-
-        return new SyntaxTree(_text, Diagnostics.ToImmutableArray(), expression, endOfFileToken);
-    }
-
     private ExpressionSyntax ParseExpression() {
         return ParseAssignmentExpression();
     }
@@ -138,5 +131,12 @@ internal sealed class Parser {
     private ExpressionSyntax ParseNameExpression() {
         var identifierToken = MatchToken(SyntaxKind.IdentifierToken);
         return new NameExpressionSyntax(identifierToken);
+    }
+
+    public CompilationUnitSyntax ParseCompilationUnit() {
+        var expression = ParseExpression();
+        var endOfFileToken = MatchToken(SyntaxKind.EndOfFileToken);
+
+        return new CompilationUnitSyntax(expression, endOfFileToken);
     }
 }

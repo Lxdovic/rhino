@@ -35,5 +35,7 @@ public enum SyntaxKind {
     UnaryExpression,
     ParenthesizedExpression,
     NameExpression,
-    AssignmentExpression
+    AssignmentExpression,
+
+    CompilationUnit
 }
