@@ -56,14 +56,12 @@ diagnostics hold every errors being thrown
 • 
 
 (line 3:1): ERROR: unexpected token <EndOfFileToken>, expected <IdentifierToken>.
-    
 
 (line 1:1): ERROR: variable 'a' doesn't exist.
     a + 
 
 (line 3:1): ERROR: variable '' doesn't exist.
     
-
 » 
 
 ```
