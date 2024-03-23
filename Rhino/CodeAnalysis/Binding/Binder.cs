@@ -15,13 +15,13 @@ internal sealed class Binder {
     public static BoundGlobalScope BindGlobalScope(BoundGlobalScope previous, CompilationUnitSyntax syntax) {
         var parentScope = CreateParentScopes(previous);
         var binder = new Binder(parentScope);
-        var expression = binder.BindExpression(syntax.Expression);
+        var statement = binder.BindStatement(syntax.Statement);
         var variables = binder._scope.GetDeclaredVariables();
         var diagnostics = binder.Diagnostics.ToImmutableArray();
 
         if (previous != null) diagnostics = diagnostics.InsertRange(0, previous.Diagnostics);
 
-        return new BoundGlobalScope(previous, diagnostics, variables, expression);
+        return new BoundGlobalScope(previous, diagnostics, variables, statement);
     }
 
     private static BoundScope CreateParentScopes(BoundGlobalScope previous) {
@@ -46,23 +46,32 @@ internal sealed class Binder {
         return parent;
     }
 
-    public BoundExpression BindExpression(ExpressionSyntax syntax) {
+    private BoundStatement BindStatement(StatementSyntax syntax) {
         switch (syntax.Kind) {
-            case SyntaxKind.LiteralExpression:
-                return BindLiteralExpression((LiteralExpressionSyntax)syntax);
-            case SyntaxKind.UnaryExpression:
-                return BindUnaryExpression((UnaryExpressionSyntax)syntax);
-            case SyntaxKind.BinaryExpression:
-                return BindBinaryExpression((BinaryExpressionSyntax)syntax);
-            case SyntaxKind.ParenthesizedExpression:
-                return BindParenthesizedExpression((ParenthesizedExpressionSyntax)syntax);
-            case SyntaxKind.NameExpression:
-                return BindNameExpression((NameExpressionSyntax)syntax);
-            case SyntaxKind.AssignmentExpression:
-                return BindAssignmentExpression((AssignmentExpressionSyntax)syntax);
+            case SyntaxKind.BlockStatement:
+                return BindBlockStatement((BlockStatementSyntax)syntax);
+            case SyntaxKind.ExpressionStatement:
+                return BindExpressionStatement((ExpressionStatementSyntax)syntax);
             default:
                 throw new Exception($"Unexpected syntax <{syntax.Kind}>");
         }
+    }
+
+    private BoundStatement BindExpressionStatement(ExpressionStatementSyntax syntax) {
+        var expression = BindExpression(syntax.Expression);
+
+        return new BoundExpressionStatement(expression);
+    }
+
+    private BoundStatement BindBlockStatement(BlockStatementSyntax syntax) {
+        var statements = ImmutableArray.CreateBuilder<BoundStatement>();
+
+        foreach (var statementSyntax in syntax.Statements) {
+            var statement = BindStatement(statementSyntax);
+            statements.Add(statement);
+        }
+
+        return new BoundBlockStatement(statements.ToImmutable());
     }
 
     private BoundExpression BindAssignmentExpression(AssignmentExpressionSyntax syntax) {
@@ -80,6 +89,25 @@ internal sealed class Binder {
         }
 
         return new BoundAssignmentExpression(variable, boundExpression);
+    }
+
+    public BoundExpression BindExpression(ExpressionSyntax syntax) {
+        switch (syntax.Kind) {
+            case SyntaxKind.LiteralExpression:
+                return BindLiteralExpression((LiteralExpressionSyntax)syntax);
+            case SyntaxKind.UnaryExpression:
+                return BindUnaryExpression((UnaryExpressionSyntax)syntax);
+            case SyntaxKind.BinaryExpression:
+                return BindBinaryExpression((BinaryExpressionSyntax)syntax);
+            case SyntaxKind.ParenthesizedExpression:
+                return BindParenthesizedExpression((ParenthesizedExpressionSyntax)syntax);
+            case SyntaxKind.NameExpression:
+                return BindNameExpression((NameExpressionSyntax)syntax);
+            case SyntaxKind.AssignmentExpression:
+                return BindAssignmentExpression((AssignmentExpressionSyntax)syntax);
+            default:
+                throw new Exception($"Unexpected syntax <{syntax.Kind}>");
+        }
     }
 
     private BoundExpression BindNameExpression(NameExpressionSyntax syntax) {

@@ -11,6 +11,8 @@ public enum SyntaxKind {
     SlashToken,
     OpenParenthesisToken,
     CloseParenthesisToken,
+    OpenBraceToken,
+    CloseBraceToken,
     IdentifierToken,
     BangToken,
     AmpersandAmpersandToken,
@@ -29,6 +31,9 @@ public enum SyntaxKind {
 
     FalseKeyword,
     TrueKeyword,
+
+    BlockStatement,
+    ExpressionStatement,
 
     LiteralExpression,
     BinaryExpression,

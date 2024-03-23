@@ -65,6 +65,8 @@ public static class SyntaxFacts {
             case SyntaxKind.BangEqualsToken: return "!=";
             case SyntaxKind.OpenParenthesisToken: return "(";
             case SyntaxKind.CloseParenthesisToken: return ")";
+            case SyntaxKind.OpenBraceToken: return "{";
+            case SyntaxKind.CloseBraceToken: return "}";
             case SyntaxKind.FalseKeyword: return "false";
             case SyntaxKind.TrueKeyword: return "true";
             case SyntaxKind.AmpersandToken: return "&";
