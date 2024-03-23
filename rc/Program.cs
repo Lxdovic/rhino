@@ -10,6 +10,7 @@ internal static class Program {
         var showTree = false;
         var variables = new Dictionary<VariableSymbol, object>();
         var textBuilder = new StringBuilder();
+        Compilation previous = null;
 
         while (true) {
             Console.ForegroundColor = ConsoleColor.Green;
@@ -34,6 +35,11 @@ internal static class Program {
                     Console.Clear();
                     continue;
                 }
+
+                if (input == "#reset") {
+                    previous = null;
+                    continue;
+                }
             }
 
             textBuilder.AppendLine(input);
@@ -43,7 +49,10 @@ internal static class Program {
 
             if (!isBlank && syntaxTree.Diagnostics.Any()) continue;
 
-            var compilation = new Compilation(syntaxTree);
+            var compilation = previous == null
+                ? new Compilation(syntaxTree)
+                : previous.ContinueWith(syntaxTree);
+
             var result = compilation.Evaluate(variables);
 
             if (showTree) {
@@ -56,6 +65,7 @@ internal static class Program {
                 Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.WriteLine(result.Value);
                 Console.ResetColor();
+                previous = compilation;
             }
 
             else {

@@ -60,4 +60,10 @@ internal sealed class DiagnosticBag : IEnumerable<Diagnostic> {
 
         Report(span, message);
     }
+
+    public void ReportCannotConvert(TextSpan expressionSpan, Type fromType, Type toType) {
+        var message = $"ERROR: cannot convert type <{fromType}> to <{toType}>.";
+
+        Report(expressionSpan, message);
+    }
 }
