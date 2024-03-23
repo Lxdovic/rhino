@@ -71,6 +71,7 @@ Meta commands allows for better developer experience
 
 - `#showTree` Shows syntax tree
 - `#cls` Clears the console
+- `#reset` Resets the current compilation
 
 ```
 » #showTree
@@ -92,5 +93,15 @@ Showing parse trees.
    │           └──NumberToken 2
    └──EndOfFileToken
 26
+```
+
+```
+» a = 10
+10
+» #reset
+» a
+
+(line 1:1): ERROR: variable 'a' doesn't exist.
+    a
 ```
 
