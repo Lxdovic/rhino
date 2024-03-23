@@ -31,9 +31,12 @@ public enum SyntaxKind {
 
     FalseKeyword,
     TrueKeyword,
+    LetKeyword,
+    VarKeyword,
 
     BlockStatement,
     ExpressionStatement,
+    VariableDeclaration,
 
     LiteralExpression,
     BinaryExpression,

@@ -27,8 +27,20 @@ internal sealed class Evaluator {
             case BoundNodeKind.ExpressionStatement:
                 EvaluateExpressionStatement((BoundExpressionStatement)node);
                 break;
+
+            case BoundNodeKind.VariableDeclaration:
+                EvaluateVariableDeclaration((BoundVariableDeclaration)node);
+                break;
+
             default: throw new Exception($"Unexpected node <{node.Kind}>");
         }
+    }
+
+    private void EvaluateVariableDeclaration(BoundVariableDeclaration node) {
+        var value = EvaluateExpression(node.Initializer);
+
+        _variables[node.Variable] = value;
+        _lastValue = value;
     }
 
     private void EvaluateExpressionStatement(BoundExpressionStatement node) {

@@ -4,7 +4,7 @@ using Rhino.CodeAnalysis.Syntax;
 namespace Rhino.CodeAnalysis.Binding;
 
 internal sealed class Binder {
-    private readonly BoundScope _scope;
+    private BoundScope _scope;
 
     public Binder(BoundScope parent) {
         _scope = new BoundScope(parent);
@@ -52,9 +52,22 @@ internal sealed class Binder {
                 return BindBlockStatement((BlockStatementSyntax)syntax);
             case SyntaxKind.ExpressionStatement:
                 return BindExpressionStatement((ExpressionStatementSyntax)syntax);
+            case SyntaxKind.VariableDeclaration:
+                return BindVariableDeclaration((VariableDeclarationSyntax)syntax);
             default:
                 throw new Exception($"Unexpected syntax <{syntax.Kind}>");
         }
+    }
+
+    private BoundStatement BindVariableDeclaration(VariableDeclarationSyntax syntax) {
+        var name = syntax.Identifier.Text;
+        var isReadOnly = syntax.Keyword.Kind == SyntaxKind.LetKeyword;
+        var initializer = BindExpression(syntax.Initializer);
+        var variable = new VariableSymbol(name, isReadOnly, initializer.Type);
+
+        if (!_scope.TryDeclare(variable)) Diagnostics.ReportVariableAlreadyDeclared(syntax.Identifier.Span, name);
+
+        return new BoundVariableDeclaration(variable, initializer);
     }
 
     private BoundStatement BindExpressionStatement(ExpressionStatementSyntax syntax) {
@@ -79,8 +92,15 @@ internal sealed class Binder {
         var name = syntax.IdentifierToken.Text;
 
         if (!_scope.TryLookup(name, out var variable)) {
-            variable = new VariableSymbol(name, boundExpression.Type);
-            _scope.TryDeclare(variable);
+            Diagnostics.ReportUndefinedName(syntax.IdentifierToken.Span, name);
+
+            return boundExpression;
+        }
+
+        if (variable.IsReadOnly) {
+            Diagnostics.ReportCannotAssign(syntax.EqualsToken.Span, name);
+
+            return boundExpression;
         }
 
         if (boundExpression.Type != variable.Type) {
