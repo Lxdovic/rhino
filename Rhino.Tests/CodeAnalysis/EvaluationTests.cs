@@ -26,7 +26,7 @@ public class EvaluationTests {
     [InlineData("false == false", true)]
     [InlineData("false != false", false)]
     [InlineData("false == true", false)]
-    [InlineData("(a = 10) * a", 100)]
+    [InlineData("{ var a = 0 (a = 10) * a }", 100)]
     [InlineData("5 | 4", 5 | 4)]
     [InlineData("5 & 4", 5 & 4)]
     [InlineData("5 ^ 4", 5 ^ 4)]
