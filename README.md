@@ -65,3 +65,32 @@ diagnostics hold every errors being thrown
 » 
 
 ```
+
+#### Meta commands:
+Meta commands allows for better developer experience
+
+- `#showTree` Shows syntax tree
+- `#cls` Clears the console
+
+```
+» #showTree
+Showing parse trees.
+» a = 10 + 32 / 2
+└──CompilationUnit
+   ├──AssignmentExpression
+   │  ├──IdentifierToken
+   │  ├──EqualsToken
+   │  └──BinaryExpression
+   │     ├──LiteralExpression
+   │     │  └──NumberToken 10
+   │     ├──PlusToken
+   │     └──BinaryExpression
+   │        ├──LiteralExpression
+   │        │  └──NumberToken 32
+   │        ├──SlashToken
+   │        └──LiteralExpression
+   │           └──NumberToken 2
+   └──EndOfFileToken
+26
+```
+
