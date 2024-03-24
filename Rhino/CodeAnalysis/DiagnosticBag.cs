@@ -73,9 +73,9 @@ internal sealed class DiagnosticBag : IEnumerable<Diagnostic> {
         Report(span, message);
     }
 
-    public void ReportCannotAssign(TextSpan equalsTokenSpan, string name) {
+    public void ReportCannotAssign(TextSpan span, string name) {
         var message = $"ERROR: cannot assign to variable '{name}' because it is read-only.";
 
-        Report(equalsTokenSpan, message);
+        Report(span, message);
     }
 }

@@ -10,15 +10,11 @@ public struct TextSpan {
     public int Length { get; }
     public int End => Start + Length;
 
-    public bool OverlapsWith(TextSpan span) {
-        return Start < span.End && End > span.Start;
-    }
-
-    public bool Contains(TextSpan span) {
-        return Start <= span.Start && End >= span.End;
-    }
-
     public static TextSpan FromBounds(int start, int end) {
         return new TextSpan(start, end - start);
+    }
+
+    public override string ToString() {
+        return $"{Start}..{End}";
     }
 }
