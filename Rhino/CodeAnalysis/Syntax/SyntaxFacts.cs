@@ -58,6 +58,10 @@ public static class SyntaxFacts {
                 return SyntaxKind.ElseKeyword;
             case "while":
                 return SyntaxKind.WhileKeyword;
+            case "for":
+                return SyntaxKind.ForKeyword;
+            case "to":
+                return SyntaxKind.ToKeyword;
             default:
                 return SyntaxKind.IdentifierToken;
         }
@@ -84,6 +88,8 @@ public static class SyntaxFacts {
             case SyntaxKind.LetKeyword: return "let";
             case SyntaxKind.VarKeyword: return "var";
             case SyntaxKind.WhileKeyword: return "while";
+            case SyntaxKind.ForKeyword: return "for";
+            case SyntaxKind.ToKeyword: return "to";
             case SyntaxKind.IfKeyword: return "if";
             case SyntaxKind.ElseKeyword: return "else";
             case SyntaxKind.AmpersandToken: return "&";

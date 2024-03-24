@@ -40,7 +40,21 @@ internal sealed class Evaluator {
                 EvaluateWhileStatement((BoundWhileStatement)node);
                 break;
 
+            case BoundNodeKind.ForStatement:
+                EvaluateForStatement((BoundForStatement)node);
+                break;
+
             default: throw new Exception($"Unexpected node <{node.Kind}>");
+        }
+    }
+
+    private void EvaluateForStatement(BoundForStatement node) {
+        var lowerBound = (int)EvaluateExpression(node.LowerBound);
+        var upperBound = (int)EvaluateExpression(node.UpperBound);
+
+        for (var i = lowerBound; i <= upperBound; i++) {
+            _variables[node.Variable] = i;
+            EvaluateStatement(node.Body);
         }
     }
 
