@@ -52,6 +52,10 @@ public static class SyntaxFacts {
                 return SyntaxKind.LetKeyword;
             case "var":
                 return SyntaxKind.VarKeyword;
+            case "if":
+                return SyntaxKind.IfKeyword;
+            case "else":
+                return SyntaxKind.ElseKeyword;
             default:
                 return SyntaxKind.IdentifierToken;
         }
@@ -77,6 +81,8 @@ public static class SyntaxFacts {
             case SyntaxKind.TrueKeyword: return "true";
             case SyntaxKind.LetKeyword: return "let";
             case SyntaxKind.VarKeyword: return "var";
+            case SyntaxKind.IfKeyword: return "if";
+            case SyntaxKind.ElseKeyword: return "else";
             case SyntaxKind.AmpersandToken: return "&";
             case SyntaxKind.PipeToken: return "|";
             case SyntaxKind.HatToken: return "^";

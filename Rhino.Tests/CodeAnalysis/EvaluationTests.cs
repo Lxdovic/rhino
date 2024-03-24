@@ -28,7 +28,6 @@ public class EvaluationTests {
     [InlineData("false == false", true)]
     [InlineData("false != false", false)]
     [InlineData("false == true", false)]
-    [InlineData("{ var a = 0 (a = 10) * a }", 100)]
     [InlineData("5 | 4", 5 | 4)]
     [InlineData("5 & 4", 5 & 4)]
     [InlineData("5 ^ 4", 5 ^ 4)]
@@ -42,6 +41,11 @@ public class EvaluationTests {
     [InlineData("true || false", true)]
     [InlineData("false || true", true)]
     [InlineData("false || false", false)]
+    [InlineData("{ var a = 0 (a = 10) * a }", 100)]
+    [InlineData("{ var a = 0 if a == 0 a = 10 a }", 10)]
+    [InlineData("{ var a = 0 if a == 4 a = 10 a }", 0)]
+    [InlineData("{ var a = 0 if a == 0 a = 10 else a = 5 a }", 10)]
+    [InlineData("{ var a = 0 if a == 4 a = 10 else a = 5 a }", 5)]
     public void EvaluatorComputesCorrectValues(string text, object expectedValue) {
         AssertValue(text, expectedValue);
     }

@@ -35,10 +35,14 @@ public enum SyntaxKind {
     TrueKeyword,
     LetKeyword,
     VarKeyword,
+    IfKeyword,
+    ElseKeyword,
 
     BlockStatement,
     ExpressionStatement,
     VariableDeclaration,
+    IfStatement,
+    ElseClause,
 
     LiteralExpression,
     BinaryExpression,
