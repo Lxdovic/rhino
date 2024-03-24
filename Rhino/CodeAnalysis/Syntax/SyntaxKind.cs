@@ -37,8 +37,10 @@ public enum SyntaxKind {
     VarKeyword,
     IfKeyword,
     ElseKeyword,
+    WhileKeyword,
 
     BlockStatement,
+    WhileStatement,
     ExpressionStatement,
     VariableDeclaration,
     IfStatement,

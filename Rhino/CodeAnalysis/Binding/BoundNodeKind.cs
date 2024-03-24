@@ -10,5 +10,6 @@ internal enum BoundNodeKind {
     BlockStatement,
     ExpressionStatement,
     VariableDeclaration,
-    IfStatement
+    IfStatement,
+    WhileStatement
 }
