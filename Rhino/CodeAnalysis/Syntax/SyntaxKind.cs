@@ -28,6 +28,8 @@ public enum SyntaxKind {
     TildeToken,
     GreaterThanOrEqualsToken,
     LessThanOrEqualsToken,
+    LessToken,
+    GreaterToken,
 
     FalseKeyword,
     TrueKeyword,

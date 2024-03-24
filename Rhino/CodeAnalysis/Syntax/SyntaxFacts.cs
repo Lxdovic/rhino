@@ -18,6 +18,8 @@ public static class SyntaxFacts {
             case SyntaxKind.BangEqualsToken:
             case SyntaxKind.GreaterThanOrEqualsToken:
             case SyntaxKind.LessThanOrEqualsToken:
+            case SyntaxKind.LessToken:
+            case SyntaxKind.GreaterToken:
                 return 3;
             case SyntaxKind.AmpersandAmpersandToken:
                 return 2;
@@ -83,6 +85,8 @@ public static class SyntaxFacts {
             case SyntaxKind.TildeToken: return "~";
             case SyntaxKind.LessThanOrEqualsToken: return "<=";
             case SyntaxKind.GreaterThanOrEqualsToken: return ">=";
+            case SyntaxKind.LessToken: return "<";
+            case SyntaxKind.GreaterToken: return ">";
             default: return null;
         }
     }

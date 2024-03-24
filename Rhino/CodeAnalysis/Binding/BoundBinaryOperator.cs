@@ -10,6 +10,10 @@ internal sealed class BoundBinaryOperator {
         new(SyntaxKind.SlashToken, BoundBinaryOperatorKind.Division, typeof(int)),
         new(SyntaxKind.EqualsEqualsToken, BoundBinaryOperatorKind.Equals, typeof(int), typeof(bool)),
         new(SyntaxKind.BangEqualsToken, BoundBinaryOperatorKind.NotEquals, typeof(int), typeof(bool)),
+        new(SyntaxKind.LessToken, BoundBinaryOperatorKind.LessThan, typeof(int), typeof(bool)),
+        new(SyntaxKind.GreaterToken, BoundBinaryOperatorKind.GreaterThan, typeof(int), typeof(bool)),
+        new(SyntaxKind.GreaterThanOrEqualsToken, BoundBinaryOperatorKind.GreaterEquals, typeof(int), typeof(bool)),
+        new(SyntaxKind.LessThanOrEqualsToken, BoundBinaryOperatorKind.LessEquals, typeof(int), typeof(bool)),
         new(SyntaxKind.AmpersandAmpersandToken, BoundBinaryOperatorKind.LogicalAnd, typeof(bool)),
         new(SyntaxKind.PipePipeToken, BoundBinaryOperatorKind.LogicalOr, typeof(bool)),
         new(SyntaxKind.EqualsEqualsToken, BoundBinaryOperatorKind.Equals, typeof(bool)),
@@ -18,17 +22,17 @@ internal sealed class BoundBinaryOperator {
         new(SyntaxKind.PipeToken, BoundBinaryOperatorKind.BitwiseOr, typeof(int)),
         new(SyntaxKind.HatToken, BoundBinaryOperatorKind.BitwiseXor, typeof(int)),
         new(SyntaxKind.LessThanLessThanToken, BoundBinaryOperatorKind.BitwiseLeftShift, typeof(int)),
-        new(SyntaxKind.GreaterThanGreaterThanToken, BoundBinaryOperatorKind.BitwiseRightShift, typeof(int)),
-        new(SyntaxKind.GreaterThanOrEqualsToken, BoundBinaryOperatorKind.GreaterEquals, typeof(int)),
-        new(SyntaxKind.LessThanOrEqualsToken, BoundBinaryOperatorKind.LessEquals, typeof(int))
+        new(SyntaxKind.GreaterThanGreaterThanToken, BoundBinaryOperatorKind.BitwiseRightShift, typeof(int))
     };
 
     private BoundBinaryOperator(SyntaxKind syntaxKind, BoundBinaryOperatorKind kind, Type type) :
-        this(syntaxKind, kind, type, type, type) { }
+        this(syntaxKind, kind, type, type, type) {
+    }
 
     private BoundBinaryOperator(SyntaxKind syntaxKind, BoundBinaryOperatorKind kind, Type operandType,
         Type resultType) :
-        this(syntaxKind, kind, operandType, operandType, resultType) { }
+        this(syntaxKind, kind, operandType, operandType, resultType) {
+    }
 
     private BoundBinaryOperator(SyntaxKind syntaxKind, BoundBinaryOperatorKind kind, Type leftType, Type rightType,
         Type type) {

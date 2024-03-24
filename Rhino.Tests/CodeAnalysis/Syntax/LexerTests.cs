@@ -103,6 +103,12 @@ public class LexerTests {
         if (t1Kind == SyntaxKind.PipeToken && t2Kind == SyntaxKind.PipeToken)
             return true;
 
+        if (t1Kind == SyntaxKind.LessToken)
+            return true;
+
+        if (t1Kind == SyntaxKind.GreaterToken)
+            return true;
+
 
         return false;
     }

@@ -17,6 +17,8 @@ public class EvaluationTests {
     [InlineData("1 != 2", true)]
     [InlineData("1 <= 2", true)]
     [InlineData("1 >= 2", false)]
+    [InlineData("1 < 2", true)]
+    [InlineData("1 > 2", false)]
     [InlineData("true", true)]
     [InlineData("false", false)]
     [InlineData("!true", false)]
