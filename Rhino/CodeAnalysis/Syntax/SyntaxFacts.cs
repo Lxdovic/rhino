@@ -83,6 +83,7 @@ public static class SyntaxFacts {
             case SyntaxKind.TrueKeyword: return "true";
             case SyntaxKind.LetKeyword: return "let";
             case SyntaxKind.VarKeyword: return "var";
+            case SyntaxKind.WhileKeyword: return "while";
             case SyntaxKind.IfKeyword: return "if";
             case SyntaxKind.ElseKeyword: return "else";
             case SyntaxKind.AmpersandToken: return "&";
