@@ -72,16 +72,6 @@ public class EvaluationTests {
     }
 
     [Fact]
-    public void EvaluatorNameExpressionReportsUndefined() {
-        var text = @"[x] * 10";
-
-        var diagnostics = @"
-            ERROR: variable 'x' doesn't exist.";
-
-        AssertDiagnostics(text, diagnostics);
-    }
-
-    [Fact]
     public void EvaluatorIfStatementReportsCannotConvert() {
         var text = @"
             {
@@ -141,6 +131,39 @@ public class EvaluationTests {
 
         var diagnostics = @"
             ERROR: cannot convert type <System.Boolean> to <System.Int32>.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Fact]
+    public void EvaluatorBlockStatementNoInfiniteLoop() {
+        var text = @"
+            {
+            [)][]";
+
+        var diagnostics = @"
+            ERROR: unexpected token <CloseParenthesisToken>, expected <IdentifierToken>.
+            ERROR: unexpected token <EndOfFileToken>, expected <CloseBraceToken>.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Fact]
+    public void EvaluatorNameExpressionReportsUndefined() {
+        var text = @"[x] * 10";
+
+        var diagnostics = @"
+            ERROR: variable 'x' doesn't exist.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Fact]
+    public void EvaluatorNameExpressionReportsNoErrorForInsertedToken() {
+        var text = @"[]";
+
+        var diagnostics = @"
+            ERROR: unexpected token <EndOfFileToken>, expected <IdentifierToken>.";
 
         AssertDiagnostics(text, diagnostics);
     }
