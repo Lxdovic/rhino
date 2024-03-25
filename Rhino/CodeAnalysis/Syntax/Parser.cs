@@ -217,9 +217,13 @@ internal sealed class Parser {
         var openBraceToken = MatchToken(SyntaxKind.OpenBraceToken);
 
         while (Current.Kind != SyntaxKind.EndOfFileToken && Current.Kind != SyntaxKind.CloseBraceToken) {
+            var startToken = Current;
             var statement = ParseStatement();
 
             statements.Add(statement);
+
+            // if the statement was not parsed correctly, we skip to the next token
+            if (Current == startToken) NextToken();
         }
 
         var closeBraceToken = MatchToken(SyntaxKind.CloseBraceToken);
