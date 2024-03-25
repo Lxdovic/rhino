@@ -139,6 +139,70 @@ public class EvaluationTests {
         AssertDiagnostics(text, diagnostics);
     }
 
+    [Fact]
+    public void EvaluatorIfStatementReportsCannotConvert() {
+        var text = @"
+            {
+                var x = 0
+                if [x]
+                    x = 10
+            }
+        ";
+
+        var diagnostics = @"
+            ERROR: cannot convert type <System.Int32> to <System.Boolean>.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Fact]
+    public void EvaluatorWhileStatementReportsCannotConvert() {
+        var text = @"
+            {
+                var x = 0
+                while [x]
+                    x = 10
+            }
+        ";
+
+        var diagnostics = @"
+            ERROR: cannot convert type <System.Int32> to <System.Boolean>.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Fact]
+    public void EvaluatorForStatementReportsCannotConvertLowerBound() {
+        var text = @"
+            {
+                var result = 0
+                for i = [false] to 10 
+                    result = result + i
+            }
+        ";
+
+        var diagnostics = @"
+            ERROR: cannot convert type <System.Boolean> to <System.Int32>.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Fact]
+    public void EvaluatorForStatementReportsCannotConvertUpperBound() {
+        var text = @"
+            {
+                var result = 0
+                for i = 1 to [true]
+                    result = result + i
+            }
+        ";
+
+        var diagnostics = @"
+            ERROR: cannot convert type <System.Boolean> to <System.Int32>.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
     private static void AssertValue(string text, object expectedValue) {
         var expression = SyntaxTree.Parse(text);
         var compilation = new Compilation(expression);
