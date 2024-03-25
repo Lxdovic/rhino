@@ -8,9 +8,6 @@ public static class SyntaxFacts {
                 return 5;
             case SyntaxKind.PlusToken:
             case SyntaxKind.MinusToken:
-            case SyntaxKind.AmpersandToken:
-            case SyntaxKind.PipeToken:
-            case SyntaxKind.HatToken:
             case SyntaxKind.LessThanLessThanToken:
             case SyntaxKind.GreaterThanGreaterThanToken:
                 return 4;
@@ -22,8 +19,11 @@ public static class SyntaxFacts {
             case SyntaxKind.GreaterToken:
                 return 3;
             case SyntaxKind.AmpersandAmpersandToken:
+            case SyntaxKind.AmpersandToken:
                 return 2;
             case SyntaxKind.PipePipeToken:
+            case SyntaxKind.PipeToken:
+            case SyntaxKind.HatToken:
                 return 1;
             default:
                 return 0;
