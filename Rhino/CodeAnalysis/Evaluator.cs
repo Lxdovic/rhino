@@ -99,26 +99,50 @@ internal sealed class Evaluator {
         var left = EvaluateExpression(b.Left);
         var right = EvaluateExpression(b.Right);
 
-        return b.Op.Kind switch {
-            BoundBinaryOperatorKind.Addition => (int)left + (int)right,
-            BoundBinaryOperatorKind.Subtraction => (int)left - (int)right,
-            BoundBinaryOperatorKind.Multiplication => (int)left * (int)right,
-            BoundBinaryOperatorKind.Division => (int)left / (int)right,
-            BoundBinaryOperatorKind.LogicalAnd => (bool)left && (bool)right,
-            BoundBinaryOperatorKind.LogicalOr => (bool)left || (bool)right,
-            BoundBinaryOperatorKind.Equals => Equals(left, right),
-            BoundBinaryOperatorKind.NotEquals => !Equals(left, right),
-            BoundBinaryOperatorKind.BitwiseAnd => (int)left & (int)right,
-            BoundBinaryOperatorKind.BitwiseOr => (int)left | (int)right,
-            BoundBinaryOperatorKind.BitwiseXor => (int)left ^ (int)right,
-            BoundBinaryOperatorKind.BitwiseLeftShift => (int)left << (int)right,
-            BoundBinaryOperatorKind.BitwiseRightShift => (int)left >> (int)right,
-            BoundBinaryOperatorKind.GreaterEquals => (int)left >= (int)right,
-            BoundBinaryOperatorKind.LessEquals => (int)left <= (int)right,
-            BoundBinaryOperatorKind.LessThan => (int)left < (int)right,
-            BoundBinaryOperatorKind.GreaterThan => (int)left > (int)right,
-            _ => throw new Exception($"Unexpected binary operator <{b.Op.Kind}>")
-        };
+        switch (b.Op.Kind) {
+            case BoundBinaryOperatorKind.Addition:
+                return (int)left + (int)right;
+            case BoundBinaryOperatorKind.Subtraction:
+                return (int)left - (int)right;
+            case BoundBinaryOperatorKind.Multiplication:
+                return (int)left * (int)right;
+            case BoundBinaryOperatorKind.Division:
+                return (int)left / (int)right;
+            case BoundBinaryOperatorKind.LogicalAnd:
+                return (bool)left && (bool)right;
+            case BoundBinaryOperatorKind.LogicalOr:
+                return (bool)left || (bool)right;
+            case BoundBinaryOperatorKind.Equals:
+                return Equals(left, right);
+            case BoundBinaryOperatorKind.NotEquals:
+                return !Equals(left, right);
+            case BoundBinaryOperatorKind.BitwiseAnd:
+                if (b.Type == typeof(int)) return (int)left & (int)right;
+
+                return (bool)left & (bool)right;
+            case BoundBinaryOperatorKind.BitwiseOr:
+                if (b.Type == typeof(int)) return (int)left | (int)right;
+
+                return (bool)left | (bool)right;
+            case BoundBinaryOperatorKind.BitwiseXor:
+                if (b.Type == typeof(int)) return (int)left ^ (int)right;
+
+                return (bool)left ^ (bool)right;
+            case BoundBinaryOperatorKind.BitwiseLeftShift:
+                return (int)left << (int)right;
+            case BoundBinaryOperatorKind.BitwiseRightShift:
+                return (int)left >> (int)right;
+            case BoundBinaryOperatorKind.GreaterEquals:
+                return (int)left >= (int)right;
+            case BoundBinaryOperatorKind.LessEquals:
+                return (int)left <= (int)right;
+            case BoundBinaryOperatorKind.LessThan:
+                return (int)left < (int)right;
+            case BoundBinaryOperatorKind.GreaterThan:
+                return (int)left > (int)right;
+            default:
+                throw new Exception($"Unexpected binary operator <{b.Op.Kind}>");
+        }
     }
 
     private object EvaluateUnaryExpression(BoundUnaryExpression u) {
