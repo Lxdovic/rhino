@@ -72,69 +72,11 @@ public class EvaluationTests {
     }
 
     [Fact]
-    public void EvaluatorNameReportsUndefined() {
+    public void EvaluatorNameExpressionReportsUndefined() {
         var text = @"[x] * 10";
 
         var diagnostics = @"
             ERROR: variable 'x' doesn't exist.";
-
-        AssertDiagnostics(text, diagnostics);
-    }
-
-    [Fact]
-    public void EvaluatorAssignmentReportsUndefined() {
-        var text = @"[x] * 10";
-
-        var diagnostics = @"
-            ERROR: variable 'x' doesn't exist.";
-
-        AssertDiagnostics(text, diagnostics);
-    }
-
-    [Fact]
-    public void EvaluatorAssignmentReportsCannotAssign() {
-        var text = @"
-            {
-                let x = 10
-                x [=] 10
-            }";
-
-        var diagnostics = @"
-            ERROR: cannot assign to variable 'x' because it is read-only.";
-
-        AssertDiagnostics(text, diagnostics);
-    }
-
-    [Fact]
-    public void EvaluatorAssignmentReportsCannotConvert() {
-        var text = @"
-            {
-                var x = 10
-                x = [true]
-            }";
-
-        var diagnostics = @"
-            ERROR: cannot convert type <System.Boolean> to <System.Int32>.";
-
-        AssertDiagnostics(text, diagnostics);
-    }
-
-    [Fact]
-    public void EvaluatorUnaryReportsUndefined() {
-        var text = @"[+]true";
-
-        var diagnostics = @"
-            Unary operator '+' is not defined for type <System.Boolean>";
-
-        AssertDiagnostics(text, diagnostics);
-    }
-
-    [Fact]
-    public void EvaluatorBinaryReportsUndefined() {
-        var text = @"10 [*] false";
-
-        var diagnostics = @"
-            Binary operator '*' is not defined for types <System.Int32> and <System.Boolean>";
 
         AssertDiagnostics(text, diagnostics);
     }
@@ -199,6 +141,64 @@ public class EvaluationTests {
 
         var diagnostics = @"
             ERROR: cannot convert type <System.Boolean> to <System.Int32>.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Fact]
+    public void EvaluatorAssignmentExpressionReportsUndefined() {
+        var text = @"[x] * 10";
+
+        var diagnostics = @"
+            ERROR: variable 'x' doesn't exist.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Fact]
+    public void EvaluatorAssignmentExpressionReportsCannotAssign() {
+        var text = @"
+            {
+                let x = 10
+                x [=] 10
+            }";
+
+        var diagnostics = @"
+            ERROR: cannot assign to variable 'x' because it is read-only.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Fact]
+    public void EvaluatorAssignmentExpressionReportsCannotConvert() {
+        var text = @"
+            {
+                var x = 10
+                x = [true]
+            }";
+
+        var diagnostics = @"
+            ERROR: cannot convert type <System.Boolean> to <System.Int32>.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Fact]
+    public void EvaluatorUnaryExpressionReportsUndefined() {
+        var text = @"[+]true";
+
+        var diagnostics = @"
+            Unary operator '+' is not defined for type <System.Boolean>";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Fact]
+    public void EvaluatorBinaryExpressionReportsUndefined() {
+        var text = @"10 [*] false";
+
+        var diagnostics = @"
+            Binary operator '*' is not defined for types <System.Int32> and <System.Boolean>";
 
         AssertDiagnostics(text, diagnostics);
     }
