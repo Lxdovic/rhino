@@ -39,10 +39,9 @@ public abstract class SyntaxNode {
         var isToConsole = writer == Console.Out;
         var marker = isLast ? "└──" : "├──";
 
-        Console.Write(indent);
-
         if (isToConsole) Console.ForegroundColor = ConsoleColor.DarkGray;
 
+        Console.Write(indent);
         Console.Write(marker);
 
         if (isToConsole) Console.ForegroundColor = node is SyntaxToken ? ConsoleColor.Blue : ConsoleColor.Cyan;

@@ -8,6 +8,7 @@ namespace Rhino;
 internal static class Program {
     private static void Main(string[] args) {
         var showTree = false;
+        var showProgram = false;
         var variables = new Dictionary<VariableSymbol, object>();
         var textBuilder = new StringBuilder();
         Compilation previous = null;
@@ -28,6 +29,12 @@ internal static class Program {
                 if (input == "#showTree") {
                     showTree = !showTree;
                     Console.WriteLine(showTree ? "Showing parse trees." : "Not showing parse trees.");
+                    continue;
+                }
+
+                if (input == "#showProgram") {
+                    showProgram = !showProgram;
+                    Console.WriteLine(showProgram ? "Showing bound trees." : "Not showing bound trees.");
                     continue;
                 }
 
@@ -58,6 +65,12 @@ internal static class Program {
             if (showTree) {
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 syntaxTree.Root.WriteTo(Console.Out);
+                Console.ResetColor();
+            }
+
+            if (showProgram) {
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                compilation.EmitTree(Console.Out);
                 Console.ResetColor();
             }
 
