@@ -60,3 +60,24 @@ building a compiler
 - `#cls` Clears the console
 - `#reset` Resets the current compilation
 
+## Examples:
+
+For loops
+```
+» var myVariable = 0
+0
+» for i = 0 to 100 {
+•   myVariable = myVariable + i
+• }
+5050
+```
+
+While loops
+```
+» var myVariable = 0
+0
+» while myVariable < 100 {
+•   myVariable = myVariable + 1
+• }
+100
+```
