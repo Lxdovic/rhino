@@ -4,15 +4,34 @@ My first attempt at building a compiler. With the help
 of [Immo Landwerth's tutorial series](https://www.youtube.com/playlist?list=PLRAdsfhKI4OWNOSfS7EUu5GRAVmze1t2y) on
 building a compiler
 
-## Building
+## Run Locally
 
-- Download and install `.NET Core 8`
-- Clone this repo and run the project
-  ```
+- Install .NET >= 8.0
+- Clone the project
+
+```bash
   git clone git@github.com:Lxdovic/rhino.git
+```
+
+- Go to the project directory
+
+```bash
+  cd rhino
+```
+- Run the project
+
+```bash
+  dotnet run --project ./rc/rc.csproj
+```
+
+## Running Tests
+
+To run tests, run the following commands
+
+```bash
   cd rhino/
-  dotnet run --project rc/rc.csproj
-  ```
+  dotnet test
+```
 
 ## Features
 
