@@ -4,20 +4,38 @@ My first attempt at building a compiler. With the help
 of [Immo Landwerth's tutorial series](https://www.youtube.com/playlist?list=PLRAdsfhKI4OWNOSfS7EUu5GRAVmze1t2y) on
 building a compiler
 
-## Building
+## Run Locally
 
-- Download and install `.NET Core 8`
-- Clone this repo and run the project
-  ```
+- Install .NET >= 8.0
+- Clone the project
+
+```bash
   git clone git@github.com:Lxdovic/rhino.git
+```
+
+- Go to the project directory
+
+```bash
+  cd rhino
+```
+- Run the project
+
+```bash
+  dotnet run --project ./rc/rc.csproj
+```
+
+## Running Tests
+
+To run tests, run the following commands
+
+```bash
   cd rhino/
-  dotnet run
-  ```
+  dotnet test
+```
 
 ## Features
 
-#### Opperators:
-Allows for arithmetic expressions
+### Operators:
 
 - `+` Addition
 - `-` Subtraction
@@ -27,81 +45,58 @@ Allows for arithmetic expressions
 - `&&` Logical AND
 - `||` Logical OR
 - `!` Logical NOT
-- `==` Equality
-- `!=` Inequality
-- `=` Assignment
 - `&` Bitwise AND
 - `|` Bitwise OR
 - `^` Bitwise XOR
+- `~` Bitwise NOT
 - `<<` Bitwise Left Shift
 - `>>` Bitwise Right Shift
+- `==` Equality
+- `!=` Inequality
+- `=` Assignment
 
-#### Assignments:
-Allows you to declare variables
+### Assignments:
 
-- `<identifier> = <value>`
+- `var <identifier> = <value>` creates a mutable variable
+- `let <identifier> = <value>` crates an immutable variable
 
-```
-» a = 10
-10
-» a ^ 6 
-12 
-```
+### Scopes
 
-#### Diagnostics:
-diagnostics hold every errors being thrown
+- `{ ... }`
 
-```
-» a + 
-• 
+### Conditions
 
-(line 3:1): ERROR: unexpected token <EndOfFileToken>, expected <IdentifierToken>.
+- `if <condition>`
 
-(line 1:1): ERROR: variable 'a' doesn't exist.
-    a + 
+### Loops
 
-(line 3:1): ERROR: variable '' doesn't exist.
-    
-» 
+- `for <identifier> = <lowerBound> to <upperBound>`
+- `while <condition>`
 
-```
-
-#### Meta commands:
-Meta commands allows for better developer experience
+### Meta commands:
 
 - `#showTree` Shows syntax tree
 - `#cls` Clears the console
 - `#reset` Resets the current compilation
 
+## Examples:
+
+For loops
 ```
-» #showTree
-Showing parse trees.
-» a = 10 + 32 / 2
-└──CompilationUnit
-   ├──AssignmentExpression
-   │  ├──IdentifierToken
-   │  ├──EqualsToken
-   │  └──BinaryExpression
-   │     ├──LiteralExpression
-   │     │  └──NumberToken 10
-   │     ├──PlusToken
-   │     └──BinaryExpression
-   │        ├──LiteralExpression
-   │        │  └──NumberToken 32
-   │        ├──SlashToken
-   │        └──LiteralExpression
-   │           └──NumberToken 2
-   └──EndOfFileToken
-26
+» var myVariable = 0
+0
+» for i = 0 to 100 {
+•   myVariable = myVariable + i
+• }
+5050
 ```
 
+While loops
 ```
-» a = 10
-10
-» #reset
-» a
-
-(line 1:1): ERROR: variable 'a' doesn't exist.
-    a
+» var myVariable = 0
+0
+» while myVariable < 100 {
+•   myVariable = myVariable + 1
+• }
+100
 ```
-
