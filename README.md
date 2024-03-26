@@ -11,13 +11,12 @@ building a compiler
   ```
   git clone git@github.com:Lxdovic/rhino.git
   cd rhino/
-  dotnet run
+  dotnet run --project rc/rc.csproj
   ```
 
 ## Features
 
-#### Opperators:
-Allows for arithmetic expressions
+### Operators:
 
 - `+` Addition
 - `-` Subtraction
@@ -27,81 +26,37 @@ Allows for arithmetic expressions
 - `&&` Logical AND
 - `||` Logical OR
 - `!` Logical NOT
-- `==` Equality
-- `!=` Inequality
-- `=` Assignment
 - `&` Bitwise AND
 - `|` Bitwise OR
 - `^` Bitwise XOR
+- `~` Bitwise NOT
 - `<<` Bitwise Left Shift
 - `>>` Bitwise Right Shift
+- `==` Equality
+- `!=` Inequality
+- `=` Assignment
 
-#### Assignments:
-Allows you to declare variables
+### Assignments:
 
-- `<identifier> = <value>`
+- `var <identifier> = <value>` creates a mutable variable
+- `let <identifier> = <value>` crates an immutable variable
 
-```
-» a = 10
-10
-» a ^ 6 
-12 
-```
+### Scopes
 
-#### Diagnostics:
-diagnostics hold every errors being thrown
+- `{ ... }`
 
-```
-» a + 
-• 
+### Conditions
 
-(line 3:1): ERROR: unexpected token <EndOfFileToken>, expected <IdentifierToken>.
+- `if <condition>`
 
-(line 1:1): ERROR: variable 'a' doesn't exist.
-    a + 
+### Loops
 
-(line 3:1): ERROR: variable '' doesn't exist.
-    
-» 
+- `for <identifier> = <lowerBound> to <upperBound>`
+- `while <condition>`
 
-```
-
-#### Meta commands:
-Meta commands allows for better developer experience
+### Meta commands:
 
 - `#showTree` Shows syntax tree
 - `#cls` Clears the console
 - `#reset` Resets the current compilation
-
-```
-» #showTree
-Showing parse trees.
-» a = 10 + 32 / 2
-└──CompilationUnit
-   ├──AssignmentExpression
-   │  ├──IdentifierToken
-   │  ├──EqualsToken
-   │  └──BinaryExpression
-   │     ├──LiteralExpression
-   │     │  └──NumberToken 10
-   │     ├──PlusToken
-   │     └──BinaryExpression
-   │        ├──LiteralExpression
-   │        │  └──NumberToken 32
-   │        ├──SlashToken
-   │        └──LiteralExpression
-   │           └──NumberToken 2
-   └──EndOfFileToken
-26
-```
-
-```
-» a = 10
-10
-» #reset
-» a
-
-(line 1:1): ERROR: variable 'a' doesn't exist.
-    a
-```
 
