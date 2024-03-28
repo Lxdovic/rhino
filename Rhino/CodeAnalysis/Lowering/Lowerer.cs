@@ -93,10 +93,12 @@ internal sealed class Lowerer : BoundTreeRewriter {
     protected override BoundStatement RewriteForStatement(BoundForStatement node) {
         var variableDeclaration = new BoundVariableDeclaration(node.Variable, node.LowerBound);
         var variableExpression = new BoundVariableExpression(node.Variable);
+        var upperBoundSymbol = new VariableSymbol("upperBound", true, typeof(int));
+        var upperBoundDeclaration = new BoundVariableDeclaration(upperBoundSymbol, node.UpperBound);
         var condition = new BoundBinaryExpression(
             variableExpression,
             BoundBinaryOperator.Bind(SyntaxKind.LessThanOrEqualsToken, typeof(int), typeof(int)),
-            node.UpperBound
+            new BoundVariableExpression(upperBoundSymbol)
         );
 
         var increment = new BoundExpressionStatement(
@@ -112,7 +114,7 @@ internal sealed class Lowerer : BoundTreeRewriter {
         var whileBlock = new BoundBlockStatement(ImmutableArray.Create(node.Body, increment));
         var whileStatement = new BoundWhileStatement(condition, whileBlock);
         var result =
-            new BoundBlockStatement(ImmutableArray.Create<BoundStatement>(variableDeclaration, whileStatement));
+            new BoundBlockStatement(ImmutableArray.Create<BoundStatement>(variableDeclaration, upperBoundDeclaration, whileStatement));
 
         return RewriteStatement(result);
     }
