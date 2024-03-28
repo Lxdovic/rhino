@@ -47,7 +47,7 @@ internal sealed class Lowerer : BoundTreeRewriter {
             var endLabel = GenerateLabel();
 
             var endLabelStatement = new BoundLabelStatement(endLabel);
-            var gotoFalse = new BoundConditionalGotoStatement(endLabel, node.Condition, true);
+            var gotoFalse = new BoundConditionalGotoStatement(endLabel, node.Condition, false);
 
             var result =
                 new BoundBlockStatement(ImmutableArray.Create(gotoFalse, node.ThenStatement, endLabelStatement));
@@ -62,7 +62,7 @@ internal sealed class Lowerer : BoundTreeRewriter {
             var gotoEndStatement = new BoundGotoStatement(endLabel);
             var elseLabelStatement = new BoundLabelStatement(elseLabel);
             var endLabelStatement = new BoundLabelStatement(endLabel);
-            var gotoFalse = new BoundConditionalGotoStatement(elseLabel, node.Condition, true);
+            var gotoFalse = new BoundConditionalGotoStatement(elseLabel, node.Condition, false);
 
             var result =
                 new BoundBlockStatement(ImmutableArray.Create(gotoFalse, node.ThenStatement, gotoEndStatement,

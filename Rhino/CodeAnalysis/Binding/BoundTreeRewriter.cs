@@ -32,7 +32,7 @@ internal abstract class BoundTreeRewriter {
         var condition = RewriteExpression(node.Condition);
         if (condition == node.Condition) return node;
 
-        return new BoundConditionalGotoStatement(node.Label, condition, node.JumpIfFalse);
+        return new BoundConditionalGotoStatement(node.Label, condition, node.JumpIfTrue);
     }
 
     private BoundStatement RewriteGotoStatement(BoundGotoStatement node) {
