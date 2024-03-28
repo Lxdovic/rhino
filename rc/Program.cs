@@ -60,8 +60,6 @@ internal static class Program {
                 ? new Compilation(syntaxTree)
                 : previous.ContinueWith(syntaxTree);
 
-            var result = compilation.Evaluate(variables);
-
             if (showTree) {
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 syntaxTree.Root.WriteTo(Console.Out);
@@ -73,6 +71,8 @@ internal static class Program {
                 compilation.EmitTree(Console.Out);
                 Console.ResetColor();
             }
+
+            var result = compilation.Evaluate(variables);
 
             if (!result.Diagnostics.Any()) {
                 Console.ForegroundColor = ConsoleColor.Magenta;
