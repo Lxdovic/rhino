@@ -26,7 +26,7 @@ building a compiler
 
 ## Running Tests
 
-To run tests, run the following commands
+To run tests, use the following commands
 
 ```bash
   cd rhino/
