@@ -56,10 +56,15 @@ internal sealed class RhinoRepl : Repl {
 
         var syntaxTree = SyntaxTree.Parse(text);
 
-        if (syntaxTree.Diagnostics.Any())
-            return false;
+        if (GetLastToken(syntaxTree.Root.Statement).IsMissing) return false;
 
         return true;
+    }
+
+    private static SyntaxToken GetLastToken(SyntaxNode node) {
+        if (node is SyntaxToken token) return token;
+
+        return GetLastToken(node.GetChildren().Last());
     }
 
     protected override void EvaluateSubmission(string text) {
