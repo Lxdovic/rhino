@@ -75,7 +75,8 @@ To run tests, use the following commands
 
 ### Meta commands:
 
-- `#showTree` Shows syntax tree
+- `#showTree` Shows parse tree
+- `#showProgram` Shows bound tree
 - `#cls` Clears the console
 - `#reset` Resets the current compilation
 
