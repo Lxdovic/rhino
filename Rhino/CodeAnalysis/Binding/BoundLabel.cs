@@ -1,7 +1,7 @@
-namespace Rhino.CodeAnalysis;
+namespace Rhino.CodeAnalysis.Binding;
 
-public sealed class LabelSymbol {
-    public LabelSymbol(string name) {
+public sealed class BoundLabel {
+    public BoundLabel(string name) {
         Name = name;
     }
 

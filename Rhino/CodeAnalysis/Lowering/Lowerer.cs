@@ -37,9 +37,9 @@ internal sealed class Lowerer : BoundTreeRewriter {
     }
 
 
-    private LabelSymbol GenerateLabel() {
+    private BoundLabel GenerateLabel() {
         var name = $"label{++_labelCount}";
-        return new LabelSymbol(name);
+        return new BoundLabel(name);
     }
 
     protected override BoundStatement RewriteIfStatement(BoundIfStatement node) {
