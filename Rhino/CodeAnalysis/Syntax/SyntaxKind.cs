@@ -30,6 +30,7 @@ public enum SyntaxKind {
     LessThanOrEqualsToken,
     LessToken,
     GreaterToken,
+    StringToken,
 
     FalseKeyword,
     TrueKeyword,

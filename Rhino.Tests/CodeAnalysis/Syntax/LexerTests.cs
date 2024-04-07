@@ -1,8 +1,24 @@
 using Rhino.CodeAnalysis.Syntax;
+using Rhino.CodeAnalysis.Text;
 
 namespace Rhino.Tests.CodeAnalysis.Syntax;
 
 public class LexerTests {
+    [Fact]
+    public void LexerLexesUnterminatedString() {
+        var text = "\"text";
+        var tokens = SyntaxTree.ParseTokens(text, out var diagnostics);
+        var token = Assert.Single(tokens);
+
+        Assert.Equal(SyntaxKind.StringToken, token.Kind);
+        Assert.Equal(text, token.Text);
+
+        var diagnostic = Assert.Single(diagnostics);
+
+        Assert.Equal(new TextSpan(0, 1), diagnostic.Span);
+        Assert.Equal("ERROR: unterminated string literal.", diagnostic.Message);
+    }
+
     [Fact]
     public void LexerTestsAllTokens() {
         var tokenKinds = Enum.GetValues(typeof(SyntaxKind))
@@ -79,6 +95,9 @@ public class LexerTests {
         if (t1Kind == SyntaxKind.NumberToken && t2Kind == SyntaxKind.NumberToken)
             return true;
 
+        if (t1Kind == SyntaxKind.StringToken && t2Kind == SyntaxKind.StringToken)
+            return true;
+
         if (t1Kind == SyntaxKind.BangToken && t2Kind == SyntaxKind.EqualsToken)
             return true;
 
@@ -103,12 +122,17 @@ public class LexerTests {
         if (t1Kind == SyntaxKind.PipeToken && t2Kind == SyntaxKind.PipeToken)
             return true;
 
-        if (t1Kind == SyntaxKind.LessToken)
+        if (t1Kind == SyntaxKind.LessToken && t2Kind == SyntaxKind.EqualsToken)
+            return true;
+
+        if (t1Kind == SyntaxKind.LessToken && t2Kind == SyntaxKind.EqualsEqualsToken)
             return true;
 
         if (t1Kind == SyntaxKind.GreaterToken)
             return true;
 
+        if (t1Kind == SyntaxKind.LessToken)
+            return true;
 
         return false;
     }
@@ -139,7 +163,9 @@ public class LexerTests {
             (SyntaxKind.NumberToken, "1"),
             (SyntaxKind.NumberToken, "123"),
             (SyntaxKind.IdentifierToken, "a"),
-            (SyntaxKind.IdentifierToken, "abc")
+            (SyntaxKind.IdentifierToken, "abc"),
+            (SyntaxKind.StringToken, "\"Test\""),
+            (SyntaxKind.StringToken, "\"Te\"\"st\"")
         };
 
         return fixedTokens.Concat(dynamicTokens);

@@ -1,3 +1,4 @@
+using System.Text;
 using Rhino.CodeAnalysis.Text;
 
 namespace Rhino.CodeAnalysis.Syntax;
@@ -176,6 +177,9 @@ internal sealed class Lexer {
                 }
 
                 break;
+            case '\"':
+                ReadString();
+                break;
             case '0':
             case '1':
             case '2':
@@ -219,6 +223,43 @@ internal sealed class Lexer {
         if (text == null) text = _text.ToString(_start, length);
 
         return new SyntaxToken(_kind, _start, text, _value);
+    }
+
+    private void ReadString() {
+        _position++;
+
+        var sb = new StringBuilder();
+        var isDone = false;
+
+        while (!isDone)
+            switch (Current) {
+                case '\0':
+                case '\r':
+                case '\n':
+                    var span = new TextSpan(_start, 1);
+                    Diagnostics.ReportUnterminatedString(span);
+                    isDone = true;
+                    break;
+                case '"':
+                    if (LookAhead == '"') {
+                        sb.Append(Current);
+                        _position += 2;
+                    }
+
+                    else {
+                        _position++;
+                        isDone = true;
+                    }
+
+                    break;
+                default:
+                    sb.Append(Current);
+                    _position++;
+                    break;
+            }
+
+        _kind = SyntaxKind.StringToken;
+        _value = sb.ToString();
     }
 
     private void ReadIdentifierOrKeyword() {

@@ -78,4 +78,10 @@ internal sealed class DiagnosticBag : IEnumerable<Diagnostic> {
 
         Report(span, message);
     }
+
+    public void ReportUnterminatedString(TextSpan span) {
+        var message = "ERROR: unterminated string literal.";
+
+        Report(span, message);
+    }
 }

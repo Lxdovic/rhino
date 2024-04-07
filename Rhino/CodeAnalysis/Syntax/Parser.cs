@@ -100,6 +100,10 @@ internal sealed class Parser {
                 return ParseNumberLiteral();
             }
 
+            case SyntaxKind.StringToken: {
+                return ParseStringLiteral();
+            }
+
             case SyntaxKind.IdentifierToken:
 
             default: {
@@ -126,6 +130,12 @@ internal sealed class Parser {
         var keywordToken = isTrue ? MatchToken(SyntaxKind.TrueKeyword) : MatchToken(SyntaxKind.FalseKeyword);
 
         return new LiteralExpressionSyntax(keywordToken, isTrue);
+    }
+
+    private ExpressionSyntax ParseStringLiteral() {
+        var stringToken = MatchToken(SyntaxKind.StringToken);
+
+        return new LiteralExpressionSyntax(stringToken);
     }
 
     private ExpressionSyntax ParseNameExpression() {
