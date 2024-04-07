@@ -8,6 +8,7 @@ internal enum BoundNodeKind {
     AssignmentExpression,
     ErrorExpression,
     CallExpression,
+    ConversionExpression,
 
     BlockStatement,
     ExpressionStatement,

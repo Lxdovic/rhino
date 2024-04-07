@@ -4,10 +4,10 @@ using Rhino.CodeAnalysis.Symbols;
 namespace Rhino.CodeAnalysis;
 
 internal sealed class Evaluator {
+    private readonly Random _random = new();
     private readonly BoundBlockStatement _root;
     private readonly Dictionary<VariableSymbol, object> _variables;
     private object _lastValue;
-    private readonly Random _random = new();
 
     public Evaluator(BoundBlockStatement root, Dictionary<VariableSymbol, object> variables) {
         _root = root;
@@ -86,8 +86,19 @@ internal sealed class Evaluator {
             BoundNodeKind.UnaryExpression => EvaluateUnaryExpression((BoundUnaryExpression)node),
             BoundNodeKind.BinaryExpression => EvaluateBinaryExpression((BoundBinaryExpression)node),
             BoundNodeKind.CallExpression => EvaluateCallExpression((BoundCallExpression)node),
+            BoundNodeKind.ConversionExpression => EvaluateConversionExpression((BoundConversionExpression)node),
             _ => throw new Exception($"Unexpected node <{node.Kind}>")
         };
+    }
+
+    private object EvaluateConversionExpression(BoundConversionExpression node) {
+        var value = EvaluateExpression(node.Expression);
+
+        if (node.Type == TypeSymbol.Bool) return Convert.ToBoolean(value);
+        if (node.Type == TypeSymbol.Int) return Convert.ToInt32(value);
+        if (node.Type == TypeSymbol.String) return Convert.ToString(value);
+
+        throw new Exception($"Unexpected type <{node.Type}>");
     }
 
     private object EvaluateCallExpression(BoundCallExpression node) {
