@@ -7,6 +7,7 @@ internal sealed class Evaluator {
     private readonly BoundBlockStatement _root;
     private readonly Dictionary<VariableSymbol, object> _variables;
     private object _lastValue;
+    private readonly Random _random = new();
 
     public Evaluator(BoundBlockStatement root, Dictionary<VariableSymbol, object> variables) {
         _root = root;
@@ -97,6 +98,13 @@ internal sealed class Evaluator {
             Console.WriteLine(message);
 
             return null;
+        }
+
+        if (node.Function == BuiltinFunctions.Random) {
+            var min = (int)EvaluateExpression(node.Arguments[0]);
+            var max = (int)EvaluateExpression(node.Arguments[1]);
+
+            return _random.Next(min, max);
         }
 
         throw new Exception($"Unexpected function <{node.Function}>");
