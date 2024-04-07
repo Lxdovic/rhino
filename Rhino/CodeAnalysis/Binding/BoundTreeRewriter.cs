@@ -113,6 +113,8 @@ internal abstract class BoundTreeRewriter {
 
     public virtual BoundExpression RewriteExpression(BoundExpression node) {
         switch (node.Kind) {
+            case BoundNodeKind.ErrorExpression:
+                return RewriteErrorExpression((BoundErrorExpression)node);
             case BoundNodeKind.AssignmentExpression:
                 return RewriteAssignmentExpression((BoundAssignmentExpression)node);
             case BoundNodeKind.UnaryExpression:
@@ -126,6 +128,10 @@ internal abstract class BoundTreeRewriter {
             default:
                 throw new Exception($"Unexpected node: {node.Kind}");
         }
+    }
+
+    private BoundExpression RewriteErrorExpression(BoundErrorExpression node) {
+        return node;
     }
 
     protected virtual BoundExpression RewriteBinaryExpression(BoundBinaryExpression node) {

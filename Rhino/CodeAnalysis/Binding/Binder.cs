@@ -73,12 +73,7 @@ internal sealed class Binder {
 
         _scope = new BoundScope(_scope);
 
-        var name = syntax.Identifier.Text;
-        var variable = new VariableSymbol(name, true, TypeSymbol.Int);
-
-        // should never happen because we just declared a new scope and it has no variables
-        if (!_scope.TryDeclare(variable)) Diagnostics.ReportVariableAlreadyDeclared(syntax.Identifier.Span, name);
-
+        var variable = BindVariable(syntax.Identifier, true, TypeSymbol.Int);
         var body = BindStatement(syntax.Body);
 
         _scope = _scope.Parent;
@@ -102,12 +97,9 @@ internal sealed class Binder {
     }
 
     private BoundStatement BindVariableDeclaration(VariableDeclarationSyntax syntax) {
-        var name = syntax.Identifier.Text;
-        var isReadOnly = syntax.Keyword.Kind == SyntaxKind.LetKeyword;
         var initializer = BindExpression(syntax.Initializer);
-        var variable = new VariableSymbol(name, isReadOnly, initializer.Type);
-
-        if (!_scope.TryDeclare(variable)) Diagnostics.ReportVariableAlreadyDeclared(syntax.Identifier.Span, name);
+        var isReadOnly = syntax.Keyword.Kind == SyntaxKind.LetKeyword;
+        var variable = BindVariable(syntax.Identifier, isReadOnly, initializer.Type);
 
         return new BoundVariableDeclaration(variable, initializer);
     }
@@ -160,7 +152,9 @@ internal sealed class Binder {
     public BoundExpression BindExpression(ExpressionSyntax syntax, TypeSymbol targetType) {
         var result = BindExpression(syntax);
 
-        if (result.Type != targetType) Diagnostics.ReportCannotConvert(syntax.Span, result.Type, targetType);
+        if (targetType != TypeSymbol.Error &&
+            result.Type != TypeSymbol.Error &&
+            result.Type != targetType) Diagnostics.ReportCannotConvert(syntax.Span, result.Type, targetType);
 
         return result;
     }
@@ -243,5 +237,15 @@ internal sealed class Binder {
         var value = syntax.Value ?? 0;
 
         return new BoundLiteralExpression(value);
+    }
+
+    private VariableSymbol BindVariable(SyntaxToken identifier, bool isReadOnly, TypeSymbol type) {
+        var name = identifier.Text ?? "?";
+        var declare = !identifier.IsMissing;
+        var variable = new VariableSymbol(name, isReadOnly, type);
+
+        // should never happen because we just declared a new scope and it has no variables
+        if (declare && !_scope.TryDeclare(variable)) Diagnostics.ReportVariableAlreadyDeclared(identifier.Span, name);
+        return variable;
     }
 }
