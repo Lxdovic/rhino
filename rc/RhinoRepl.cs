@@ -58,6 +58,10 @@ internal sealed class RhinoRepl : Repl {
         if (string.IsNullOrEmpty(text))
             return true;
 
+        // return true if the last two lines are blank
+        var lastTwoLinesAreBlank = text.Split(Environment.NewLine).Reverse().Take(2).All(string.IsNullOrWhiteSpace);
+        if (lastTwoLinesAreBlank) return true;
+
         var syntaxTree = SyntaxTree.Parse(text);
 
         if (syntaxTree.Root.Statement.GetLastToken().IsMissing) return false;
