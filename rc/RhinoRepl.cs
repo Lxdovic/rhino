@@ -89,10 +89,12 @@ internal sealed class RhinoRepl : Repl {
         var result = compilation.Evaluate(_variables);
 
         if (!result.Diagnostics.Any()) {
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine(result.Value);
-            Console.ResetColor();
-            _previous = compilation;
+            if (result.Value != null) {
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine(result.Value);
+                Console.ResetColor();
+                _previous = compilation;
+            }
         }
         else {
             foreach (var diagnostic in result.Diagnostics) {

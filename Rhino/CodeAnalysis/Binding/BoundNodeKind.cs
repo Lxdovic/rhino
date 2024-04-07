@@ -7,6 +7,7 @@ internal enum BoundNodeKind {
     VariableExpression,
     AssignmentExpression,
     ErrorExpression,
+    CallExpression,
 
     BlockStatement,
     ExpressionStatement,

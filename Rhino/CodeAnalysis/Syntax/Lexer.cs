@@ -181,6 +181,10 @@ internal sealed class Lexer {
             case '\"':
                 ReadString();
                 break;
+            case ',':
+                _position++;
+                _kind = SyntaxKind.CommaToken;
+                break;
             case '0':
             case '1':
             case '2':

@@ -102,6 +102,7 @@ public static class SyntaxFacts {
             case SyntaxKind.GreaterThanOrEqualsToken: return ">=";
             case SyntaxKind.LessToken: return "<";
             case SyntaxKind.GreaterToken: return ">";
+            case SyntaxKind.CommaToken: return ",";
             default: return null;
         }
     }

@@ -1,6 +1,6 @@
 namespace Rhino.CodeAnalysis.Symbols;
 
-public sealed class VariableSymbol : Symbol {
+public class VariableSymbol : Symbol {
     public VariableSymbol(string name, bool isReadOnly, TypeSymbol type) : base(name) {
         IsReadOnly = isReadOnly;
         Type = type;

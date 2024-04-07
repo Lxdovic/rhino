@@ -31,6 +31,7 @@ public enum SyntaxKind {
     LessToken,
     GreaterToken,
     StringToken,
+    CommaToken,
 
     FalseKeyword,
     TrueKeyword,
@@ -56,6 +57,7 @@ public enum SyntaxKind {
     ParenthesizedExpression,
     NameExpression,
     AssignmentExpression,
+    CallExpression,
 
     CompilationUnit
 }

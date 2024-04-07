@@ -86,4 +86,29 @@ internal sealed class DiagnosticBag : IEnumerable<Diagnostic> {
 
         Report(span, message);
     }
+
+    public void ReportWrongArgumentCount(TextSpan span, string name, int expectedCount, int actualCount) {
+        var message = $"ERROR: function '{name}' requires {expectedCount} arguments, but was given {actualCount}.";
+
+        Report(span, message);
+    }
+
+    public void ReportUndefinedFunction(TextSpan span, string? identifierText) {
+        var message = $"ERROR: function '{identifierText}' doesn't exist.";
+
+        Report(span, message);
+    }
+
+    public void ReportWrongArgumentType(TextSpan span, string name, TypeSymbol expectedType, TypeSymbol actualType) {
+        var message =
+            $"ERROR: parameter '{name}' requires a value of type <{expectedType}>, but was given a value of type <{actualType}>.";
+
+        Report(span, message);
+    }
+
+    public void ReportExpressionMustHaveValue(TextSpan span) {
+        var message = "ERROR: expression must have a value.";
+
+        Report(span, message);
+    }
 }

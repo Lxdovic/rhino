@@ -105,7 +105,7 @@ internal sealed class Binder {
     }
 
     private BoundStatement BindExpressionStatement(ExpressionStatementSyntax syntax) {
-        var expression = BindExpression(syntax.Expression);
+        var expression = BindExpression(syntax.Expression, true);
 
         return new BoundExpressionStatement(expression);
     }
@@ -159,7 +159,18 @@ internal sealed class Binder {
         return result;
     }
 
-    public BoundExpression BindExpression(ExpressionSyntax syntax) {
+    public BoundExpression BindExpression(ExpressionSyntax syntax, bool canBeVoid = false) {
+        var result = BindExpressionInternal(syntax);
+
+        if (!canBeVoid && result.Type == TypeSymbol.Void) {
+            Diagnostics.ReportExpressionMustHaveValue(syntax.Span);
+            return new BoundErrorExpression();
+        }
+
+        return result;
+    }
+
+    public BoundExpression BindExpressionInternal(ExpressionSyntax syntax) {
         switch (syntax.Kind) {
             case SyntaxKind.LiteralExpression:
                 return BindLiteralExpression((LiteralExpressionSyntax)syntax);
@@ -173,9 +184,46 @@ internal sealed class Binder {
                 return BindNameExpression((NameExpressionSyntax)syntax);
             case SyntaxKind.AssignmentExpression:
                 return BindAssignmentExpression((AssignmentExpressionSyntax)syntax);
+            case SyntaxKind.CallExpression:
+                return BindCallExpression((CallExpressionSyntax)syntax);
             default:
                 throw new Exception($"Unexpected syntax <{syntax.Kind}>");
         }
+    }
+
+    private BoundExpression BindCallExpression(CallExpressionSyntax syntax) {
+        var boundArguments = ImmutableArray.CreateBuilder<BoundExpression>();
+
+        foreach (var argumentSyntax in syntax.Arguments) {
+            var boundArgument = BindExpression(argumentSyntax);
+            boundArguments.Add(boundArgument);
+        }
+
+        var functions = BuiltinFunctions.GetAll();
+        var function = functions.SingleOrDefault(f => f.Name == syntax.Identifier.Text);
+
+        if (function == null) {
+            Diagnostics.ReportUndefinedFunction(syntax.Identifier.Span, syntax.Identifier.Text);
+            return new BoundErrorExpression();
+        }
+
+        if (syntax.Arguments.Count != function.Parameters.Length) {
+            Diagnostics.ReportWrongArgumentCount(syntax.Span, function.Name, function.Parameters.Length,
+                syntax.Arguments.Count);
+            return new BoundErrorExpression();
+        }
+
+        for (var i = 0; i < syntax.Arguments.Count; i++) {
+            var argument = boundArguments[i];
+            var parameter = function.Parameters[i];
+
+            if (argument.Type != parameter.Type) {
+                Diagnostics.ReportWrongArgumentType(syntax.Span, parameter.Name, parameter.Type, argument.Type);
+                return new BoundErrorExpression();
+            }
+        }
+
+        return new BoundCallExpression(function, boundArguments.ToImmutable());
     }
 
     private BoundExpression BindNameExpression(NameExpressionSyntax syntax) {
