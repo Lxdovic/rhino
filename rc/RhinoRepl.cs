@@ -15,11 +15,15 @@ internal sealed class RhinoRepl : Repl {
         foreach (var token in tokens) {
             var isKeyword = token.Kind.ToString().EndsWith("Keyword");
             var isNumber = token.Kind == SyntaxKind.NumberToken;
+            var isIdentifier = token.Kind == SyntaxKind.IdentifierToken;
 
             if (isKeyword)
                 Console.ForegroundColor = ConsoleColor.Blue;
-            else if (!isNumber)
-                Console.ForegroundColor = ConsoleColor.DarkGray;
+            else if (isNumber)
+                Console.ForegroundColor = ConsoleColor.Cyan;
+            else if (isIdentifier)
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+            else Console.ForegroundColor = ConsoleColor.DarkGray;
 
             Console.Write(token.Text);
 
