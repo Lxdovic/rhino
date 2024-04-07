@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using Rhino.CodeAnalysis.Symbols;
 using Rhino.CodeAnalysis.Syntax;
 
 namespace Rhino.CodeAnalysis.Binding;

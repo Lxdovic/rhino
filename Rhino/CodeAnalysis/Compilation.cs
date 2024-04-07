@@ -1,6 +1,7 @@
 using System.Collections.Immutable;
 using Rhino.CodeAnalysis.Binding;
 using Rhino.CodeAnalysis.Lowering;
+using Rhino.CodeAnalysis.Symbols;
 using Rhino.CodeAnalysis.Syntax;
 
 namespace Rhino.CodeAnalysis;

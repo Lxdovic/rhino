@@ -1,3 +1,5 @@
+using Rhino.CodeAnalysis.Symbols;
+
 namespace Rhino.CodeAnalysis.Binding;
 
 internal sealed class BoundForStatement : BoundStatement {

@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using Rhino.CodeAnalysis.Binding;
+using Rhino.CodeAnalysis.Symbols;
 using Rhino.CodeAnalysis.Syntax;
 
 namespace Rhino.CodeAnalysis.Lowering;
@@ -114,7 +115,8 @@ internal sealed class Lowerer : BoundTreeRewriter {
         var whileBlock = new BoundBlockStatement(ImmutableArray.Create(node.Body, increment));
         var whileStatement = new BoundWhileStatement(condition, whileBlock);
         var result =
-            new BoundBlockStatement(ImmutableArray.Create<BoundStatement>(variableDeclaration, upperBoundDeclaration, whileStatement));
+            new BoundBlockStatement(ImmutableArray.Create<BoundStatement>(variableDeclaration, upperBoundDeclaration,
+                whileStatement));
 
         return RewriteStatement(result);
     }
