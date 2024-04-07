@@ -187,12 +187,12 @@ internal sealed class Binder {
     private BoundExpression BindNameExpression(NameExpressionSyntax syntax) {
         var name = syntax.IdentifierToken.Text;
 
-        if (string.IsNullOrEmpty(name)) return new BoundLiteralExpression(0);
+        if (string.IsNullOrEmpty(name)) return new BoundErrorExpression();
 
         if (!_scope.TryLookup(name, out var variable)) {
             Diagnostics.ReportUndefinedName(syntax.IdentifierToken.Span, name);
 
-            return new BoundLiteralExpression(0);
+            return new BoundErrorExpression();
         }
 
         return new BoundVariableExpression(variable);
@@ -205,13 +205,17 @@ internal sealed class Binder {
     private BoundExpression BindBinaryExpression(BinaryExpressionSyntax syntax) {
         var boundLeft = BindExpression(syntax.Left);
         var boundRight = BindExpression(syntax.Right);
+
+        if (boundLeft.Type == TypeSymbol.Error || boundRight.Type == TypeSymbol.Error)
+            return new BoundErrorExpression();
+
         var boundOperator = BoundBinaryOperator.Bind(syntax.OperatorToken.Kind, boundLeft.Type, boundRight.Type);
 
         if (boundOperator == null) {
             Diagnostics.ReportUndefinedBinaryOperator(syntax.OperatorToken.Span, syntax.OperatorToken.Text,
                 boundLeft.Type, boundRight.Type);
 
-            return boundLeft;
+            return new BoundErrorExpression();
         }
 
         return new BoundBinaryExpression(boundLeft, boundOperator, boundRight);
@@ -219,13 +223,17 @@ internal sealed class Binder {
 
     private BoundExpression BindUnaryExpression(UnaryExpressionSyntax syntax) {
         var boundOperand = BindExpression(syntax.Operand);
+
+        if (boundOperand.Type == TypeSymbol.Error)
+            return new BoundErrorExpression();
+
         var boundOperator = BoundUnaryOperator.Bind(syntax.OperatorToken.Kind, boundOperand.Type);
 
         if (boundOperator == null) {
             Diagnostics.ReportUndefinedUnaryOperator(syntax.OperatorToken.Span, syntax.OperatorToken.Text,
                 boundOperand.Type);
 
-            return boundOperand;
+            return new BoundErrorExpression();
         }
 
         return new BoundUnaryExpression(boundOperator, boundOperand);
