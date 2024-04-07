@@ -9,8 +9,4 @@ public sealed class VariableSymbol : Symbol {
     public override SymbolKind Kind => SymbolKind.Variable;
     public bool IsReadOnly { get; }
     public Type Type { get; }
-
-    public override string ToString() {
-        return Name;
-    }
 }

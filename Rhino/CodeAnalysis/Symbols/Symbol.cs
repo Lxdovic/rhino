@@ -7,4 +7,8 @@ public abstract class Symbol {
 
     public string Name { get; }
     public abstract SymbolKind Kind { get; }
+
+    public override string ToString() {
+        return Name;
+    }
 }
