@@ -110,15 +110,15 @@ internal sealed class Evaluator {
             case BoundBinaryOperatorKind.NotEquals:
                 return !Equals(left, right);
             case BoundBinaryOperatorKind.BitwiseAnd:
-                if (b.Type == typeof(int)) return (int)left & (int)right;
+                if (b.Type == TypeSymbol.Int) return (int)left & (int)right;
 
                 return (bool)left & (bool)right;
             case BoundBinaryOperatorKind.BitwiseOr:
-                if (b.Type == typeof(int)) return (int)left | (int)right;
+                if (b.Type == TypeSymbol.Int) return (int)left | (int)right;
 
                 return (bool)left | (bool)right;
             case BoundBinaryOperatorKind.BitwiseXor:
-                if (b.Type == typeof(int)) return (int)left ^ (int)right;
+                if (b.Type == TypeSymbol.Int) return (int)left ^ (int)right;
 
                 return (bool)left ^ (bool)right;
             case BoundBinaryOperatorKind.BitwiseLeftShift:

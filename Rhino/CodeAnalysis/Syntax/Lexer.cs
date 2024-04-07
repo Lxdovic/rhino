@@ -1,4 +1,5 @@
 using System.Text;
+using Rhino.CodeAnalysis.Symbols;
 using Rhino.CodeAnalysis.Text;
 
 namespace Rhino.CodeAnalysis.Syntax;
@@ -282,7 +283,7 @@ internal sealed class Lexer {
         var length = _position - _start;
         var text = _text.ToString(_start, length);
         if (!int.TryParse(text, out var value))
-            Diagnostics.ReportInvalidNumber(new TextSpan(_start, length), text, typeof(int));
+            Diagnostics.ReportInvalidNumber(new TextSpan(_start, length), text, TypeSymbol.Int);
 
         _value = value;
         _kind = SyntaxKind.NumberToken;

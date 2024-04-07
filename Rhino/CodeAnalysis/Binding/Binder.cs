@@ -68,13 +68,13 @@ internal sealed class Binder {
     }
 
     private BoundStatement BindForStatement(ForStatementSyntax syntax) {
-        var lowerBound = BindExpression(syntax.LowerBound, typeof(int));
-        var upperBound = BindExpression(syntax.UpperBound, typeof(int));
+        var lowerBound = BindExpression(syntax.LowerBound, TypeSymbol.Int);
+        var upperBound = BindExpression(syntax.UpperBound, TypeSymbol.Int);
 
         _scope = new BoundScope(_scope);
 
         var name = syntax.Identifier.Text;
-        var variable = new VariableSymbol(name, true, typeof(int));
+        var variable = new VariableSymbol(name, true, TypeSymbol.Int);
 
         // should never happen because we just declared a new scope and it has no variables
         if (!_scope.TryDeclare(variable)) Diagnostics.ReportVariableAlreadyDeclared(syntax.Identifier.Span, name);
@@ -87,14 +87,14 @@ internal sealed class Binder {
     }
 
     private BoundStatement BindWhileStatement(WhileStatementSyntax syntax) {
-        var condition = BindExpression(syntax.Condition, typeof(bool));
+        var condition = BindExpression(syntax.Condition, TypeSymbol.Bool);
         var body = BindStatement(syntax.Body);
 
         return new BoundWhileStatement(condition, body);
     }
 
     private BoundStatement BindIfStatement(IfStatementSyntax syntax) {
-        var condition = BindExpression(syntax.Condition, typeof(bool));
+        var condition = BindExpression(syntax.Condition, TypeSymbol.Bool);
         var thenStatement = BindStatement(syntax.ThenStatement);
         var elseStatement = syntax.ElseClause == null ? null : BindStatement(syntax.ElseClause.ElseStatement);
 
@@ -157,7 +157,7 @@ internal sealed class Binder {
         return new BoundAssignmentExpression(variable, boundExpression);
     }
 
-    public BoundExpression BindExpression(ExpressionSyntax syntax, Type targetType) {
+    public BoundExpression BindExpression(ExpressionSyntax syntax, TypeSymbol targetType) {
         var result = BindExpression(syntax);
 
         if (result.Type != targetType) Diagnostics.ReportCannotConvert(syntax.Span, result.Type, targetType);
