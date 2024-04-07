@@ -14,7 +14,7 @@ internal sealed class Binder {
     public DiagnosticBag Diagnostics { get; } = new();
 
     public static BoundGlobalScope BindGlobalScope(BoundGlobalScope previous, CompilationUnitSyntax syntax) {
-        var parentScope = CreateParentScopes(previous);
+        var parentScope = CreateParentScope(previous);
         var binder = new Binder(parentScope);
         var statement = binder.BindStatement(syntax.Statement);
         var variables = binder._scope.GetDeclaredVariables();
@@ -25,7 +25,7 @@ internal sealed class Binder {
         return new BoundGlobalScope(previous, diagnostics, variables, statement);
     }
 
-    private static BoundScope CreateParentScopes(BoundGlobalScope previous) {
+    private static BoundScope CreateParentScope(BoundGlobalScope previous) {
         var stack = new Stack<BoundGlobalScope>();
 
         while (previous != null) {
@@ -33,18 +33,26 @@ internal sealed class Binder {
             previous = previous.Previous;
         }
 
-        BoundScope parent = null;
+        var parent = CreateRootScope();
 
         while (stack.Count > 0) {
             previous = stack.Pop();
             var scope = new BoundScope(parent);
 
-            foreach (var variable in previous.Variables) scope.TryDeclare(variable);
+            foreach (var variable in previous.Variables) scope.TryDeclareVariable(variable);
 
             parent = scope;
         }
 
         return parent;
+    }
+
+    private static BoundScope CreateRootScope() {
+        var result = new BoundScope(null);
+
+        foreach (var function in BuiltinFunctions.GetAll()) result.TryDeclareFunction(function);
+
+        return result;
     }
 
     private BoundStatement BindStatement(StatementSyntax syntax) {
@@ -129,7 +137,7 @@ internal sealed class Binder {
         var boundExpression = BindExpression(syntax.Expression);
         var name = syntax.IdentifierToken.Text;
 
-        if (!_scope.TryLookup(name, out var variable)) {
+        if (!_scope.TryLookupVariable(name, out var variable)) {
             Diagnostics.ReportUndefinedName(syntax.IdentifierToken.Span, name);
 
             return boundExpression;
@@ -199,10 +207,7 @@ internal sealed class Binder {
             boundArguments.Add(boundArgument);
         }
 
-        var functions = BuiltinFunctions.GetAll();
-        var function = functions.SingleOrDefault(f => f.Name == syntax.Identifier.Text);
-
-        if (function == null) {
+        if (!_scope.TryLookupFunction(syntax.Identifier.Text, out var function)) {
             Diagnostics.ReportUndefinedFunction(syntax.Identifier.Span, syntax.Identifier.Text);
             return new BoundErrorExpression();
         }
@@ -231,7 +236,7 @@ internal sealed class Binder {
 
         if (syntax.IdentifierToken.IsMissing) return new BoundErrorExpression();
 
-        if (!_scope.TryLookup(name, out var variable)) {
+        if (!_scope.TryLookupVariable(name, out var variable)) {
             Diagnostics.ReportUndefinedName(syntax.IdentifierToken.Span, name);
 
             return new BoundErrorExpression();
@@ -293,7 +298,8 @@ internal sealed class Binder {
         var variable = new VariableSymbol(name, isReadOnly, type);
 
         // should never happen because we just declared a new scope and it has no variables
-        if (declare && !_scope.TryDeclare(variable)) Diagnostics.ReportVariableAlreadyDeclared(identifier.Span, name);
+        if (declare && !_scope.TryDeclareVariable(variable))
+            Diagnostics.ReportVariableAlreadyDeclared(identifier.Span, name);
         return variable;
     }
 }
