@@ -53,6 +53,10 @@ To run tests, use the following commands
 - `>>` Bitwise Right Shift
 - `==` Equality
 - `!=` Inequality
+- `<` Less than
+- `<=` Less than or equal to
+- `>` Greater than
+- `>=` Greater than or equal to
 - `=` Assignment
 
 ### Assignments:
