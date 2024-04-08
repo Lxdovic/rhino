@@ -32,6 +32,7 @@ public enum SyntaxKind {
     GreaterToken,
     StringToken,
     CommaToken,
+    ModuloToken,
 
     FalseKeyword,
     TrueKeyword,
@@ -59,5 +60,5 @@ public enum SyntaxKind {
     AssignmentExpression,
     CallExpression,
 
-    CompilationUnit
+    CompilationUnit,
 }

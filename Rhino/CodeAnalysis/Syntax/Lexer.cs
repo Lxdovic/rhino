@@ -43,6 +43,11 @@ internal sealed class Lexer {
                 _position++;
 
                 break;
+            case '%':
+                _kind = SyntaxKind.ModuloToken;
+                _position++;
+
+                break;
             case '-':
                 _kind = SyntaxKind.MinusToken;
                 _position++;

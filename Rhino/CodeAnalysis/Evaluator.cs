@@ -174,6 +174,8 @@ internal sealed class Evaluator {
                 return (int)left < (int)right;
             case BoundBinaryOperatorKind.GreaterThan:
                 return (int)left > (int)right;
+            case BoundBinaryOperatorKind.Modulus:
+                return (int)left % (int)right;
             default:
                 throw new Exception($"Unexpected binary operator <{b.Op.Kind}>");
         }

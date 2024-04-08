@@ -28,7 +28,8 @@ internal sealed class BoundBinaryOperator {
         new(SyntaxKind.HatToken, BoundBinaryOperatorKind.BitwiseXor, TypeSymbol.Bool),
         new(SyntaxKind.LessThanLessThanToken, BoundBinaryOperatorKind.BitwiseLeftShift, TypeSymbol.Int),
         new(SyntaxKind.GreaterThanGreaterThanToken, BoundBinaryOperatorKind.BitwiseRightShift, TypeSymbol.Int),
-        new(SyntaxKind.PlusToken, BoundBinaryOperatorKind.Addition, TypeSymbol.String)
+        new(SyntaxKind.PlusToken, BoundBinaryOperatorKind.Addition, TypeSymbol.String),
+        new(SyntaxKind.ModuloToken, BoundBinaryOperatorKind.Modulus, TypeSymbol.Int),
     };
 
     private BoundBinaryOperator(SyntaxKind syntaxKind, BoundBinaryOperatorKind kind, TypeSymbol type) :

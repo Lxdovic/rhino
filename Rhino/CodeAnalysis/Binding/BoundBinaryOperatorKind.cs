@@ -17,5 +17,6 @@ internal enum BoundBinaryOperatorKind {
     BitwiseOr,
     BitwiseXor,
     BitwiseLeftShift,
-    BitwiseRightShift
+    BitwiseRightShift,
+    Modulus
 }
