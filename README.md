@@ -77,6 +77,12 @@ To run tests, use the following commands
 - `for <identifier> = <lowerBound> to <upperBound>`
 - `while <condition>`
 
+### Builtin functions
+
+- `print(<expression>)` prints the expression to the console
+- `input()` reads a line from the console
+- `random(<min>, <max>)` generates a random number
+
 ### Meta commands:
 
 - `#showTree` Shows parse tree
