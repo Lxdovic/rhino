@@ -105,6 +105,7 @@ public static class SyntaxFacts {
             case SyntaxKind.GreaterToken: return ">";
             case SyntaxKind.CommaToken: return ",";
             case SyntaxKind.ModuloToken: return "%";
+            case SyntaxKind.ColonToken: return ":";
             default: return null;
         }
     }

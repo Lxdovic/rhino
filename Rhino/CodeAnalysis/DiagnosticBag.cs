@@ -111,4 +111,17 @@ internal sealed class DiagnosticBag : IEnumerable<Diagnostic> {
 
         Report(span, message);
     }
+
+    public void ReportUndefinedType(TextSpan span, string text) {
+        var message = $"ERROR: type '{text}' doesn't exist.";
+
+        Report(span, message);
+    }
+
+    public void ReportCannotConvertImplicitly(TextSpan span, TypeSymbol fromType, TypeSymbol toType) {
+        var message =
+            $"ERROR: cannot implicitly convert type <{fromType}> to <{toType}>. An explicit conversion exists. Are you missing a cast?";
+
+        Report(span, message);
+    }
 }

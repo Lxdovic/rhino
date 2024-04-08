@@ -183,6 +183,10 @@ internal sealed class Lexer {
                 }
 
                 break;
+            case ':':
+                _position++;
+                _kind = SyntaxKind.ColonToken;
+                break;
             case '\"':
                 ReadString();
                 break;

@@ -33,6 +33,7 @@ public enum SyntaxKind {
     StringToken,
     CommaToken,
     ModuloToken,
+    ColonToken,
 
     FalseKeyword,
     TrueKeyword,
@@ -51,6 +52,7 @@ public enum SyntaxKind {
     VariableDeclaration,
     IfStatement,
     ElseClause,
+    TypeClause,
 
     LiteralExpression,
     BinaryExpression,
@@ -60,5 +62,5 @@ public enum SyntaxKind {
     AssignmentExpression,
     CallExpression,
 
-    CompilationUnit,
+    CompilationUnit
 }
