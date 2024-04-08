@@ -1,6 +1,7 @@
 using System.Collections.Immutable;
 using Rhino.CodeAnalysis.Symbols;
 using Rhino.CodeAnalysis.Syntax;
+using Rhino.CodeAnalysis.Text;
 
 namespace Rhino.CodeAnalysis.Binding;
 
@@ -143,28 +144,15 @@ internal sealed class Binder {
             return boundExpression;
         }
 
-        if (variable.IsReadOnly) {
-            Diagnostics.ReportCannotAssign(syntax.EqualsToken.Span, name);
+        if (variable.IsReadOnly) Diagnostics.ReportCannotAssign(syntax.EqualsToken.Span, name);
 
-            return boundExpression;
-        }
-
-        if (boundExpression.Type != variable.Type) {
-            Diagnostics.ReportCannotConvert(syntax.Expression.Span, boundExpression.Type, variable.Type);
-            return boundExpression;
-        }
+        var convertedExpression = BindConversion(syntax.Expression.Span, boundExpression, variable.Type);
 
         return new BoundAssignmentExpression(variable, boundExpression);
     }
 
     public BoundExpression BindExpression(ExpressionSyntax syntax, TypeSymbol targetType) {
-        var result = BindExpression(syntax);
-
-        if (targetType != TypeSymbol.Error &&
-            result.Type != TypeSymbol.Error &&
-            result.Type != targetType) Diagnostics.ReportCannotConvert(syntax.Span, result.Type, targetType);
-
-        return result;
+        return BindConversion(syntax, targetType);
     }
 
     public BoundExpression BindExpression(ExpressionSyntax syntax, bool canBeVoid = false) {
@@ -201,7 +189,7 @@ internal sealed class Binder {
 
     private BoundExpression BindCallExpression(CallExpressionSyntax syntax) {
         if (syntax.Arguments.Count == 1 && LookupType(syntax.Identifier.Text) is TypeSymbol type)
-            return BindConversion(type, syntax.Arguments[0]);
+            return BindConversion(syntax.Arguments[0], type);
 
         var boundArguments = ImmutableArray.CreateBuilder<BoundExpression>();
 
@@ -234,14 +222,23 @@ internal sealed class Binder {
         return new BoundCallExpression(function, boundArguments.ToImmutable());
     }
 
-    private BoundExpression BindConversion(TypeSymbol type, ExpressionSyntax syntax) {
+    private BoundExpression BindConversion(ExpressionSyntax syntax, TypeSymbol type) {
         var expression = BindExpression(syntax);
+
+        return BindConversion(syntax.Span, expression, type);
+    }
+
+    private BoundExpression BindConversion(TextSpan diagnosticSpan, BoundExpression expression, TypeSymbol type) {
         var conversion = Conversion.Classify(expression.Type, type);
 
         if (!conversion.Exists) {
-            Diagnostics.ReportCannotConvert(syntax.Span, expression.Type, type);
+            if (expression.Type != TypeSymbol.Error && type != TypeSymbol.Error)
+                Diagnostics.ReportCannotConvert(diagnosticSpan, expression.Type, type);
+
             return new BoundErrorExpression();
         }
+
+        if (conversion.IsIdentity) return expression;
 
         return new BoundConversionExpression(type, expression);
     }
