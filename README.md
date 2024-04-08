@@ -88,6 +88,12 @@ To run tests, use the following commands
 - `string(<expression>)` converts the expression to a string
 - `int(<expression>)` converts the expression to an integer
 
+### Primitive types
+
+- String
+- Int
+- Bool
+
 ### Meta commands:
 
 - `#showTree` Shows parse tree
