@@ -96,8 +96,7 @@ public class EvaluationTests {
             ";
 
         var diagnostics = @"
-                Function 'print' doesn't exist.
-            ";
+                ERROR: function 'print' doesn't exist.";
 
         AssertDiagnostics(text, diagnostics);
     }
