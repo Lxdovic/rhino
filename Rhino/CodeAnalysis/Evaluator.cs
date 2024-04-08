@@ -106,6 +106,12 @@ internal sealed class Evaluator {
         if (node.Function == BuiltinFunctions.Print) {
             var message = (string)EvaluateExpression(node.Arguments[0]);
 
+            Console.Write(message);
+
+            return null;
+        } if (node.Function == BuiltinFunctions.PrintLine) {
+            var message = (string)EvaluateExpression(node.Arguments[0]);
+
             Console.WriteLine(message);
 
             return null;
