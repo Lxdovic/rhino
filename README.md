@@ -83,6 +83,11 @@ To run tests, use the following commands
 - `input()` reads a line from the console
 - `random(<min>, <max>)` generates a random number
 
+### Type conversion
+
+- `string(<expression>)` converts the expression to a string
+- `int(<expression>)` converts the expression to an integer
+
 ### Meta commands:
 
 - `#showTree` Shows parse tree
