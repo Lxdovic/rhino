@@ -314,7 +314,7 @@ internal sealed class Binder {
 
         // should never happen because we just declared a new scope and it has no variables
         if (declare && !_scope.TryDeclareVariable(variable))
-            Diagnostics.ReportVariableAlreadyDeclared(identifier.Span, name);
+            Diagnostics.ReportSymbolAlreadyDeclared(identifier.Span, name);
         return variable;
     }
 

@@ -81,7 +81,23 @@ public class EvaluationTests {
         ";
 
         var diagnostics = @"
-            ERROR: variable 'x' is already declared.";
+            ERROR: 'x' is already declared.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Fact]
+    public void EvaluatorVariablesCanShadowFunctions() {
+        var text = @"
+                {
+                    let print = 42
+                    [print](""test"")
+                }
+            ";
+
+        var diagnostics = @"
+                Function 'print' doesn't exist.
+            ";
 
         AssertDiagnostics(text, diagnostics);
     }
