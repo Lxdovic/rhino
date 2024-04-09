@@ -61,8 +61,8 @@ To run tests, use the following commands
 
 ### Assignments:
 
-- `var <identifier> = <value>` creates a mutable variable
-- `let <identifier> = <value>` crates an immutable variable
+- `var <identifier>(: <optional type>) = <value>` creates a mutable variable
+- `let <identifier>(: <optional type>) = <value>` crates an immutable variable
 
 ### Scopes
 
