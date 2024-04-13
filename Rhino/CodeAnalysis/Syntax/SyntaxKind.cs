@@ -44,15 +44,20 @@ public enum SyntaxKind {
     WhileKeyword,
     ForKeyword,
     ToKeyword,
+    FunctionKeyword,
 
+    CompilationUnit,
     BlockStatement,
     WhileStatement,
     ForStatement,
     ExpressionStatement,
     VariableDeclaration,
+    FunctionDeclaration,
+    GlobalStatement,
     IfStatement,
     ElseClause,
     TypeClause,
+    Parameter,
 
     LiteralExpression,
     BinaryExpression,
@@ -60,7 +65,5 @@ public enum SyntaxKind {
     ParenthesizedExpression,
     NameExpression,
     AssignmentExpression,
-    CallExpression,
-
-    CompilationUnit
+    CallExpression
 }

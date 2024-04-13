@@ -1,6 +1,5 @@
 using System.Collections.Immutable;
 using Rhino.CodeAnalysis.Binding;
-using Rhino.CodeAnalysis.Lowering;
 using Rhino.CodeAnalysis.Symbols;
 using Rhino.CodeAnalysis.Syntax;
 
@@ -39,20 +38,18 @@ public class Compilation {
         var diagnostics = SyntaxTree.Diagnostics.Concat(GlobalScope.Diagnostics).ToImmutableArray();
         if (diagnostics.Any()) return new EvaluationResult(diagnostics);
 
-        var statement = GetStatement();
-        var evaluator = new Evaluator(statement, variables);
+        var program = Binder.BindProgram(GlobalScope);
+
+        if (program.Diagnostics.Any()) return new EvaluationResult(program.Diagnostics.ToImmutableArray());
+
+        var evaluator = new Evaluator(program, variables);
         var value = evaluator.Evaluate();
 
         return new EvaluationResult(ImmutableArray<Diagnostic>.Empty, value);
     }
 
     public void EmitTree(TextWriter writer) {
-        var statement = GetStatement();
-        statement.WriteTo(writer);
-    }
-
-    private BoundBlockStatement GetStatement() {
-        var result = GlobalScope.Statement;
-        return Lowerer.Lower(result);
+        var program = Binder.BindProgram(GlobalScope);
+        program.Statement.WriteTo(writer);
     }
 }

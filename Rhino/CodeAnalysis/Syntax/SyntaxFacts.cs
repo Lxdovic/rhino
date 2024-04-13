@@ -61,6 +61,8 @@ public static class SyntaxFacts {
                 return SyntaxKind.WhileKeyword;
             case "for":
                 return SyntaxKind.ForKeyword;
+            case "function":
+                return SyntaxKind.FunctionKeyword;
             case "to":
                 return SyntaxKind.ToKeyword;
             default:
@@ -90,6 +92,7 @@ public static class SyntaxFacts {
             case SyntaxKind.VarKeyword: return "var";
             case SyntaxKind.WhileKeyword: return "while";
             case SyntaxKind.ForKeyword: return "for";
+            case SyntaxKind.FunctionKeyword: return "function";
             case SyntaxKind.ToKeyword: return "to";
             case SyntaxKind.IfKeyword: return "if";
             case SyntaxKind.ElseKeyword: return "else";

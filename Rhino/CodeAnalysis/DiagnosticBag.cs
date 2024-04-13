@@ -124,4 +124,16 @@ internal sealed class DiagnosticBag : IEnumerable<Diagnostic> {
 
         Report(span, message);
     }
+
+    public void ReportFunctionsAreUnsupported(TextSpan span) {
+        var message = "ERROR: functions are unsupported in this language.";
+
+        Report(span, message);
+    }
+
+    public void ReportParameterAlreadyDeclared(TextSpan span, string parameterName) {
+        var message = $"ERROR: A parameter with the name '{parameterName}' already exists.";
+
+        Report(span, message);
+    }
 }

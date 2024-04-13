@@ -4,27 +4,33 @@ using Rhino.CodeAnalysis.Symbols;
 namespace Rhino.CodeAnalysis;
 
 internal sealed class Evaluator {
+    private readonly Dictionary<VariableSymbol, object> _globals;
+    private readonly Stack<Dictionary<VariableSymbol, object>> _locals = new();
+    private readonly BoundProgram _program;
     private readonly Random _random = new();
-    private readonly BoundBlockStatement _root;
-    private readonly Dictionary<VariableSymbol, object> _variables;
     private object _lastValue;
 
-    public Evaluator(BoundBlockStatement root, Dictionary<VariableSymbol, object> variables) {
-        _root = root;
-        _variables = variables;
+    public Evaluator(BoundProgram program, Dictionary<VariableSymbol, object> variables) {
+        _program = program;
+        _globals = variables;
+        _locals.Push(new Dictionary<VariableSymbol, object>());
     }
 
     public object Evaluate() {
+        return EvaluateStatement(_program.Statement);
+    }
+
+    private object EvaluateStatement(BoundBlockStatement body) {
         var labelToIndex = new Dictionary<BoundLabel, int>();
 
-        for (var i = 0; i < _root.Statements.Length; i++)
-            if (_root.Statements[i] is BoundLabelStatement l)
+        for (var i = 0; i < body.Statements.Length; i++)
+            if (body.Statements[i] is BoundLabelStatement l)
                 labelToIndex.Add(l.Label, i + 1);
 
         var index = 0;
 
-        while (index < _root.Statements.Length) {
-            var statement = _root.Statements[index];
+        while (index < body.Statements.Length) {
+            var statement = body.Statements[index];
 
             switch (statement.Kind) {
                 case BoundNodeKind.VariableDeclaration:
@@ -70,8 +76,9 @@ internal sealed class Evaluator {
     private void EvaluateVariableDeclaration(BoundVariableDeclaration node) {
         var value = EvaluateExpression(node.Initializer);
 
-        _variables[node.Variable] = value;
         _lastValue = value;
+
+        Assign(node.Variable, value);
     }
 
     private void EvaluateExpressionStatement(BoundExpressionStatement node) {
@@ -109,7 +116,9 @@ internal sealed class Evaluator {
             Console.Write(message);
 
             return null;
-        } if (node.Function == BuiltinFunctions.PrintLine) {
+        }
+
+        if (node.Function == BuiltinFunctions.PrintLine) {
             var message = (string)EvaluateExpression(node.Arguments[0]);
 
             Console.WriteLine(message);
@@ -124,7 +133,23 @@ internal sealed class Evaluator {
             return _random.Next(min, max);
         }
 
-        throw new Exception($"Unexpected function <{node.Function}>");
+        var locals = new Dictionary<VariableSymbol, object>();
+
+        for (var i = 0; i < node.Arguments.Length; i++) {
+            var parameter = node.Function.Parameters[i];
+            var value = EvaluateExpression(node.Arguments[i]);
+
+            locals.Add(parameter, value);
+        }
+
+        _locals.Push(locals);
+
+        var statement = _program.Functions[node.Function];
+        var result = EvaluateStatement(statement);
+
+        _locals.Pop();
+
+        return result;
     }
 
     private object EvaluateBinaryExpression(BoundBinaryExpression b) {
@@ -195,16 +220,31 @@ internal sealed class Evaluator {
     private object EvaluateAssignmentExpression(BoundAssignmentExpression a) {
         var value = EvaluateExpression(a.Expression);
 
-        _variables[a.Variable] = value;
+        Assign(a.Variable, value);
 
         return value;
     }
 
     private object EvaluateVariableExpression(BoundVariableExpression v) {
-        return _variables[v.Variable];
+        if (v.Variable.Kind == SymbolKind.GlobalVariable) return _globals[v.Variable];
+
+        var locals = _locals.Peek();
+
+        return locals[v.Variable];
     }
 
     private static object EvaluateLiteralExpression(BoundLiteralExpression n) {
         return n.Value;
+    }
+
+    private void Assign(VariableSymbol variable, object value) {
+        if (variable.Kind == SymbolKind.GlobalVariable) {
+            _globals[variable] = value;
+        }
+
+        else {
+            var locals = _locals.Peek();
+            locals[variable] = value;
+        }
     }
 }
