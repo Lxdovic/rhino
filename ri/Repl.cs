@@ -4,9 +4,7 @@ using System.Collections.Specialized;
 namespace Rhino;
 
 internal abstract class Repl {
-    private readonly List<string> _submissionHistory = new();
     private bool _done;
-    private int _submissionHistoryIndex;
 
     public void Run() {
         while (true) {
@@ -18,9 +16,6 @@ internal abstract class Repl {
                 EvaluateMetaCommand(text);
             else
                 EvaluateSubmission(text);
-
-            _submissionHistory.Add(text);
-            _submissionHistoryIndex = 0;
         }
     }
 
@@ -45,9 +40,6 @@ internal abstract class Repl {
     private void HandleKey(ConsoleKeyInfo key, ObservableCollection<string> document, SubmissionView view) {
         if (key.Modifiers == default)
             switch (key.Key) {
-                case ConsoleKey.Escape:
-                    HandleEscape(document, view);
-                    break;
                 case ConsoleKey.Enter:
                     HandleEnter(document, view);
                     break;
@@ -69,35 +61,13 @@ internal abstract class Repl {
                 case ConsoleKey.Delete:
                     HandleDelete(document, view);
                     break;
-                case ConsoleKey.Home:
-                    HandleHome(document, view);
-                    break;
-                case ConsoleKey.End:
-                    HandleEnd(document, view);
-                    break;
                 case ConsoleKey.Tab:
                     HandleTab(document, view);
                     break;
-                case ConsoleKey.PageUp:
-                    HandlePageUp(document, view);
-                    break;
-                case ConsoleKey.PageDown:
-                    HandlePageDown(document, view);
-                    break;
             }
-        else if (key.Modifiers == ConsoleModifiers.Control)
-            switch (key.Key) {
-                case ConsoleKey.Enter:
-                    HandleControlEnter(document, view);
-                    break;
-            }
+
 
         if (key.Key != ConsoleKey.Backspace && key.KeyChar >= ' ') HandleTyping(document, view, key.KeyChar.ToString());
-    }
-
-    private void HandleEscape(ObservableCollection<string> document, SubmissionView view) {
-        document[view.CurrentLine] = string.Empty;
-        view.CurrentCharacter = 0;
     }
 
     private void HandleEnter(ObservableCollection<string> document, SubmissionView view) {
@@ -107,10 +77,6 @@ internal abstract class Repl {
             return;
         }
 
-        InsertLine(document, view);
-    }
-
-    private void HandleControlEnter(ObservableCollection<string> document, SubmissionView view) {
         InsertLine(document, view);
     }
 
@@ -187,14 +153,6 @@ internal abstract class Repl {
         document[lineIndex] = before + after;
     }
 
-    private void HandleHome(ObservableCollection<string> document, SubmissionView view) {
-        view.CurrentCharacter = 0;
-    }
-
-    private void HandleEnd(ObservableCollection<string> document, SubmissionView view) {
-        view.CurrentCharacter = document[view.CurrentLine].Length;
-    }
-
     private void HandleTab(ObservableCollection<string> document, SubmissionView view) {
         const int TabWidth = 4;
         var start = view.CurrentCharacter;
@@ -203,44 +161,12 @@ internal abstract class Repl {
         document[view.CurrentLine] = line.Insert(start, new string(' ', remainingSpaces));
         view.CurrentCharacter += remainingSpaces;
     }
-
-    private void HandlePageUp(ObservableCollection<string> document, SubmissionView view) {
-        _submissionHistoryIndex--;
-        if (_submissionHistoryIndex < 0)
-            _submissionHistoryIndex = _submissionHistory.Count - 1;
-        UpdateDocumentFromHistory(document, view);
-    }
-
-    private void HandlePageDown(ObservableCollection<string> document, SubmissionView view) {
-        if (_submissionHistory.Count == 0) return;
-
-        _submissionHistoryIndex++;
-        if (_submissionHistoryIndex > _submissionHistory.Count - 1)
-            _submissionHistoryIndex = 0;
-        UpdateDocumentFromHistory(document, view);
-    }
-
-    private void UpdateDocumentFromHistory(ObservableCollection<string> document, SubmissionView view) {
-        document.Clear();
-
-        var historyItem = _submissionHistory[_submissionHistoryIndex];
-        var lines = historyItem.Split(Environment.NewLine);
-        foreach (var line in lines)
-            document.Add(line);
-
-        view.CurrentLine = document.Count - 1;
-        view.CurrentCharacter = document[view.CurrentLine].Length;
-    }
-
+    
     private void HandleTyping(ObservableCollection<string> document, SubmissionView view, string text) {
         var lineIndex = view.CurrentLine;
         var start = view.CurrentCharacter;
         document[lineIndex] = document[lineIndex].Insert(start, text);
         view.CurrentCharacter += text.Length;
-    }
-
-    protected void ClearHistory() {
-        _submissionHistory.Clear();
     }
 
     protected virtual void RenderLine(string line) {
