@@ -190,7 +190,7 @@ public class EvaluationTests {
 
     [Fact]
     public void EvaluatorNameExpressionReportsNoErrorForInsertedToken() {
-        var text = @"[]";
+        var text = @"1 + []";
 
         var diagnostics = @"
             ERROR: unexpected token <EndOfFileToken>, expected <IdentifierToken>.";
