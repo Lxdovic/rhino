@@ -102,6 +102,37 @@ public class EvaluationTests {
     }
 
     [Fact]
+    public void Evaluator_InvokeFunctionArguments_NoInfiniteLoop() {
+        var text = @"
+                print(""Hi""[[=]][)]";
+
+        var diagnostics = @"
+                ERROR: unexpected token <EqualsToken>, expected <CloseParenthesisToken>.
+                ERROR: unexpected token <EqualsToken>, expected <IdentifierToken>.
+                ERROR: unexpected token <CloseParenthesisToken>, expected <IdentifierToken>.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Fact]
+    public void Evaluator_FunctionParameters_NoInfiniteLoop() {
+        var text = @"
+                function hi(name: string[[[=]]][)]
+                {
+                    print(""Hi "" + name + ""!"" )
+                }[]";
+
+        var diagnostics = @"
+                ERROR: unexpected token <EqualsToken>, expected <CloseParenthesisToken>.
+                ERROR: unexpected token <EqualsToken>, expected <OpenBraceToken>.
+                ERROR: unexpected token <EqualsToken>, expected <IdentifierToken>.
+                ERROR: unexpected token <CloseParenthesisToken>, expected <IdentifierToken>.
+                ERROR: unexpected token <EndOfFileToken>, expected <CloseBraceToken>.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Fact]
     public void EvaluatorIfStatementReportsCannotConvert() {
         var text = @"
             {
