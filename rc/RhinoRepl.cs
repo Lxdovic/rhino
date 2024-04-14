@@ -62,13 +62,12 @@ internal sealed class RhinoRepl : Repl {
         if (string.IsNullOrEmpty(text))
             return true;
 
-        // return true if the last two lines are blank
         var lastTwoLinesAreBlank = text.Split(Environment.NewLine).Reverse().Take(2).All(string.IsNullOrWhiteSpace);
         if (lastTwoLinesAreBlank) return true;
 
         var syntaxTree = SyntaxTree.Parse(text);
 
-        if (syntaxTree.Root.Statement.GetLastToken().IsMissing) return false;
+        if (syntaxTree.Root.Members.Last().GetLastToken().IsMissing) return false;
 
         return true;
     }
@@ -93,8 +92,9 @@ internal sealed class RhinoRepl : Repl {
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine(result.Value);
                 Console.ResetColor();
-                _previous = compilation;
             }
+
+            _previous = compilation;
         }
         else {
             foreach (var diagnostic in result.Diagnostics) {
