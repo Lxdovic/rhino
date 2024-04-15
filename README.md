@@ -58,6 +58,7 @@ To run tests, use the following commands
 - `>` Greater than
 - `>=` Greater than or equal to
 - `=` Assignment
+- `%` Modulus
 
 ### Assignments
 
@@ -84,6 +85,7 @@ To run tests, use the following commands
 ### Builtin functions
 
 - `print(<expression>)` prints the expression to the console
+- `println(<expression>)` prints the expression to the console in a new line
 - `input()` reads a line from the console
 - `random(<min>, <max>)` generates a random number
 
@@ -91,11 +93,14 @@ To run tests, use the following commands
 
 - `string(<expression>)` converts the expression to a string
 - `int(<expression>)` converts the expression to an integer
+- `bool(<expression>)` converts the expression to a boolean
+- `float(<expression>)` converts the expression to a float
 
 ### Primitive types
 
 - String
 - Int
+- Float
 - Bool
 
 ### Meta commands:
