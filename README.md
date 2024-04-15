@@ -35,7 +35,7 @@ To run tests, use the following commands
 
 ## Features
 
-### Operators:
+### Operators
 
 - `+` Addition
 - `-` Subtraction
@@ -59,10 +59,14 @@ To run tests, use the following commands
 - `>=` Greater than or equal to
 - `=` Assignment
 
-### Assignments:
+### Assignments
 
 - `var <identifier>(: <optional type>) = <value>` creates a mutable variable
 - `let <identifier>(: <optional type>) = <value>` crates an immutable variable
+
+### Functions
+
+- `function <identifier>(<parameter 1>: <type>, ... <parameterN>: type) { ... }`
 
 ### Scopes
 
@@ -70,7 +74,7 @@ To run tests, use the following commands
 
 ### Conditions
 
-- `if <condition>`
+- `if <condition> { ... } (optional) else { ... }`
 
 ### Loops
 
