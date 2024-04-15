@@ -23,21 +23,29 @@ internal sealed class Conversion {
     public static Conversion Classify(TypeSymbol from, TypeSymbol to) {
         if (from == to) return Identity;
 
-        if (from == TypeSymbol.Bool || from == TypeSymbol.Int)
+        if (from == TypeSymbol.Bool)
             if (to == TypeSymbol.String)
                 return Explicit;
 
         if (from == TypeSymbol.String)
-            if (to == TypeSymbol.Bool || to == TypeSymbol.Int)
+            if (to == TypeSymbol.Bool || to == TypeSymbol.Int || to == TypeSymbol.Float)
                 return Explicit;
-        
-        if (from == TypeSymbol.Int)
+
+        if (from == TypeSymbol.Int) {
             if (to == TypeSymbol.Float)
                 return Implicit;
-        
-        if (from == TypeSymbol.Float)
+
+            if (to == TypeSymbol.String || to == TypeSymbol.Bool)
+                return Explicit;
+        }
+
+        if (from == TypeSymbol.Float) {
             if (to == TypeSymbol.Int)
                 return Implicit;
+
+            if (to == TypeSymbol.String)
+                return Explicit;
+        }
 
         return None;
     }
