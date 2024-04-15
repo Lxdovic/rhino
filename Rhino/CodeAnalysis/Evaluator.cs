@@ -103,6 +103,7 @@ internal sealed class Evaluator {
 
         if (node.Type == TypeSymbol.Bool) return Convert.ToBoolean(value);
         if (node.Type == TypeSymbol.Int) return Convert.ToInt32(value);
+        if (node.Type == TypeSymbol.Float) return Convert.ToSingle(value);
         if (node.Type == TypeSymbol.String) return Convert.ToString(value);
 
         throw new Exception($"Unexpected type <{node.Type}>");
@@ -159,13 +160,20 @@ internal sealed class Evaluator {
         switch (b.Op.Kind) {
             case BoundBinaryOperatorKind.Addition:
                 if (b.Type == TypeSymbol.Int) return (int)left + (int)right;
+                if (b.Type == TypeSymbol.Float) return (float)left + (float)right;
 
                 return (string)left + (string)right;
             case BoundBinaryOperatorKind.Subtraction:
+                if (b.Type == TypeSymbol.Float) return (float)left - (float)right;
+                
                 return (int)left - (int)right;
             case BoundBinaryOperatorKind.Multiplication:
+                if (b.Type == TypeSymbol.Float) return (float)left * (float)right;
+                
                 return (int)left * (int)right;
             case BoundBinaryOperatorKind.Division:
+                if (b.Type == TypeSymbol.Float) return (float)left / (float)right;
+                
                 return (int)left / (int)right;
             case BoundBinaryOperatorKind.LogicalAnd:
                 return (bool)left && (bool)right;
@@ -192,12 +200,20 @@ internal sealed class Evaluator {
             case BoundBinaryOperatorKind.BitwiseRightShift:
                 return (int)left >> (int)right;
             case BoundBinaryOperatorKind.GreaterEquals:
+                if (b.Type == TypeSymbol.Float) return (float)left >= (float)right;
+                
                 return (int)left >= (int)right;
             case BoundBinaryOperatorKind.LessEquals:
+                if (b.Type == TypeSymbol.Float) return (float)left <= (float)right;
+                
                 return (int)left <= (int)right;
             case BoundBinaryOperatorKind.LessThan:
+                if (b.Type == TypeSymbol.Float) return (float)left < (float)right;
+                
                 return (int)left < (int)right;
             case BoundBinaryOperatorKind.GreaterThan:
+                if (b.Type == TypeSymbol.Float) return (float)left > (float)right;
+                
                 return (int)left > (int)right;
             case BoundBinaryOperatorKind.Modulus:
                 return (int)left % (int)right;
@@ -209,12 +225,22 @@ internal sealed class Evaluator {
     private object EvaluateUnaryExpression(BoundUnaryExpression u) {
         var operand = EvaluateExpression(u.Operand);
 
-        if (u.Op.Kind == BoundUnaryOperatorKind.Identity) return (int)operand;
-        if (u.Op.Kind == BoundUnaryOperatorKind.Negation) return -(int)operand;
-        if (u.Op.Kind == BoundUnaryOperatorKind.LogicalNegation) return !(bool)operand;
-        if (u.Op.Kind == BoundUnaryOperatorKind.BitwiseNegation) return ~(int)operand;
-
-        throw new Exception($"Unexpected unary operator <{u.Op.Kind}>");
+        switch (u.Op.Kind) {
+            case BoundUnaryOperatorKind.Identity:
+                if (u.Type == TypeSymbol.Float) return (float)operand;
+                
+                return (int)operand;
+            case BoundUnaryOperatorKind.Negation:
+                if (u.Type == TypeSymbol.Float) return -(float)operand;
+                
+                return -(int)operand;
+            case BoundUnaryOperatorKind.LogicalNegation:
+                return !(bool)operand;
+            case BoundUnaryOperatorKind.BitwiseNegation:
+                return ~(int)operand;
+            default:
+                throw new Exception($"Unexpected unary operator <{u.Op.Kind}>");
+        }
     }
 
     private object EvaluateAssignmentExpression(BoundAssignmentExpression a) {

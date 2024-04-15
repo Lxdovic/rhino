@@ -31,7 +31,20 @@ internal sealed class BoundBinaryOperator {
         new(SyntaxKind.PlusToken, BoundBinaryOperatorKind.Addition, TypeSymbol.String),
         new(SyntaxKind.ModuloToken, BoundBinaryOperatorKind.Modulus, TypeSymbol.Int),
         new(SyntaxKind.EqualsEqualsToken, BoundBinaryOperatorKind.Equals, TypeSymbol.String, TypeSymbol.Bool),
-        new(SyntaxKind.BangEqualsToken, BoundBinaryOperatorKind.NotEquals, TypeSymbol.String, TypeSymbol.Bool)
+        new(SyntaxKind.BangEqualsToken, BoundBinaryOperatorKind.NotEquals, TypeSymbol.String, TypeSymbol.Bool),
+        
+        new(SyntaxKind.PlusToken, BoundBinaryOperatorKind.Addition, TypeSymbol.Float),
+        new(SyntaxKind.MinusToken, BoundBinaryOperatorKind.Subtraction, TypeSymbol.Float),
+        new(SyntaxKind.StarToken, BoundBinaryOperatorKind.Multiplication, TypeSymbol.Float),
+        new(SyntaxKind.SlashToken, BoundBinaryOperatorKind.Division, TypeSymbol.Float),
+        new(SyntaxKind.EqualsEqualsToken, BoundBinaryOperatorKind.Equals, TypeSymbol.Float, TypeSymbol.Bool),
+        new(SyntaxKind.BangEqualsToken, BoundBinaryOperatorKind.NotEquals, TypeSymbol.Float, TypeSymbol.Bool),
+        new(SyntaxKind.LessToken, BoundBinaryOperatorKind.LessThan, TypeSymbol.Float, TypeSymbol.Bool),
+        new(SyntaxKind.GreaterToken, BoundBinaryOperatorKind.GreaterThan, TypeSymbol.Float, TypeSymbol.Bool),
+        new(SyntaxKind.GreaterThanOrEqualsToken, BoundBinaryOperatorKind.GreaterEquals, TypeSymbol.Float,
+            TypeSymbol.Bool),
+        new(SyntaxKind.LessThanOrEqualsToken, BoundBinaryOperatorKind.LessEquals, TypeSymbol.Float, TypeSymbol.Bool),
+        
     };
 
     private BoundBinaryOperator(SyntaxKind syntaxKind, BoundBinaryOperatorKind kind, TypeSymbol type) :

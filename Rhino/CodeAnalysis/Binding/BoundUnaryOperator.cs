@@ -8,7 +8,10 @@ internal sealed class BoundUnaryOperator {
         new(SyntaxKind.BangToken, BoundUnaryOperatorKind.LogicalNegation, TypeSymbol.Bool),
         new(SyntaxKind.PlusToken, BoundUnaryOperatorKind.Identity, TypeSymbol.Int),
         new(SyntaxKind.MinusToken, BoundUnaryOperatorKind.Negation, TypeSymbol.Int),
-        new(SyntaxKind.TildeToken, BoundUnaryOperatorKind.BitwiseNegation, TypeSymbol.Int)
+        new(SyntaxKind.TildeToken, BoundUnaryOperatorKind.BitwiseNegation, TypeSymbol.Int),
+        new(SyntaxKind.PlusToken, BoundUnaryOperatorKind.Identity, TypeSymbol.Float),
+        new(SyntaxKind.MinusToken, BoundUnaryOperatorKind.Negation, TypeSymbol.Float),
+        new(SyntaxKind.TildeToken, BoundUnaryOperatorKind.BitwiseNegation, TypeSymbol.Float)
     };
 
     private BoundUnaryOperator(SyntaxKind syntaxKind, BoundUnaryOperatorKind kind, TypeSymbol operandType) : this(

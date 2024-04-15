@@ -30,6 +30,14 @@ internal sealed class Conversion {
         if (from == TypeSymbol.String)
             if (to == TypeSymbol.Bool || to == TypeSymbol.Int)
                 return Explicit;
+        
+        if (from == TypeSymbol.Int)
+            if (to == TypeSymbol.Float)
+                return Implicit;
+        
+        if (from == TypeSymbol.Float)
+            if (to == TypeSymbol.Int)
+                return Implicit;
 
         return None;
     }
