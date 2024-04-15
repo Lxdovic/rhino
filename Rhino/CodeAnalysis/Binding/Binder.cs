@@ -8,6 +8,8 @@ namespace Rhino.CodeAnalysis.Binding;
 
 internal sealed class Binder {
     private readonly FunctionSymbol _function;
+    private readonly Stack<(BoundLabel breakLabel, BoundLabel continueLabel)> _loopStack = new();
+    private int _labelCounter;
     private BoundScope _scope;
 
     public Binder(BoundScope parent, FunctionSymbol? function) {
@@ -143,10 +145,40 @@ internal sealed class Binder {
                 return BindWhileStatement((WhileStatementSyntax)syntax);
             case SyntaxKind.ForStatement:
                 return BindForStatement((ForStatementSyntax)syntax);
+            case SyntaxKind.BreakStatement:
+                return BindBreakStatement((BreakStatementSyntax)syntax);
+            case SyntaxKind.ContinueStatement:
+                return BindContinueStatement((ContinueStatementSyntax)syntax);
 
             default:
                 throw new Exception($"Unexpected syntax <{syntax.Kind}>");
         }
+    }
+
+    private BoundStatement BindContinueStatement(ContinueStatementSyntax syntax) {
+        if (_loopStack.Count == 0) {
+            Diagnostics.ReportInvalidBreakOrContinue(syntax.Keyword.Span, syntax.Keyword.Text);
+            return BindErrorStatement();
+        }
+
+        var continueLabel = _loopStack.Peek().continueLabel;
+
+        return new BoundGotoStatement(continueLabel);
+    }
+
+    private BoundStatement BindBreakStatement(BreakStatementSyntax syntax) {
+        if (_loopStack.Count == 0) {
+            Diagnostics.ReportInvalidBreakOrContinue(syntax.Keyword.Span, syntax.Keyword.Text);
+            return BindErrorStatement();
+        }
+
+        var breakLabel = _loopStack.Peek().breakLabel;
+
+        return new BoundGotoStatement(breakLabel);
+    }
+
+    private BoundStatement BindErrorStatement() {
+        return new BoundExpressionStatement(new BoundErrorExpression());
     }
 
     private BoundStatement BindForStatement(ForStatementSyntax syntax) {
@@ -156,18 +188,31 @@ internal sealed class Binder {
         _scope = new BoundScope(_scope);
 
         var variable = BindVariable(syntax.Identifier, true, TypeSymbol.Int);
-        var body = BindStatement(syntax.Body);
+        var body = BindLoopBody(syntax.Body, out var breakLabel, out var continueLabel);
 
         _scope = _scope.Parent;
 
-        return new BoundForStatement(variable, lowerBound, upperBound, body);
+        return new BoundForStatement(variable, lowerBound, upperBound, body, breakLabel, continueLabel);
     }
 
     private BoundStatement BindWhileStatement(WhileStatementSyntax syntax) {
         var condition = BindExpression(syntax.Condition, TypeSymbol.Bool);
-        var body = BindStatement(syntax.Body);
+        var body = BindLoopBody(syntax.Body, out var breakLabel, out var continueLabel);
 
-        return new BoundWhileStatement(condition, body);
+        return new BoundWhileStatement(condition, body, breakLabel, continueLabel);
+    }
+
+    private BoundStatement BindLoopBody(StatementSyntax syntax, out BoundLabel breakLabel,
+        out BoundLabel continueLabel) {
+        _labelCounter++;
+        breakLabel = new BoundLabel($"break{_labelCounter}");
+        continueLabel = new BoundLabel($"continue{_labelCounter}");
+
+        _loopStack.Push((breakLabel, continueLabel));
+        var boundBody = BindStatement(syntax);
+        _loopStack.Pop();
+
+        return boundBody;
     }
 
     private BoundStatement BindIfStatement(IfStatementSyntax syntax) {
