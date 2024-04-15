@@ -148,14 +148,14 @@ public class EvaluationTests {
     public void EvaluatorIfStatementReportsCannotConvert() {
         var text = @"
             {
-                var x = 0
+                var x: float = 0.2
                 if [x]
                     x = 10
             }
         ";
 
         var diagnostics = @"
-            ERROR: cannot convert type <int> to <bool>.";
+            ERROR: cannot convert type <float> to <bool>.";
 
         AssertDiagnostics(text, diagnostics);
     }
@@ -164,14 +164,14 @@ public class EvaluationTests {
     public void EvaluatorWhileStatementReportsCannotConvert() {
         var text = @"
             {
-                var x = 0
+                var x: float = 0.1
                 while [x]
                     x = 10
             }
         ";
 
         var diagnostics = @"
-            ERROR: cannot convert type <int> to <bool>.";
+            ERROR: cannot convert type <float> to <bool>.";
 
         AssertDiagnostics(text, diagnostics);
     }
