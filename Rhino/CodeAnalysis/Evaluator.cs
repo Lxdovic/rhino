@@ -221,18 +221,22 @@ internal sealed class Evaluator {
             case BoundBinaryOperatorKind.Addition:
                 if (b.Type == TypeSymbol.Int) return (int)left + (int)right;
                 if (b.Type == TypeSymbol.Float) return (float)left + (float)right;
+                if (b.Type == TypeSymbol.Double) return (double)left + (double)right;
 
                 return (string)left + (string)right;
             case BoundBinaryOperatorKind.Subtraction:
                 if (b.Type == TypeSymbol.Float) return (float)left - (float)right;
+                if (b.Type == TypeSymbol.Double) return (double)left - (double)right;
 
                 return (int)left - (int)right;
             case BoundBinaryOperatorKind.Multiplication:
                 if (b.Type == TypeSymbol.Float) return (float)left * (float)right;
+                if (b.Type == TypeSymbol.Double) return (double)left * (double)right;
 
                 return (int)left * (int)right;
             case BoundBinaryOperatorKind.Division:
                 if (b.Type == TypeSymbol.Float) return (float)left / (float)right;
+                if (b.Type == TypeSymbol.Double) return (double)left / (double)right;
 
                 return (int)left / (int)right;
             case BoundBinaryOperatorKind.LogicalAnd:
@@ -261,18 +265,22 @@ internal sealed class Evaluator {
                 return (int)left >> (int)right;
             case BoundBinaryOperatorKind.GreaterEquals:
                 if (b.Type == TypeSymbol.Float) return (float)left >= (float)right;
+                if (b.Type == TypeSymbol.Double) return (double)left >= (double)right;
 
                 return (int)left >= (int)right;
             case BoundBinaryOperatorKind.LessEquals:
                 if (b.Type == TypeSymbol.Float) return (float)left <= (float)right;
+                if (b.Type == TypeSymbol.Double) return (double)left <= (double)right;
 
                 return (int)left <= (int)right;
             case BoundBinaryOperatorKind.LessThan:
                 if (b.Type == TypeSymbol.Float) return (float)left < (float)right;
+                if (b.Type == TypeSymbol.Double) return (double)left < (double)right;
 
                 return (int)left < (int)right;
             case BoundBinaryOperatorKind.GreaterThan:
                 if (b.Type == TypeSymbol.Float) return (float)left > (float)right;
+                if (b.Type == TypeSymbol.Double) return (double)left > (double)right;
 
                 return (int)left > (int)right;
             case BoundBinaryOperatorKind.Modulus:
@@ -288,10 +296,12 @@ internal sealed class Evaluator {
         switch (u.Op.Kind) {
             case BoundUnaryOperatorKind.Identity:
                 if (u.Type == TypeSymbol.Float) return (float)operand;
+                if (u.Type == TypeSymbol.Double) return (double)operand;
 
                 return (int)operand;
             case BoundUnaryOperatorKind.Negation:
                 if (u.Type == TypeSymbol.Float) return -(float)operand;
+                if (u.Type == TypeSymbol.Double) return -(double)operand;
 
                 return -(int)operand;
             case BoundUnaryOperatorKind.LogicalNegation:
