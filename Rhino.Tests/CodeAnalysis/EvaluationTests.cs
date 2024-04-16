@@ -7,13 +7,13 @@ namespace Rhino.Tests.CodeAnalysis;
 public class EvaluationTests {
     [Theory]
     [InlineData("1", 1)]
-    [InlineData("1.0", (float)1.0)]
-    [InlineData("0.1", (float)0.1)]
-    [InlineData("-1.23", (float)-1.23)]
-    [InlineData("1.23 + 4.56", (float)5.79)]
-    [InlineData("1.23 - 4.56", (float)-3.33)]
-    [InlineData("1.23 * 4.56", (float)5.6088)]
-    [InlineData("4.56 / 1.23", (float)3.70731688)]
+    [InlineData("1.0", 1.0)]
+    [InlineData("0.1", 0.1)]
+    [InlineData("-1.23", -1.23)]
+    [InlineData("1.23 + 4.56", 1.23 + 4.56)]
+    [InlineData("1.23 - 4.56", 1.23 - 4.56)]
+    [InlineData("1.23 * 4.56", 1.23 * 4.56)]
+    [InlineData("4.56 / 1.23", 4.56 / 1.23)]
     [InlineData("-1", -1)]
     [InlineData("+1", 1)]
     [InlineData("~1", -2)]
@@ -148,7 +148,7 @@ public class EvaluationTests {
     public void EvaluatorIfStatementReportsCannotConvert() {
         var text = @"
             {
-                var x: float = 0.2
+                var x: float = 0.2f
                 if [x]
                     x = 10
             }
@@ -164,7 +164,7 @@ public class EvaluationTests {
     public void EvaluatorWhileStatementReportsCannotConvert() {
         var text = @"
             {
-                var x: float = 0.1
+                var x: float = 0.1f
                 while [x]
                     x = 10
             }
