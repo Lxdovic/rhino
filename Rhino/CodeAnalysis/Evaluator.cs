@@ -85,7 +85,7 @@ internal sealed class Evaluator {
         _lastValue = EvaluateExpression(node.Expression);
     }
 
-    private object EvaluateExpression(BoundExpression node) {
+    private object? EvaluateExpression(BoundExpression node) {
         return node.Kind switch {
             BoundNodeKind.LiteralExpression => EvaluateLiteralExpression((BoundLiteralExpression)node),
             BoundNodeKind.VariableExpression => EvaluateVariableExpression((BoundVariableExpression)node),
@@ -109,31 +109,26 @@ internal sealed class Evaluator {
         throw new Exception($"Unexpected type <{node.Type}>");
     }
 
-    private object EvaluateCallExpression(BoundCallExpression node) {
-        if (node.Function == BuiltinFunctions.Input) return Console.ReadLine();
-        if (node.Function == BuiltinFunctions.Print) {
-            var message = (string)EvaluateExpression(node.Arguments[0]);
+    private object? EvaluateCallExpression(BoundCallExpression node) {
+        return node.Function.Name switch {
+            "input" => EvaluateInputFunction(node),
+            "print" => EvaluatePrintFunction(node),
+            "println" => EvaluatePrintLineFunction(node),
+            "random" => EvaluateRandomFunction(node),
+            "cos" => EvaluateCosFunction(node),
+            "sin" => EvaluateSinFunction(node),
+            "acos" => EvaluateAcosFunction(node),
+            "floor" => EvaluateFloorFunction(node),
+            _ => EvaluateFunction(node)
+        };
+    }
 
-            Console.Write(message);
+    private object? EvaluateInputFunction(BoundCallExpression node) {
+        return Console.ReadLine();
+    }
 
-            return null;
-        }
 
-        if (node.Function == BuiltinFunctions.PrintLine) {
-            var message = (string)EvaluateExpression(node.Arguments[0]);
-
-            Console.WriteLine(message);
-
-            return null;
-        }
-
-        if (node.Function == BuiltinFunctions.Random) {
-            var min = (int)EvaluateExpression(node.Arguments[0]);
-            var max = (int)EvaluateExpression(node.Arguments[1]);
-
-            return _random.Next(min, max);
-        }
-
+    private object EvaluateFunction(BoundCallExpression node) {
         var locals = new Dictionary<VariableSymbol, object>();
 
         for (var i = 0; i < node.Arguments.Length; i++) {
@@ -153,6 +148,70 @@ internal sealed class Evaluator {
         return result;
     }
 
+
+    private float? EvaluateFloorFunction(BoundCallExpression node) {
+        var value = EvaluateExpression(node.Arguments[0]);
+
+        if (value == null) return null;
+
+        
+        return (float)Math.Floor((float)value);
+    }
+
+    private object EvaluateRandomFunction(BoundCallExpression node) {
+        var min = EvaluateExpression(node.Arguments[0]);
+        var max = EvaluateExpression(node.Arguments[1]);
+        
+        
+        if (min == null || max == null) return null;
+
+        return _random.Next((int)min, (int)max);
+    }
+
+    private float? EvaluateSinFunction(BoundCallExpression node) {
+        var value = EvaluateExpression(node.Arguments[0]);
+
+        if (value == null) return null;
+
+        return (float)Math.Sin((float)value);
+    }
+
+    private float? EvaluateAcosFunction(BoundCallExpression node) {
+        var value = EvaluateExpression(node.Arguments[0]);
+
+        if (value == null) return null;
+
+        return (float)Math.Acos((float)value);
+    }
+
+    private float? EvaluateCosFunction(BoundCallExpression node) {
+        var value = EvaluateExpression(node.Arguments[0]);
+
+        if (value == null) return null;
+
+        return (float)Math.Cos((float)value);
+    }
+
+    private object? EvaluatePrintFunction(BoundCallExpression node) {
+        var message = EvaluateExpression(node.Arguments[0]);
+
+        if (message == null) return null;
+
+        Console.Write((string)message);
+
+        return null;
+    }
+
+    private object? EvaluatePrintLineFunction(BoundCallExpression node) {
+        var message = EvaluateExpression(node.Arguments[0]);
+        
+        if (message == null) return null;
+
+        Console.WriteLine((string)message);
+
+        return null;
+    }
+
     private object EvaluateBinaryExpression(BoundBinaryExpression b) {
         var left = EvaluateExpression(b.Left);
         var right = EvaluateExpression(b.Right);
@@ -165,15 +224,15 @@ internal sealed class Evaluator {
                 return (string)left + (string)right;
             case BoundBinaryOperatorKind.Subtraction:
                 if (b.Type == TypeSymbol.Float) return (float)left - (float)right;
-                
+
                 return (int)left - (int)right;
             case BoundBinaryOperatorKind.Multiplication:
                 if (b.Type == TypeSymbol.Float) return (float)left * (float)right;
-                
+
                 return (int)left * (int)right;
             case BoundBinaryOperatorKind.Division:
                 if (b.Type == TypeSymbol.Float) return (float)left / (float)right;
-                
+
                 return (int)left / (int)right;
             case BoundBinaryOperatorKind.LogicalAnd:
                 return (bool)left && (bool)right;
@@ -201,19 +260,19 @@ internal sealed class Evaluator {
                 return (int)left >> (int)right;
             case BoundBinaryOperatorKind.GreaterEquals:
                 if (b.Type == TypeSymbol.Float) return (float)left >= (float)right;
-                
+
                 return (int)left >= (int)right;
             case BoundBinaryOperatorKind.LessEquals:
                 if (b.Type == TypeSymbol.Float) return (float)left <= (float)right;
-                
+
                 return (int)left <= (int)right;
             case BoundBinaryOperatorKind.LessThan:
                 if (b.Type == TypeSymbol.Float) return (float)left < (float)right;
-                
+
                 return (int)left < (int)right;
             case BoundBinaryOperatorKind.GreaterThan:
                 if (b.Type == TypeSymbol.Float) return (float)left > (float)right;
-                
+
                 return (int)left > (int)right;
             case BoundBinaryOperatorKind.Modulus:
                 return (int)left % (int)right;
@@ -228,11 +287,11 @@ internal sealed class Evaluator {
         switch (u.Op.Kind) {
             case BoundUnaryOperatorKind.Identity:
                 if (u.Type == TypeSymbol.Float) return (float)operand;
-                
+
                 return (int)operand;
             case BoundUnaryOperatorKind.Negation:
                 if (u.Type == TypeSymbol.Float) return -(float)operand;
-                
+
                 return -(int)operand;
             case BoundUnaryOperatorKind.LogicalNegation:
                 return !(bool)operand;
