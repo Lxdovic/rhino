@@ -18,25 +18,21 @@ internal static class BuiltinFunctions {
             ImmutableArray.Create(new ParameterSymbol("min", TypeSymbol.Int),
                 new ParameterSymbol("max", TypeSymbol.Int)), TypeSymbol.Int);
 
-    // TODO: needs double
     public static readonly FunctionSymbol
         Cos = new("cos",
-            ImmutableArray.Create(new ParameterSymbol("value", TypeSymbol.Float)), TypeSymbol.Float);
+            ImmutableArray.Create(new ParameterSymbol("value", TypeSymbol.Double)), TypeSymbol.Double);
 
-    // TODO: needs double
     public static readonly FunctionSymbol
         Sin = new("sin",
-            ImmutableArray.Create(new ParameterSymbol("value", TypeSymbol.Float)), TypeSymbol.Float);
+            ImmutableArray.Create(new ParameterSymbol("value", TypeSymbol.Double)), TypeSymbol.Double);
 
-    // TODO: needs double
     public static readonly FunctionSymbol
         Acos = new("acos",
-            ImmutableArray.Create(new ParameterSymbol("value", TypeSymbol.Float)), TypeSymbol.Float);
+            ImmutableArray.Create(new ParameterSymbol("value", TypeSymbol.Double)), TypeSymbol.Double);
 
-    // TODO: needs double
     public static readonly FunctionSymbol
         Floor = new("floor",
-            ImmutableArray.Create(new ParameterSymbol("value", TypeSymbol.Float)), TypeSymbol.Float);
+            ImmutableArray.Create(new ParameterSymbol("value", TypeSymbol.Double)), TypeSymbol.Double);
 
     public static IEnumerable<FunctionSymbol> GetAll() {
         return typeof(BuiltinFunctions).GetFields(BindingFlags.Public | BindingFlags.Static)

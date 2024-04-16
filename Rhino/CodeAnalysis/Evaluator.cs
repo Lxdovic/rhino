@@ -150,13 +150,13 @@ internal sealed class Evaluator {
     }
 
 
-    private float? EvaluateFloorFunction(BoundCallExpression node) {
+    private double? EvaluateFloorFunction(BoundCallExpression node) {
         var value = EvaluateExpression(node.Arguments[0]);
 
         if (value == null) return null;
 
 
-        return (float)Math.Floor((float)value);
+        return Math.Floor((double)value);
     }
 
     private object EvaluateRandomFunction(BoundCallExpression node) {
@@ -169,28 +169,28 @@ internal sealed class Evaluator {
         return _random.Next((int)min, (int)max);
     }
 
-    private float? EvaluateSinFunction(BoundCallExpression node) {
+    private double? EvaluateSinFunction(BoundCallExpression node) {
         var value = EvaluateExpression(node.Arguments[0]);
 
         if (value == null) return null;
 
-        return (float)Math.Sin((float)value);
+        return Math.Sin((double)value);
     }
 
-    private float? EvaluateAcosFunction(BoundCallExpression node) {
+    private double? EvaluateAcosFunction(BoundCallExpression node) {
         var value = EvaluateExpression(node.Arguments[0]);
 
         if (value == null) return null;
 
-        return (float)Math.Acos((float)value);
+        return Math.Acos((double)value);
     }
 
-    private float? EvaluateCosFunction(BoundCallExpression node) {
+    private double? EvaluateCosFunction(BoundCallExpression node) {
         var value = EvaluateExpression(node.Arguments[0]);
 
         if (value == null) return null;
 
-        return (float)Math.Cos((float)value);
+        return Math.Cos((double)value);
     }
 
     private object? EvaluatePrintFunction(BoundCallExpression node) {
