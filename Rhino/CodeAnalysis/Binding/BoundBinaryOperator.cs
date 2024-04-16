@@ -32,7 +32,7 @@ internal sealed class BoundBinaryOperator {
         new(SyntaxKind.ModuloToken, BoundBinaryOperatorKind.Modulus, TypeSymbol.Int),
         new(SyntaxKind.EqualsEqualsToken, BoundBinaryOperatorKind.Equals, TypeSymbol.String, TypeSymbol.Bool),
         new(SyntaxKind.BangEqualsToken, BoundBinaryOperatorKind.NotEquals, TypeSymbol.String, TypeSymbol.Bool),
-        
+
         new(SyntaxKind.PlusToken, BoundBinaryOperatorKind.Addition, TypeSymbol.Float),
         new(SyntaxKind.MinusToken, BoundBinaryOperatorKind.Subtraction, TypeSymbol.Float),
         new(SyntaxKind.StarToken, BoundBinaryOperatorKind.Multiplication, TypeSymbol.Float),
@@ -44,17 +44,26 @@ internal sealed class BoundBinaryOperator {
         new(SyntaxKind.GreaterThanOrEqualsToken, BoundBinaryOperatorKind.GreaterEquals, TypeSymbol.Float,
             TypeSymbol.Bool),
         new(SyntaxKind.LessThanOrEqualsToken, BoundBinaryOperatorKind.LessEquals, TypeSymbol.Float, TypeSymbol.Bool),
-        
+
+        new(SyntaxKind.PlusToken, BoundBinaryOperatorKind.Addition, TypeSymbol.Double),
+        new(SyntaxKind.MinusToken, BoundBinaryOperatorKind.Subtraction, TypeSymbol.Double),
+        new(SyntaxKind.StarToken, BoundBinaryOperatorKind.Multiplication, TypeSymbol.Double),
+        new(SyntaxKind.SlashToken, BoundBinaryOperatorKind.Division, TypeSymbol.Double),
+        new(SyntaxKind.EqualsEqualsToken, BoundBinaryOperatorKind.Equals, TypeSymbol.Double, TypeSymbol.Bool),
+        new(SyntaxKind.BangEqualsToken, BoundBinaryOperatorKind.NotEquals, TypeSymbol.Double, TypeSymbol.Bool),
+        new(SyntaxKind.LessToken, BoundBinaryOperatorKind.LessThan, TypeSymbol.Double, TypeSymbol.Bool),
+        new(SyntaxKind.GreaterToken, BoundBinaryOperatorKind.GreaterThan, TypeSymbol.Double, TypeSymbol.Bool),
+        new(SyntaxKind.GreaterThanOrEqualsToken, BoundBinaryOperatorKind.GreaterEquals, TypeSymbol.Double,
+            TypeSymbol.Bool),
+        new(SyntaxKind.LessThanOrEqualsToken, BoundBinaryOperatorKind.LessEquals, TypeSymbol.Double, TypeSymbol.Bool)
     };
 
     private BoundBinaryOperator(SyntaxKind syntaxKind, BoundBinaryOperatorKind kind, TypeSymbol type) :
-        this(syntaxKind, kind, type, type, type) {
-    }
+        this(syntaxKind, kind, type, type, type) { }
 
     private BoundBinaryOperator(SyntaxKind syntaxKind, BoundBinaryOperatorKind kind, TypeSymbol operandType,
         TypeSymbol resultType) :
-        this(syntaxKind, kind, operandType, operandType, resultType) {
-    }
+        this(syntaxKind, kind, operandType, operandType, resultType) { }
 
     private BoundBinaryOperator(SyntaxKind syntaxKind, BoundBinaryOperatorKind kind, TypeSymbol leftType,
         TypeSymbol rightType,
