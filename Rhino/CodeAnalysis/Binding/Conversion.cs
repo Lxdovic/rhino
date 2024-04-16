@@ -28,23 +28,23 @@ internal sealed class Conversion {
                 return Explicit;
 
         if (from == TypeSymbol.String)
-            if (to == TypeSymbol.Bool || to == TypeSymbol.Int || to == TypeSymbol.Float)
+            if (to == TypeSymbol.Bool || to == TypeSymbol.Int || to == TypeSymbol.Float || to == TypeSymbol.Double)
                 return Explicit;
 
         if (from == TypeSymbol.Int) {
-            if (to == TypeSymbol.Float)
-                return Implicit;
-
-            if (to == TypeSymbol.String || to == TypeSymbol.Bool)
-                return Explicit;
+            if (to == TypeSymbol.Float || to == TypeSymbol.Double) return Implicit;
+            if (to == TypeSymbol.String || to == TypeSymbol.Bool) return Explicit;
         }
 
         if (from == TypeSymbol.Float) {
-            if (to == TypeSymbol.Int)
-                return Implicit;
+            if (to == TypeSymbol.Int) return Implicit;
+            if (to == TypeSymbol.String) return Explicit;
+        }
 
-            if (to == TypeSymbol.String)
-                return Explicit;
+        if (from == TypeSymbol.Double) {
+            if (to == TypeSymbol.Int) return Implicit;
+            if (to == TypeSymbol.String) return Explicit;
+            if (to == TypeSymbol.Float) return Explicit;
         }
 
         return None;

@@ -303,10 +303,10 @@ internal sealed class Lexer {
         var text = _text.ToString(_start, length);
 
         if (numberOfDots > 0) {
-            if (!float.TryParse(text, out var floatValue))
+            if (!double.TryParse(text, out var doubleValue))
                 Diagnostics.ReportInvalidNumber(new TextSpan(_start, length), text, TypeSymbol.Float);
 
-            _value = floatValue;
+            _value = doubleValue;
         }
 
         if (numberOfDots == 0) {

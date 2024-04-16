@@ -104,6 +104,7 @@ internal sealed class Evaluator {
         if (node.Type == TypeSymbol.Bool) return Convert.ToBoolean(value);
         if (node.Type == TypeSymbol.Int) return Convert.ToInt32(value);
         if (node.Type == TypeSymbol.Float) return Convert.ToSingle(value);
+        if (node.Type == TypeSymbol.Double) return Convert.ToDouble(value);
         if (node.Type == TypeSymbol.String) return Convert.ToString(value);
 
         throw new Exception($"Unexpected type <{node.Type}>");
@@ -154,15 +155,15 @@ internal sealed class Evaluator {
 
         if (value == null) return null;
 
-        
+
         return (float)Math.Floor((float)value);
     }
 
     private object EvaluateRandomFunction(BoundCallExpression node) {
         var min = EvaluateExpression(node.Arguments[0]);
         var max = EvaluateExpression(node.Arguments[1]);
-        
-        
+
+
         if (min == null || max == null) return null;
 
         return _random.Next((int)min, (int)max);
@@ -204,7 +205,7 @@ internal sealed class Evaluator {
 
     private object? EvaluatePrintLineFunction(BoundCallExpression node) {
         var message = EvaluateExpression(node.Arguments[0]);
-        
+
         if (message == null) return null;
 
         Console.WriteLine((string)message);
