@@ -37,15 +37,12 @@ internal sealed class Conversion {
         }
 
         if (from == TypeSymbol.Float) {
-            if (to == TypeSymbol.Int) return Implicit;
+            if (to == TypeSymbol.Int) return Explicit;
             if (to == TypeSymbol.String) return Explicit;
+            if (to == TypeSymbol.Double) return Implicit;
         }
 
-        if (from == TypeSymbol.Double) {
-            if (to == TypeSymbol.Int) return Implicit;
-            if (to == TypeSymbol.String) return Explicit;
-            if (to == TypeSymbol.Float) return Explicit;
-        }
+        if (from == TypeSymbol.Double) return Implicit;
 
         return None;
     }
