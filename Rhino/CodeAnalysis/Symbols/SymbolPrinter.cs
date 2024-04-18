@@ -1,3 +1,4 @@
+using Rhino.CodeAnalysis.Syntax;
 using Rhino.IO;
 
 namespace Rhino.CodeAnalysis.Symbols;
@@ -26,17 +27,17 @@ internal static class SymbolPrinter {
     }
 
     private static void WriteLocalVariableTo(LocalVariableSymbol symbol, TextWriter writer) {
-        writer.WriteKeyword(symbol.IsReadOnly ? "let" : "var");
+        writer.WriteKeyword(symbol.IsReadOnly ? SyntaxKind.LetKeyword : SyntaxKind.VarKeyword);
         writer.WriteIdentifier(symbol.Name);
-        writer.WritePonctuation(":");
+        writer.WritePunctuation(":");
 
         symbol.Type.WriteTo(writer);
     }
 
     private static void WriteGlobalVariableTo(GlobalVariableSymbol symbol, TextWriter writer) {
-        writer.WriteKeyword(symbol.IsReadOnly ? "let " : "var ");
+        writer.WriteKeyword(symbol.IsReadOnly ? SyntaxKind.LetKeyword : SyntaxKind.VarKeyword);
         writer.WriteIdentifier(symbol.Name);
-        writer.WritePonctuation(":");
+        writer.WritePunctuation(SyntaxKind.ColonToken);
 
         symbol.Type.WriteTo(writer);
     }
@@ -47,23 +48,28 @@ internal static class SymbolPrinter {
 
     private static void WriteParameterTo(ParameterSymbol symbol, TextWriter writer) {
         writer.WriteIdentifier(symbol.Name);
-        writer.WritePonctuation(":");
+        writer.WritePunctuation(":");
+        writer.WriteSpace();
 
         symbol.Type.WriteTo(writer);
     }
 
     private static void WriteFunctionTo(FunctionSymbol symbol, TextWriter writer) {
-        writer.WriteKeyword("function ");
+        writer.WriteKeyword(SyntaxKind.FunctionKeyword);
+        writer.WriteSpace();
         writer.WriteIdentifier(symbol.Name);
-        writer.WritePonctuation("(");
+        writer.WritePunctuation(SyntaxKind.OpenParenthesisToken);
 
         for (var index = 0; index < symbol.Parameters.Length; index++) {
-            if (index > 0) writer.WritePonctuation(", ");
+            if (index > 0) {
+                writer.WritePunctuation(SyntaxKind.CommaToken);
+                writer.WriteSpace();
+            }
 
             symbol.Parameters[index].WriteTo(writer);
         }
 
-        writer.WritePonctuation(")");
+        writer.WritePunctuation(SyntaxKind.CloseParenthesisToken);
         writer.WriteLine();
     }
 }

@@ -1,22 +1,28 @@
 using System.CodeDom.Compiler;
+using Rhino.CodeAnalysis.Syntax;
 
 namespace Rhino.IO;
 
 internal static class TextWriterExtensions {
-    public static bool IsConsoleOut(this TextWriter writer) {
+    private static bool IsConsoleOut(this TextWriter writer) {
         if (writer == Console.Out) return true;
         if (writer is IndentedTextWriter iw && iw.InnerWriter.IsConsoleOut()) return true;
 
         return false;
     }
 
-    public static void SetForeground(this TextWriter writer, ConsoleColor color) {
+    private static void SetForeground(this TextWriter writer, ConsoleColor color) {
         if (writer.IsConsoleOut()) Console.ForegroundColor = color;
     }
 
-    public static void ResetColor(this TextWriter writer) {
+    private static void ResetColor(this TextWriter writer) {
         if (writer.IsConsoleOut()) Console.ResetColor();
     }
+
+    public static void WriteKeyword(this TextWriter writer, SyntaxKind kind) {
+        writer.WriteKeyword(SyntaxFacts.GetText(kind));
+    }
+
 
     public static void WriteKeyword(this TextWriter writer, string text) {
         writer.SetForeground(ConsoleColor.Blue);
@@ -42,7 +48,16 @@ internal static class TextWriterExtensions {
         writer.ResetColor();
     }
 
-    public static void WritePonctuation(this TextWriter writer, string text) {
+    public static void WriteSpace(this TextWriter writer) {
+        writer.WritePunctuation(" ");
+    }
+
+
+    public static void WritePunctuation(this TextWriter writer, SyntaxKind kind) {
+        writer.WritePunctuation(SyntaxFacts.GetText(kind));
+    }
+
+    public static void WritePunctuation(this TextWriter writer, string text) {
         writer.SetForeground(ConsoleColor.DarkGray);
         writer.Write(text);
         writer.ResetColor();

@@ -39,11 +39,13 @@ internal static class BoundNodePrinter {
         int currentPrecedence, BoundExpression expression) {
         var needsParenthesis = parentPrecedence >= currentPrecedence;
 
-        if (needsParenthesis) writer.WritePonctuation("(");
+        if (needsParenthesis)
+            writer.WritePunctuation(SyntaxKind.OpenParenthesisToken);
 
         expression.WriteTo(writer);
 
-        if (needsParenthesis) writer.WritePonctuation(")");
+        if (needsParenthesis)
+            writer.WritePunctuation(SyntaxKind.CloseParenthesisToken);
     }
 
 
@@ -112,8 +114,8 @@ internal static class BoundNodePrinter {
 
         if (unindent) writer.Indent--;
 
-        writer.WritePonctuation(node.Label.Name);
-        writer.WritePonctuation(":");
+        writer.WritePunctuation(node.Label.Name);
+        writer.WritePunctuation(":");
         writer.WriteLine();
 
         if (unindent) writer.Indent++;
@@ -135,13 +137,18 @@ internal static class BoundNodePrinter {
     }
 
     private static void WriteForStatement(BoundForStatement node, IndentedTextWriter writer) {
-        writer.WriteKeyword("for ");
+        writer.WriteKeyword(SyntaxKind.ForKeyword);
+        writer.WriteSpace();
         writer.WriteIdentifier(node.Variable.Name);
-        writer.WritePonctuation(" = ");
+        writer.WriteSpace();
+        writer.WritePunctuation(SyntaxKind.EqualsToken);
+        writer.WriteSpace();
 
         node.LowerBound.WriteTo(writer);
 
-        writer.WritePonctuation(" to ");
+        writer.WriteSpace();
+        writer.WritePunctuation(SyntaxKind.ToKeyword);
+        writer.WriteSpace();
 
         node.UpperBound.WriteTo(writer);
 
@@ -150,30 +157,35 @@ internal static class BoundNodePrinter {
     }
 
     private static void WriteWhileStatement(BoundWhileStatement node, IndentedTextWriter writer) {
-        writer.WriteKeyword("while ");
+        writer.WriteKeyword(SyntaxKind.WhileKeyword);
+        writer.WriteSpace();
         node.Condition.WriteTo(writer);
         writer.WriteLine();
         writer.WriteNestedStatement(node.Body);
     }
 
     private static void WriteIfStatement(BoundIfStatement node, IndentedTextWriter writer) {
-        writer.WriteKeyword("if");
+        writer.WriteKeyword(SyntaxKind.IfKeyword);
+        writer.WriteSpace();
         node.Condition.WriteTo(writer);
         writer.WriteLine();
         writer.WriteNestedStatement(node.ThenStatement);
         // WriteBlockStatement((BoundBlockStatement)node.ThenStatement, writer);
 
         if (node.ElseStatement != null) {
-            writer.WriteKeyword("else");
+            writer.WriteKeyword(SyntaxKind.ElseKeyword);
             writer.WriteLine();
             writer.WriteNestedStatement(node.ElseStatement);
         }
     }
 
     private static void WriteVariableDeclaration(BoundVariableDeclaration node, IndentedTextWriter writer) {
-        writer.WriteKeyword(node.Variable.IsReadOnly ? "let " : "var ");
+        writer.WriteKeyword(node.Variable.IsReadOnly ? SyntaxKind.LetKeyword : SyntaxKind.VarKeyword);
+        writer.WriteSpace();
         writer.WriteIdentifier(node.Variable.Name);
-        writer.WritePonctuation(" = ");
+        writer.WriteSpace();
+        writer.WritePunctuation(SyntaxKind.EqualsToken);
+        writer.WriteSpace();
         node.Initializer.WriteTo(writer);
         writer.WriteLine();
     }
@@ -184,24 +196,25 @@ internal static class BoundNodePrinter {
     }
 
     private static void WriteBlockStatement(BoundBlockStatement node, IndentedTextWriter writer) {
-        writer.WritePonctuation("{");
+        writer.WritePunctuation(SyntaxKind.OpenBraceToken);
+
         writer.WriteLine();
         writer.Indent++;
 
         foreach (var statement in node.Statements) statement.WriteTo(writer);
 
         writer.Indent--;
-        writer.WritePonctuation("}");
+        writer.WritePunctuation(SyntaxKind.CloseBraceToken);
+
         writer.WriteLine();
     }
 
     private static void WriteConversionExpression(BoundConversionExpression node, IndentedTextWriter writer) {
         writer.WriteIdentifier(node.Type.Name);
-        writer.WritePonctuation("(");
 
+        writer.WritePunctuation(SyntaxKind.OpenParenthesisToken);
         node.Expression.WriteTo(writer);
-
-        writer.WritePonctuation(")");
+        writer.WritePunctuation(SyntaxKind.CloseParenthesisToken);
     }
 
     private static void WriteVariableExpression(BoundVariableExpression node, IndentedTextWriter writer) {
@@ -210,18 +223,23 @@ internal static class BoundNodePrinter {
 
     private static void WriteCallExpression(BoundCallExpression node, IndentedTextWriter writer) {
         writer.WriteIdentifier(node.Function.Name);
-        writer.WritePonctuation("(");
+        writer.WritePunctuation(SyntaxKind.OpenParenthesisToken);
 
         var isFirst = true;
 
         foreach (var argument in node.Arguments) {
-            if (isFirst) isFirst = false;
-            else writer.WritePonctuation(", ");
+            if (isFirst) {
+                isFirst = false;
+            }
+            else {
+                writer.WritePunctuation(SyntaxKind.CommaToken);
+                writer.WriteSpace();
+            }
 
             argument.WriteTo(writer);
         }
 
-        writer.WritePonctuation(")");
+        writer.WritePunctuation(SyntaxKind.CloseParenthesisToken);
     }
 
     private static void WriteErrorExpression(BoundErrorExpression node, IndentedTextWriter writer) {
@@ -230,7 +248,9 @@ internal static class BoundNodePrinter {
 
     private static void WriteAssignmentExpression(BoundAssignmentExpression node, IndentedTextWriter writer) {
         writer.WriteIdentifier(node.Variable.Name);
-        writer.WritePonctuation(" = ");
+        writer.WriteSpace();
+        writer.WritePunctuation(SyntaxKind.EqualsToken);
+        writer.WriteSpace();
 
         node.Expression.WriteTo(writer);
     }
@@ -241,9 +261,9 @@ internal static class BoundNodePrinter {
 
 
         writer.WriteNestedExpression(precedence, node.Left);
-        writer.Write(" ");
-        writer.WritePonctuation(op);
-        writer.Write(" ");
+        writer.WriteSpace();
+        writer.WritePunctuation(op);
+        writer.WriteSpace();
         writer.WriteNestedExpression(precedence, node.Right);
     }
 
@@ -262,7 +282,7 @@ internal static class BoundNodePrinter {
         var op = SyntaxFacts.GetText(node.Op.SyntaxKind);
         var precedence = node.Op.SyntaxKind.GetUnaryOperatorPrecedence();
 
-        writer.WritePonctuation(op);
+        writer.WritePunctuation(op);
         writer.WriteNestedExpression(precedence, node.Operand);
     }
 }
