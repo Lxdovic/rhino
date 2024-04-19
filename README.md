@@ -65,6 +65,10 @@ To run tests, use the following commands
 - `var <identifier>(: <optional type>) = <value>` creates a mutable variable
 - `let <identifier>(: <optional type>) = <value>` crates an immutable variable
 
+### Expressions
+
+- `(1 + 2) * 3`
+
 ### Functions
 
 - `function <identifier>(<parameter 1>: <type>, ... <parameterN>: type) { ... }`
