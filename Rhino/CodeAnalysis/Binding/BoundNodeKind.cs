@@ -18,5 +18,6 @@ internal enum BoundNodeKind {
     ForStatement,
     GotoStatement,
     LabelStatement,
-    ConditionalGotoStatement
+    ConditionalGotoStatement,
+    ReturnStatement
 }

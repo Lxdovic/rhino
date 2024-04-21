@@ -125,12 +125,6 @@ internal sealed class DiagnosticBag : IEnumerable<Diagnostic> {
         Report(span, message);
     }
 
-    public void ReportFunctionsAreUnsupported(TextSpan span) {
-        var message = "ERROR: functions are unsupported in this language.";
-
-        Report(span, message);
-    }
-
     public void ReportParameterAlreadyDeclared(TextSpan span, string parameterName) {
         var message = $"ERROR: A parameter with the name '{parameterName}' already exists.";
 
@@ -141,5 +135,23 @@ internal sealed class DiagnosticBag : IEnumerable<Diagnostic> {
         var message = $"ERROR: The keyword '{text}' can only be used inside of loops.";
 
         Report(span, message);
+    }
+
+    public void ReportInvalidReturn(TextSpan returnKeywordSpan) {
+        var message = "ERROR: The 'return' keyword can only be used inside of functions.";
+
+        Report(returnKeywordSpan, message);
+    }
+
+    public void ReportInvalidReturnExpression(TextSpan expressionSpan, string functionName) {
+        var message = $"ERROR: The return expression is not valid for function '{functionName}'.";
+
+        Report(expressionSpan, message);
+    }
+
+    public void ReportMissingReturnExpression(TextSpan returnKeywordSpan, string functionName) {
+        var message = $"ERROR: The return expression is missing for function '{functionName}'.";
+
+        Report(returnKeywordSpan, message);
     }
 }

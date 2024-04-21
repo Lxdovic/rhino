@@ -69,6 +69,8 @@ public static class SyntaxFacts {
                 return SyntaxKind.BreakKeyword;
             case "continue":
                 return SyntaxKind.ContinueKeyword;
+            case "return":
+                return SyntaxKind.ReturnKeyword;
             default:
                 return SyntaxKind.IdentifierToken;
         }
@@ -102,6 +104,7 @@ public static class SyntaxFacts {
             case SyntaxKind.ElseKeyword: return "else";
             case SyntaxKind.BreakKeyword: return "break";
             case SyntaxKind.ContinueKeyword: return "continue";
+            case SyntaxKind.ReturnKeyword: return "return";
             case SyntaxKind.AmpersandToken: return "&";
             case SyntaxKind.PipeToken: return "|";
             case SyntaxKind.HatToken: return "^";

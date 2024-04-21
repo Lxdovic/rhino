@@ -62,6 +62,14 @@ internal sealed class Evaluator {
 
                     break;
 
+                case BoundNodeKind.ReturnStatement:
+                    var returnStatement = (BoundReturnStatement)statement;
+                    _lastValue = returnStatement.Expression == null
+                        ? null
+                        : EvaluateExpression(returnStatement.Expression);
+
+                    return _lastValue;
+
                 case BoundNodeKind.LabelStatement:
                     index++;
                     break;

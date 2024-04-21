@@ -47,6 +47,7 @@ public enum SyntaxKind {
     FunctionKeyword,
     ContinueKeyword,
     BreakKeyword,
+    ReturnKeyword,
 
     CompilationUnit,
     BlockStatement,
@@ -55,6 +56,7 @@ public enum SyntaxKind {
     ExpressionStatement,
     ContinueStatement,
     BreakStatement,
+    ReturnStatement,
     VariableDeclaration,
     FunctionDeclaration,
     GlobalStatement,
