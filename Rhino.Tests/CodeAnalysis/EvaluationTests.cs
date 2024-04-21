@@ -80,6 +80,29 @@ public class EvaluationTests {
     }
 
     [Fact]
+    public void Evaluator_InvokeFunctionArguments_Missing() {
+        var text = @"
+                print([)]";
+
+        var diagnostics = @"
+                ERROR: function 'print' requires 1 arguments, but was given 0.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Fact]
+    public void Evaluator_InvokeFunctionArguments_Exceeding() {
+        var text = @"
+                print(""Hello""[, "" "", "" world!""])";
+
+        var diagnostics = @"
+                ERROR: function 'print' requires 1 arguments, but was given 3.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+
+    [Fact]
     public void EvaluatorVariableDeclarationReportsRedeclaration() {
         var text = @"
             {
