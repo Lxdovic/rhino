@@ -8,7 +8,8 @@ namespace Rhino.CodeAnalysis;
 public class Compilation {
     private BoundGlobalScope _globalScope;
 
-    public Compilation(SyntaxTree syntaxTree) : this(null, syntaxTree) { }
+    public Compilation(SyntaxTree syntaxTree) : this(null, syntaxTree) {
+    }
 
     private Compilation(Compilation previous, SyntaxTree syntaxTree) {
         Previous = previous;
@@ -38,6 +39,19 @@ public class Compilation {
         if (diagnostics.Any()) return new EvaluationResult(diagnostics);
 
         var program = Binder.BindProgram(GlobalScope);
+        var appPath = Environment.GetCommandLineArgs()[0];
+        var appDirectory = Path.GetDirectoryName(appPath);
+        var controlFlowGraphPath = Path.Combine(appDirectory, "control-flow-graph.dot");
+
+        var controlFlowGraphStatement = !program.Statement.Statements.Any() && program.Functions.Any()
+            ? program.Functions.Last().Value
+            : program.Statement;
+
+        var controlFlowGraph = ControlFlowGraph.Create(controlFlowGraphStatement);
+
+        using (var writer = new StreamWriter(controlFlowGraphPath)) {
+            controlFlowGraph.WriteTo(writer);
+        }
 
         if (program.Diagnostics.Any()) return new EvaluationResult(program.Diagnostics.ToImmutableArray());
 
