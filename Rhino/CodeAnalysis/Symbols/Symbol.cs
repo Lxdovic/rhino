@@ -8,7 +8,14 @@ public abstract class Symbol {
     public string Name { get; }
     public abstract SymbolKind Kind { get; }
 
+    public void WriteTo(TextWriter writer) {
+        SymbolPrinter.WriteTo(this, writer);
+    }
+
     public override string ToString() {
-        return Name;
+        using (var writer = new StringWriter()) {
+            WriteTo(writer);
+            return writer.ToString();
+        }
     }
 }

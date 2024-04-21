@@ -7,13 +7,23 @@ namespace Rhino.Tests.CodeAnalysis;
 public class EvaluationTests {
     [Theory]
     [InlineData("1", 1)]
-    [InlineData("1.0", (float)1.0)]
-    [InlineData("0.1", (float)0.1)]
-    [InlineData("-1.23", (float)-1.23)]
-    [InlineData("1.23 + 4.56", (float)5.79)]
-    [InlineData("1.23 - 4.56", (float)-3.33)]
-    [InlineData("1.23 * 4.56", (float)5.6088)]
-    [InlineData("4.56 / 1.23", (float)3.70731688)]
+    [InlineData("1.0", 1.0)]
+    [InlineData("0.1", 0.1)]
+    [InlineData("-1.23", -1.23)]
+    [InlineData("cos(0.45)", 0.9004471023526769)]
+    [InlineData("sin(0.45)", 0.43496553411123023)]
+    [InlineData("floor(0.45)", 0.0)]
+    [InlineData("acos(0.45)", 1.1040309877476002)]
+    [InlineData("1.23 + 4.56", 1.23 + 4.56)]
+    [InlineData("1.23 - 4.56", 1.23 - 4.56)]
+    [InlineData("1.23 * 4.56", 1.23 * 4.56)]
+    [InlineData("4.56 / 1.23", 4.56 / 1.23)]
+    [InlineData("0.1f", 0.1f)]
+    [InlineData("-1.23f", -1.23f)]
+    [InlineData("1.23f + 4.56f", 1.23f + 4.56f)]
+    [InlineData("1.23f - 4.56f", 1.23f - 4.56f)]
+    [InlineData("1.23f * 4.56f", 1.23f * 4.56f)]
+    [InlineData("4.56f / 1.23f", 4.56f / 1.23f)]
     [InlineData("-1", -1)]
     [InlineData("+1", 1)]
     [InlineData("~1", -2)]
@@ -75,6 +85,7 @@ public class EvaluationTests {
     [InlineData("{ var i = 10 var result = 0 while i > 0 { result = result + i i = i - 1 } result }", 55)]
     [InlineData("{ var result = 0 for i = 1 to 10 { result = result + i } result }", 55)]
     [InlineData("{ var a = 10 for i = 1 to (a = a - 1) {} a }", 9)]
+    [InlineData("{ var i = 0 while i < 5 { i = i + 1 if i == 5 continue } i }", 5)]
     public void EvaluatorComputesCorrectValues(string text, object expectedValue) {
         AssertValue(text, expectedValue);
     }
@@ -171,7 +182,7 @@ public class EvaluationTests {
     public void EvaluatorIfStatementReportsCannotConvert() {
         var text = @"
             {
-                var x: float = 0.2
+                var x: float = 0.2f
                 if [x]
                     x = 10
             }
@@ -187,7 +198,7 @@ public class EvaluationTests {
     public void EvaluatorWhileStatementReportsCannotConvert() {
         var text = @"
             {
-                var x: float = 0.1
+                var x: float = 0.1f
                 while [x]
                     x = 10
             }

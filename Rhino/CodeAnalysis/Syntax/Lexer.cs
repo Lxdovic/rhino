@@ -303,17 +303,28 @@ internal sealed class Lexer {
         var text = _text.ToString(_start, length);
 
         if (numberOfDots > 0) {
-            if (!float.TryParse(text, out var floatValue))
-                Diagnostics.ReportInvalidNumber(new TextSpan(_start, length), text, TypeSymbol.Float);
+            if (Current == 'f') {
+                _position++;
 
-            _value = floatValue;
+                if (!float.TryParse(text, out var value))
+                    Diagnostics.ReportInvalidNumber(new TextSpan(_start, length), text, TypeSymbol.Float);
+
+                _value = value;
+            }
+
+            else {
+                if (!double.TryParse(text, out var value))
+                    Diagnostics.ReportInvalidNumber(new TextSpan(_start, length), text, TypeSymbol.Float);
+
+                _value = value;
+            }
         }
 
         if (numberOfDots == 0) {
-            if (!int.TryParse(text, out var integerValue))
+            if (!int.TryParse(text, out var value))
                 Diagnostics.ReportInvalidNumber(new TextSpan(_start, length), text, TypeSymbol.Int);
 
-            _value = integerValue;
+            _value = value;
         }
 
         _kind = SyntaxKind.NumberToken;

@@ -65,6 +65,10 @@ To run tests, use the following commands
 - `var <identifier>(: <optional type>) = <value>` creates a mutable variable
 - `let <identifier>(: <optional type>) = <value>` crates an immutable variable
 
+### Expressions
+
+- `(1 + 2) * 3`
+
 ### Functions
 
 - `function <identifier>(<parameter 1>: <type>, ... <parameterN>: type) { ... }`
@@ -87,7 +91,11 @@ To run tests, use the following commands
 - `print(<expression>)` prints the expression to the console
 - `println(<expression>)` prints the expression to the console in a new line
 - `input()` reads a line from the console
-- `random(<min>, <max>)` generates a random number
+- `random(<min>: int, <max>: int)` generates a random number
+- `cos(<value>: double)` get the cosinus for the given value
+- `sin(<value>: double)` get the sinus for the given value
+- `acos(<value>: double)` get the arc cosinus for the given value
+- `floor(<value>: double)` get the floor pf the given value
 
 ### Type conversion
 
@@ -95,13 +103,20 @@ To run tests, use the following commands
 - `int(<expression>)` converts the expression to an integer
 - `bool(<expression>)` converts the expression to a boolean
 - `float(<expression>)` converts the expression to a float
+- `double(<expression>)` converts the expression to a float
 
 ### Primitive types
 
 - String
-- Int
-- Float
+  `var myString = "myString"`
 - Bool
+  `var myBool = true`
+- Int
+  `var myInt = 1`
+- Float
+  `var myFloat = 0.2f`
+- Double
+  `var myDouble = 0.2`
 
 ### Meta commands:
 

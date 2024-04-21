@@ -8,8 +8,7 @@ namespace Rhino.CodeAnalysis;
 public class Compilation {
     private BoundGlobalScope _globalScope;
 
-    public Compilation(SyntaxTree syntaxTree) : this(null, syntaxTree) {
-    }
+    public Compilation(SyntaxTree syntaxTree) : this(null, syntaxTree) { }
 
     private Compilation(Compilation previous, SyntaxTree syntaxTree) {
         Previous = previous;
@@ -50,6 +49,16 @@ public class Compilation {
 
     public void EmitTree(TextWriter writer) {
         var program = Binder.BindProgram(GlobalScope);
-        program.Statement.WriteTo(writer);
+
+        if (program.Statement.Statements.Any())
+            program.Statement.WriteTo(writer);
+
+        else
+            foreach (var functionBody in program.Functions) {
+                if (!GlobalScope.Functions.Contains(functionBody.Key)) continue;
+
+                functionBody.Key.WriteTo(writer);
+                functionBody.Value.WriteTo(writer);
+            }
     }
 }

@@ -9,6 +9,7 @@ internal sealed class BoundLiteralExpression : BoundExpression {
         if (value is bool) Type = TypeSymbol.Bool;
         else if (value is int) Type = TypeSymbol.Int;
         else if (value is float) Type = TypeSymbol.Float;
+        else if (value is double) Type = TypeSymbol.Double;
         else if (value is string) Type = TypeSymbol.String;
         else
             throw new Exception($"Unexpected literal '{value}' of type {value.GetType()}");

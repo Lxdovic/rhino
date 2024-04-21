@@ -486,6 +486,8 @@ internal sealed class Binder {
                 return TypeSymbol.String;
             case "float":
                 return TypeSymbol.Float;
+            case "double":
+                return TypeSymbol.Double;
             default:
                 return null;
         }

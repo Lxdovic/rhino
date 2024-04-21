@@ -11,13 +11,15 @@ internal sealed class BoundUnaryOperator {
         new(SyntaxKind.TildeToken, BoundUnaryOperatorKind.BitwiseNegation, TypeSymbol.Int),
         new(SyntaxKind.PlusToken, BoundUnaryOperatorKind.Identity, TypeSymbol.Float),
         new(SyntaxKind.MinusToken, BoundUnaryOperatorKind.Negation, TypeSymbol.Float),
-        new(SyntaxKind.TildeToken, BoundUnaryOperatorKind.BitwiseNegation, TypeSymbol.Float)
+        new(SyntaxKind.TildeToken, BoundUnaryOperatorKind.BitwiseNegation, TypeSymbol.Float),
+        new(SyntaxKind.PlusToken, BoundUnaryOperatorKind.Identity, TypeSymbol.Double),
+        new(SyntaxKind.MinusToken, BoundUnaryOperatorKind.Negation, TypeSymbol.Double),
+        new(SyntaxKind.TildeToken, BoundUnaryOperatorKind.BitwiseNegation, TypeSymbol.Double)
     };
 
     private BoundUnaryOperator(SyntaxKind syntaxKind, BoundUnaryOperatorKind kind, TypeSymbol operandType) : this(
         syntaxKind,
-        kind, operandType, operandType) {
-    }
+        kind, operandType, operandType) { }
 
     private BoundUnaryOperator(SyntaxKind syntaxKind, BoundUnaryOperatorKind kind, TypeSymbol operandType,
         TypeSymbol type) {
