@@ -123,9 +123,11 @@ building a compiler
 ### Control Flow Graph
 
 The following code
+
 ![image](https://github.com/Lxdovic/rhino/assets/80395681/fc3f44ae-b819-493e-abf5-8c914405082d)
 
 Generates the following diagram
+
 ![image](https://github.com/Lxdovic/rhino/assets/80395681/a260b499-8296-4c2d-9f09-0b7bc4c2ddde)
 
 ## Run Locally
