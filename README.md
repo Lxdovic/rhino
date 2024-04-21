@@ -4,34 +4,23 @@ My first attempt at building a compiler. With the help
 of [Immo Landwerth's tutorial series](https://www.youtube.com/playlist?list=PLRAdsfhKI4OWNOSfS7EUu5GRAVmze1t2y) on
 building a compiler
 
-## Run Locally
-
-- Install .NET >= 8.0
-- Clone the project
-
-```bash
-  git clone git@github.com:Lxdovic/rhino.git
-```
-
-- Go to the project directory
-
-```bash
-  cd rhino
-```
-- Run the project
-
-```bash
-  dotnet run --project ./rc/rc.csproj
-```
-
-## Running Tests
-
-To run tests, use the following commands
-
-```bash
-  cd rhino/
-  dotnet test
-```
+## Table of Contents
+- [Features](#run-locally)
+  - [Operators](#operators)
+  - [Assignments](#assignments)
+  - [Expressions](#expressions)
+  - [Functions](#functions)
+  - [Scopes](#scopes)
+  - [Conditions](#conditions)
+  - [Loops](#loops)
+  - [Built-in Functions](#built-in-functions)
+  - [Type Conversion](#type-conversion)
+  - [Primitive Types](#primitive-types)
+  - [Meta Commands](#meta-commands)
+- [Examples](#examples)
+- [Misc](#misc)
+- [Run Locally](#run-locally)
+- [Running Tests](#running-tests)
 
 ## Features
 
@@ -86,7 +75,7 @@ To run tests, use the following commands
 - `for <identifier> = <lowerBound> to <upperBound>`
 - `while <condition>`
 
-### Builtin functions
+### Built-in functions
 
 - `print(<expression>)` prints the expression to the console
 - `println(<expression>)` prints the expression to the console in a new line
@@ -128,3 +117,42 @@ To run tests, use the following commands
 ## Examples:
 
 ![](./docs/images/odd-even-example.png)
+
+## Misc:
+
+### Control Flow Graph
+
+The following code
+![image](https://github.com/Lxdovic/rhino/assets/80395681/fc3f44ae-b819-493e-abf5-8c914405082d)
+
+Generates the following diagram
+![image](https://github.com/Lxdovic/rhino/assets/80395681/a260b499-8296-4c2d-9f09-0b7bc4c2ddde)
+
+## Run Locally
+
+- Install .NET >= 8.0
+- Clone the project
+
+```bash
+  git clone git@github.com:Lxdovic/rhino.git
+```
+
+- Go to the project directory
+
+```bash
+  cd rhino
+```
+- Run the project
+
+```bash
+  dotnet run --project ./rc/rc.csproj
+```
+
+## Running Tests
+
+To run tests, use the following commands
+
+```bash
+  cd rhino/
+  dotnet test
+```
