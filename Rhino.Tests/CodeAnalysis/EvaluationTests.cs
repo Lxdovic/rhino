@@ -91,7 +91,123 @@ public class EvaluationTests {
     }
 
     [Fact]
-    public void Evaluator_InvokeFunctionArguments_Missing() {
+    public void EvaluatorFunctionWithReturnValueShouldNotReturnVoid() {
+        var text = @"
+            function test(): int {
+                [return]
+            }";
+
+        var diagnostics = @"
+            ERROR: The return expression is missing for function 'test'.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Fact]
+    public void EvaluatorNotAllCodePathsReturnValue() {
+        var text = @"
+                function [test](n: int): bool {
+                    if (n > 10)
+                       return true
+                }";
+
+        var diagnostics = @"
+            ERROR: Not all code paths return a value for function 'test'.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Fact]
+    public void EvaluatorExpressionMustHaveValue() {
+        var text = @"
+            function test(n: int) {
+                return
+            }
+
+            let value = [test(100)]";
+
+        var diagnostics = @"
+            ERROR: expression must have a value.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Theory]
+    [InlineData("[break]", "break")]
+    [InlineData("[continue]", "continue")]
+    public void EvaluatorInvalidBreakOrContinue(string text, string keyword) {
+        var diagnostics = $@"
+            ERROR: The keyword '{keyword}' can only be used inside of loops.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Fact]
+    public void EvaluatorInvalidReturn() {
+        var text = @"
+                [return]";
+
+        var diagnostics = @"
+                ERROR: The 'return' keyword can only be used inside of functions.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Fact]
+    public void EvaluatorParameterAlreadyDeclared() {
+        var text = @"
+                function sum(a: int, b: int, [a: int]): int {
+                    return a + b + c
+                }";
+
+        var diagnostics = @"
+                ERROR: A parameter with the name 'a' already exists.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Fact]
+    public void EvaluatorFunctionMustHaveName() {
+        var text = @"
+                function [(]a: int, b: int): int {
+                    return a + b
+                }";
+
+        var diagnostics = @"
+                ERROR: unexpected token <OpenParenthesisToken>, expected <IdentifierToken>.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Fact]
+    public void EvaluatorWrongArgumentType() {
+        var text = @"
+                function test(n: int): bool {
+                    return n > 10
+                }
+
+                let testValue = ""string""
+                test([testValue])";
+
+        var diagnostics = @"
+                ERROR: parameter 'n' requires a value of type <int>, but was given a value of type <string>.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Fact]
+    public void EvaluatorBadType() {
+        var text = @"
+                function test(n: [invalidtype]) {}";
+
+        var diagnostics = @"
+                ERROR: type 'invalidtype' doesn't exist.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Fact]
+    public void EvaluatorInvokeFunctionArgumentsMissing() {
         var text = @"
                 print([)]";
 
@@ -102,7 +218,7 @@ public class EvaluationTests {
     }
 
     [Fact]
-    public void Evaluator_InvokeFunctionArguments_Exceeding() {
+    public void EvaluatorInvokeFunctionArgumentsExceeding() {
         var text = @"
                 print(""Hello""[, "" "", "" world!""])";
 

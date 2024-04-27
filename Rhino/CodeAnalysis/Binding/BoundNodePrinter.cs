@@ -124,7 +124,6 @@ internal static class BoundNodePrinter {
         writer.WriteLine();
     }
 
-
     private static void WriteLabelStatement(BoundLabelStatement node, IndentedTextWriter writer) {
         var unindent = writer.Indent > 0;
 
@@ -292,7 +291,7 @@ internal static class BoundNodePrinter {
         else if (node.Type == TypeSymbol.Float) writer.WriteNumber(((float)value).ToString());
         else if (node.Type == TypeSymbol.String)
             writer.WriteString("\"" + ((string)value).Replace("\"", "\"\"") + "\"");
-        
+
         else throw new Exception($"Unexpected type {node.Type}");
     }
 
