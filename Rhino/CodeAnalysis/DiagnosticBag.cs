@@ -154,4 +154,10 @@ internal sealed class DiagnosticBag : IEnumerable<Diagnostic> {
 
         Report(returnKeywordSpan, message);
     }
+
+    public void ReportAllPathsMustReturn(TextSpan span, string functionName) {
+        var message = $"ERROR: Not all code paths return a value for function '{functionName}'.";
+
+        Report(span, message);
+    }
 }

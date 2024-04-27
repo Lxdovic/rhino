@@ -76,6 +76,10 @@ internal static class BoundNodePrinter {
                 WriteConversionExpression((BoundConversionExpression)node, writer);
                 break;
 
+            case BoundNodeKind.ReturnStatement:
+                WriteReturnStatement((BoundReturnStatement)node, writer);
+                break;
+
             case BoundNodeKind.BlockStatement:
                 WriteBlockStatement((BoundBlockStatement)node, writer);
                 break;
@@ -108,6 +112,18 @@ internal static class BoundNodePrinter {
                 throw new Exception($"Unexpected node {node.Kind}");
         }
     }
+
+    private static void WriteReturnStatement(BoundReturnStatement node, IndentedTextWriter writer) {
+        writer.WriteKeyword(SyntaxKind.ReturnKeyword);
+
+        if (node.Expression != null) {
+            writer.WriteSpace();
+            node.Expression.WriteTo(writer);
+        }
+
+        writer.WriteLine();
+    }
+
 
     private static void WriteLabelStatement(BoundLabelStatement node, IndentedTextWriter writer) {
         var unindent = writer.Indent > 0;

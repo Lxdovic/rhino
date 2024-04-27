@@ -59,6 +59,19 @@ internal sealed class ControlFlowGraph {
         return graphBuilder.Build(blocks);
     }
 
+    public static bool AllPathsReturn(BoundBlockStatement body) {
+        var graph = Create(body);
+
+        foreach (var branch in graph.End.Incoming) {
+            var lastStatement = branch.From.Statements.LastOrDefault();
+
+            if (lastStatement == null || lastStatement.Kind != BoundNodeKind.ReturnStatement)
+                return false;
+        }
+
+        return true;
+    }
+
     public sealed class BasicBlockBuilder {
         private readonly List<BasicBlock> _blocks = new();
         private readonly List<BoundStatement> _statements = new();
@@ -94,7 +107,7 @@ internal sealed class ControlFlowGraph {
         }
 
         private void EndBlock() {
-            if (_statements.Any()) {
+            if (_statements.Count > 0) {
                 var block = new BasicBlock();
 
                 block.Statements.AddRange(_statements);
@@ -171,11 +184,33 @@ internal sealed class ControlFlowGraph {
                 }
             }
 
+            ScanAgain:
+            foreach (var block in blocks)
+                if (!block.Incoming.Any()) {
+                    RemoveBlock(blocks, block);
+                    goto ScanAgain;
+                }
+
             blocks.Insert(0, _start);
             blocks.Add(_end);
 
             return new ControlFlowGraph(_start, _end, blocks, _branches);
         }
+
+        private void RemoveBlock(List<BasicBlock> blocks, BasicBlock block) {
+            foreach (var branch in block.Incoming) {
+                branch.From.Outgoing.Remove(branch);
+                _branches.Remove(branch);
+            }
+
+            foreach (var branch in block.Outgoing) {
+                branch.To.Incoming.Remove(branch);
+                _branches.Remove(branch);
+            }
+
+            blocks.Remove(block);
+        }
+
 
         private BoundExpression Negate(BoundExpression condition) {
             if (condition is BoundLiteralExpression literal) {
@@ -190,6 +225,12 @@ internal sealed class ControlFlowGraph {
         }
 
         private void Connect(BasicBlock start, BasicBlock end, BoundExpression condition = null) {
+            if (condition is BoundLiteralExpression l) {
+                var value = (bool)l.Value;
+                if (value) condition = null;
+                else return;
+            }
+
             var branch = new BasicBlockBranch(start, end, condition);
 
             _branches.Add(branch);
