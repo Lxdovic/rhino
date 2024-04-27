@@ -288,9 +288,11 @@ internal static class BoundNodePrinter {
 
         if (node.Type == TypeSymbol.Bool) writer.WriteKeyword(((bool)value).ToString());
         else if (node.Type == TypeSymbol.Int) writer.WriteNumber(((int)value).ToString());
+        else if (node.Type == TypeSymbol.Double) writer.WriteNumber(((double)value).ToString());
+        else if (node.Type == TypeSymbol.Float) writer.WriteNumber(((float)value).ToString());
         else if (node.Type == TypeSymbol.String)
             writer.WriteString("\"" + ((string)value).Replace("\"", "\"\"") + "\"");
-
+        
         else throw new Exception($"Unexpected type {node.Type}");
     }
 
