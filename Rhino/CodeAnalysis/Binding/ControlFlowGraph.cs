@@ -1,3 +1,4 @@
+using System.CodeDom.Compiler;
 using Rhino.CodeAnalysis.Symbols;
 using Rhino.CodeAnalysis.Syntax;
 
@@ -32,7 +33,7 @@ internal sealed class ControlFlowGraph {
             var id = blockIds[block];
             var label = Quote(block.ToString().Replace(Environment.NewLine, "\\l"));
 
-            writer.WriteLine($"  {id} [label={label} shape=box]");
+            writer.WriteLine($"  {id} [label={label}, shape=box]");
         }
 
         string Quote(string text) {
@@ -259,10 +260,12 @@ internal sealed class ControlFlowGraph {
             if (IsStart) return "<Start>";
             if (IsEnd) return "<End>";
 
-            using (var writer = new StringWriter()) {
+            using (var writer = new StringWriter())
+            using (var indentedTextWriter = new IndentedTextWriter(writer)) {
                 foreach (var statement in Statements)
-                    statement.WriteTo(writer);
-                return writer.ToString();
+                    statement.WriteTo(indentedTextWriter);
+
+                return indentedTextWriter.ToString();
             }
         }
     }
