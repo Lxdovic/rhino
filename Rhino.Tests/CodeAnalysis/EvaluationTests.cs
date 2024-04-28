@@ -91,6 +91,40 @@ public class EvaluationTests {
     }
 
     [Fact]
+    public void EvaluatorAssignmentExpressionReportsNotAVariable() {
+        var text = @"[print] = 42";
+
+        var diagnostics = @"
+            ERROR: 'print' is not a variable.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Fact]
+    public void EvaluatorCallExpressionReportsUndefined() {
+        var text = @"[foo](42)";
+
+        var diagnostics = @"
+            ERROR: function 'foo' doesn't exist.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Fact]
+    public void EvaluatorCallExpressionReportsNotAFunction() {
+        var text = @"
+            {
+                let foo = 42
+                [foo](42)
+            }";
+
+        var diagnostics = @"
+            ERROR: 'foo' is not a function.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Fact]
     public void EvaluatorFunctionWithReturnValueShouldNotReturnVoid() {
         var text = @"
             function test(): int {
@@ -258,7 +292,7 @@ public class EvaluationTests {
             ";
 
         var diagnostics = @"
-                ERROR: function 'print' doesn't exist.";
+                ERROR: 'print' is not a function.";
 
         AssertDiagnostics(text, diagnostics);
     }

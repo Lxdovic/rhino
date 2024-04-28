@@ -215,7 +215,7 @@ internal sealed class Binder {
 
         _scope = new BoundScope(_scope);
 
-        var variable = BindVariable(syntax.Identifier, true, TypeSymbol.Int);
+        var variable = BindVariableDeclaration(syntax.Identifier, true, TypeSymbol.Int);
         var body = BindLoopBody(syntax.Body, out var breakLabel, out var continueLabel);
 
         _scope = _scope.Parent;
@@ -256,7 +256,7 @@ internal sealed class Binder {
         var type = BindTypeClause(syntax.TypeClause);
         var variableType = type ?? initializer.Type;
         var isReadOnly = syntax.Keyword.Kind == SyntaxKind.LetKeyword;
-        var variable = BindVariable(syntax.Identifier, isReadOnly, initializer.Type);
+        var variable = BindVariableDeclaration(syntax.Identifier, isReadOnly, initializer.Type);
         var convertedInitializer = BindConversion(syntax.Initializer.Span, initializer, variableType);
 
         return new BoundVariableDeclaration(variable, convertedInitializer);
@@ -297,11 +297,8 @@ internal sealed class Binder {
         var boundExpression = BindExpression(syntax.Expression);
         var name = syntax.IdentifierToken.Text;
 
-        if (!_scope.TryLookupVariable(name, out var variable)) {
-            Diagnostics.ReportUndefinedName(syntax.IdentifierToken.Span, name);
-
-            return boundExpression;
-        }
+        var variable = BindVariableReference(name, syntax.IdentifierToken.Span);
+        if (variable == null) return boundExpression;
 
         if (variable.IsReadOnly) Diagnostics.ReportCannotAssign(syntax.EqualsToken.Span, name);
 
@@ -357,8 +354,16 @@ internal sealed class Binder {
             boundArguments.Add(boundArgument);
         }
 
-        if (!_scope.TryLookupFunction(syntax.Identifier.Text, out var function)) {
+
+        var symbol = _scope.TryLookupSymbol(syntax.Identifier.Text);
+        if (symbol == null) {
             Diagnostics.ReportUndefinedFunction(syntax.Identifier.Span, syntax.Identifier.Text);
+            return new BoundErrorExpression();
+        }
+
+        var function = symbol as FunctionSymbol;
+        if (function == null) {
+            Diagnostics.ReportNotAFunction(syntax.Identifier.Span, syntax.Identifier.Text);
             return new BoundErrorExpression();
         }
 
@@ -434,13 +439,27 @@ internal sealed class Binder {
 
         if (syntax.IdentifierToken.IsMissing) return new BoundErrorExpression();
 
-        if (!_scope.TryLookupVariable(name, out var variable)) {
-            Diagnostics.ReportUndefinedName(syntax.IdentifierToken.Span, name);
+        var variable = BindVariableReference(name, syntax.IdentifierToken.Span);
+        if (variable == null)
 
             return new BoundErrorExpression();
-        }
 
         return new BoundVariableExpression(variable);
+    }
+
+    private VariableSymbol BindVariableReference(string name, TextSpan span) {
+        switch (_scope.TryLookupSymbol(name)) {
+            case VariableSymbol variable:
+                return variable;
+
+            case null:
+                Diagnostics.ReportUndefinedVariable(span, name);
+                return null;
+
+            default:
+                Diagnostics.ReportNotAVariable(span, name);
+                return null;
+        }
     }
 
     private BoundExpression BindParenthesizedExpression(ParenthesizedExpressionSyntax syntax) {
@@ -490,7 +509,7 @@ internal sealed class Binder {
         return new BoundLiteralExpression(value);
     }
 
-    private VariableSymbol BindVariable(SyntaxToken identifier, bool isReadOnly, TypeSymbol type) {
+    private VariableSymbol BindVariableDeclaration(SyntaxToken identifier, bool isReadOnly, TypeSymbol type) {
         var name = identifier.Text ?? "?";
         var declare = !identifier.IsMissing;
         var variable = _function == null

@@ -31,31 +31,10 @@ internal sealed class BoundScope {
         return true;
     }
 
-    public bool TryLookupVariable(string name, out VariableSymbol variable) {
-        return TryLookupSymbol(name, out variable);
-    }
+    public Symbol TryLookupSymbol(string name) {
+        if (_symbols != null && _symbols.TryGetValue(name, out var symbol)) return symbol;
 
-    public bool TryLookupFunction(string name, out FunctionSymbol function) {
-        return TryLookupSymbol(name, out function);
-    }
-
-    private bool TryLookupSymbol<TSymbol>(string name, out TSymbol symbol)
-        where TSymbol : Symbol {
-        symbol = null;
-
-        if (_symbols != null && _symbols.TryGetValue(name, out var declaredSymbol)) {
-            if (declaredSymbol is TSymbol matchingSymbol) {
-                symbol = matchingSymbol;
-                return true;
-            }
-
-            return false;
-        }
-
-        if (Parent == null)
-            return false;
-
-        return Parent.TryLookupSymbol(name, out symbol);
+        return Parent?.TryLookupSymbol(name);
     }
 
     public ImmutableArray<VariableSymbol> GetDeclaredVariables() {

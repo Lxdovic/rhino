@@ -160,4 +160,22 @@ internal sealed class DiagnosticBag : IEnumerable<Diagnostic> {
 
         Report(span, message);
     }
+
+    public void ReportNotAVariable(TextSpan span, string name) {
+        var message = $"ERROR: '{name}' is not a variable.";
+
+        Report(span, message);
+    }
+
+    public void ReportUndefinedVariable(TextSpan span, string name) {
+        var message = $"ERROR: variable '{name}' doesn't exist.";
+
+        Report(span, message);
+    }
+
+    public void ReportNotAFunction(TextSpan span, string text) {
+        var message = $"ERROR: '{text}' is not a function.";
+
+        Report(span, message);
+    }
 }
