@@ -23,16 +23,19 @@ internal sealed class Binder {
 
     public DiagnosticBag Diagnostics { get; } = new();
 
-    public static BoundGlobalScope BindGlobalScope(BoundGlobalScope previous, CompilationUnitSyntax syntax) {
+    public static BoundGlobalScope BindGlobalScope(BoundGlobalScope previous, ImmutableArray<SyntaxTree> syntaxTrees) {
         var parentScope = CreateParentScope(previous);
         var binder = new Binder(parentScope, null);
 
-        foreach (var function in syntax.Members.OfType<FunctionDeclarationSyntax>())
+        var functionDeclarations = syntaxTrees.SelectMany(st => st.Root.Members).OfType<FunctionDeclarationSyntax>();
+
+        foreach (var function in functionDeclarations)
             binder.BindFunctionDeclaration(function);
 
         var statements = ImmutableArray.CreateBuilder<BoundStatement>();
+        var globalStatements = syntaxTrees.SelectMany(st => st.Root.Members).OfType<GlobalStatementSyntax>();
 
-        foreach (var globalStatement in syntax.Members.OfType<GlobalStatementSyntax>()) {
+        foreach (var globalStatement in globalStatements) {
             var s = binder.BindStatement(globalStatement.Statement);
             statements.Add(s);
         }

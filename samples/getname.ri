@@ -1,0 +1,5 @@
+function getName(): string {
+    println("What is your name?")
+    let name = input()
+    return name
+}
