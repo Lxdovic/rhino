@@ -61,7 +61,8 @@ internal sealed class Binder {
                 var loweredBody = Lowerer.Lower(body);
 
                 if (function.ReturnType != TypeSymbol.Void && !ControlFlowGraph.AllPathsReturn(loweredBody))
-                    binder.Diagnostics.ReportAllPathsMustReturn(function.Declaration.Identifier.Span, function.Name);
+                    binder.Diagnostics.ReportAllPathsMustReturn(function.Declaration.Identifier.Location,
+                        function.Name);
 
                 functionBodies.Add(function, loweredBody);
 
@@ -86,7 +87,7 @@ internal sealed class Binder {
             var parameterType = BindTypeClause(parameterSyntax.Type);
 
             if (!seenParameterNames.Add(parameterName)) {
-                Diagnostics.ReportParameterAlreadyDeclared(parameterSyntax.Span, parameterName);
+                Diagnostics.ReportParameterAlreadyDeclared(parameterSyntax.Location, parameterName);
             }
 
             else {
@@ -99,7 +100,7 @@ internal sealed class Binder {
         var function = new FunctionSymbol(syntax.Identifier.Text, parameters.ToImmutable(), type, syntax);
 
         if (function.Declaration.Identifier.Text != null && !_scope.TryDeclareFunction(function))
-            Diagnostics.ReportSymbolAlreadyDeclared(syntax.Identifier.Span, function.Name);
+            Diagnostics.ReportSymbolAlreadyDeclared(syntax.Identifier.Location, function.Name);
     }
 
     private static BoundScope CreateParentScope(BoundGlobalScope previous) {
@@ -163,20 +164,20 @@ internal sealed class Binder {
         var expression = syntax.Expression == null ? null : BindExpression(syntax.Expression);
 
         if (_function == null) {
-            Diagnostics.ReportInvalidReturn(syntax.ReturnKeyword.Span);
+            Diagnostics.ReportInvalidReturn(syntax.ReturnKeyword.Location);
         }
 
         else {
             if (_function.ReturnType == TypeSymbol.Void) {
                 if (expression != null)
-                    Diagnostics.ReportInvalidReturnExpression(syntax.Expression.Span, _function.Name);
+                    Diagnostics.ReportInvalidReturnExpression(syntax.Expression.Location, _function.Name);
             }
 
             else {
                 if (expression == null)
-                    Diagnostics.ReportMissingReturnExpression(syntax.ReturnKeyword.Span, _function.Name);
+                    Diagnostics.ReportMissingReturnExpression(syntax.ReturnKeyword.Location, _function.Name);
 
-                else expression = BindConversion(syntax.Expression.Span, expression, _function.ReturnType);
+                else expression = BindConversion(syntax.Expression.Location, expression, _function.ReturnType);
             }
         }
 
@@ -185,7 +186,7 @@ internal sealed class Binder {
 
     private BoundStatement BindContinueStatement(ContinueStatementSyntax syntax) {
         if (_loopStack.Count == 0) {
-            Diagnostics.ReportInvalidBreakOrContinue(syntax.Keyword.Span, syntax.Keyword.Text);
+            Diagnostics.ReportInvalidBreakOrContinue(syntax.Keyword.Location, syntax.Keyword.Text);
             return BindErrorStatement();
         }
 
@@ -196,7 +197,7 @@ internal sealed class Binder {
 
     private BoundStatement BindBreakStatement(BreakStatementSyntax syntax) {
         if (_loopStack.Count == 0) {
-            Diagnostics.ReportInvalidBreakOrContinue(syntax.Keyword.Span, syntax.Keyword.Text);
+            Diagnostics.ReportInvalidBreakOrContinue(syntax.Keyword.Location, syntax.Keyword.Text);
             return BindErrorStatement();
         }
 
@@ -257,7 +258,7 @@ internal sealed class Binder {
         var variableType = type ?? initializer.Type;
         var isReadOnly = syntax.Keyword.Kind == SyntaxKind.LetKeyword;
         var variable = BindVariableDeclaration(syntax.Identifier, isReadOnly, initializer.Type);
-        var convertedInitializer = BindConversion(syntax.Initializer.Span, initializer, variableType);
+        var convertedInitializer = BindConversion(syntax.Initializer.Location, initializer, variableType);
 
         return new BoundVariableDeclaration(variable, convertedInitializer);
     }
@@ -267,7 +268,7 @@ internal sealed class Binder {
 
         var type = LookupType(syntax.Identifier.Text);
 
-        if (type == null) Diagnostics.ReportUndefinedType(syntax.Identifier.Span, syntax.Identifier.Text);
+        if (type == null) Diagnostics.ReportUndefinedType(syntax.Identifier.Location, syntax.Identifier.Text);
 
         return type;
     }
@@ -297,12 +298,12 @@ internal sealed class Binder {
         var boundExpression = BindExpression(syntax.Expression);
         var name = syntax.IdentifierToken.Text;
 
-        var variable = BindVariableReference(name, syntax.IdentifierToken.Span);
+        var variable = BindVariableReference(syntax.IdentifierToken);
         if (variable == null) return boundExpression;
 
-        if (variable.IsReadOnly) Diagnostics.ReportCannotAssign(syntax.EqualsToken.Span, name);
+        if (variable.IsReadOnly) Diagnostics.ReportCannotAssign(syntax.EqualsToken.Location, name);
 
-        var convertedExpression = BindConversion(syntax.Expression.Span, boundExpression, variable.Type);
+        var convertedExpression = BindConversion(syntax.Expression.Location, boundExpression, variable.Type);
 
         return new BoundAssignmentExpression(variable, convertedExpression);
     }
@@ -315,7 +316,7 @@ internal sealed class Binder {
         var result = BindExpressionInternal(syntax);
 
         if (!canBeVoid && result.Type == TypeSymbol.Void) {
-            Diagnostics.ReportExpressionMustHaveValue(syntax.Span);
+            Diagnostics.ReportExpressionMustHaveValue(syntax.Location);
             return new BoundErrorExpression();
         }
 
@@ -357,13 +358,13 @@ internal sealed class Binder {
 
         var symbol = _scope.TryLookupSymbol(syntax.Identifier.Text);
         if (symbol == null) {
-            Diagnostics.ReportUndefinedFunction(syntax.Identifier.Span, syntax.Identifier.Text);
+            Diagnostics.ReportUndefinedFunction(syntax.Identifier.Location, syntax.Identifier.Text);
             return new BoundErrorExpression();
         }
 
         var function = symbol as FunctionSymbol;
         if (function == null) {
-            Diagnostics.ReportNotAFunction(syntax.Identifier.Span, syntax.Identifier.Text);
+            Diagnostics.ReportNotAFunction(syntax.Identifier.Location, syntax.Identifier.Text);
             return new BoundErrorExpression();
         }
 
@@ -373,16 +374,22 @@ internal sealed class Binder {
                 SyntaxNode firstExceedingNode;
                 if (function.Parameters.Length > 0)
                     firstExceedingNode = syntax.Arguments.GetSeparator(function.Parameters.Length - 1);
+
                 else
                     firstExceedingNode = syntax.Arguments[0];
+
                 var lastExceedingArgument = syntax.Arguments[syntax.Arguments.Count - 1];
+
                 span = TextSpan.FromBounds(firstExceedingNode.Span.Start, lastExceedingArgument.Span.End);
             }
+
             else {
                 span = syntax.CloseParenthesissToken.Span;
             }
 
-            Diagnostics.ReportWrongArgumentCount(span, function.Name, function.Parameters.Length,
+            var location = new TextLocation(syntax.SyntaxTree.Text, span);
+
+            Diagnostics.ReportWrongArgumentCount(location, function.Name, function.Parameters.Length,
                 syntax.Arguments.Count);
 
             return new BoundErrorExpression();
@@ -396,7 +403,7 @@ internal sealed class Binder {
 
             if (argument.Type != parameter.Type) {
                 if (argument.Type != TypeSymbol.Error)
-                    Diagnostics.ReportWrongArgumentType(syntax.Arguments[i].Span, parameter.Name, parameter.Type,
+                    Diagnostics.ReportWrongArgumentType(syntax.Arguments[i].Location, parameter.Name, parameter.Type,
                         argument.Type);
 
                 hasErrors = true;
@@ -412,22 +419,22 @@ internal sealed class Binder {
     private BoundExpression BindConversion(ExpressionSyntax syntax, TypeSymbol type, bool allowExplicit = false) {
         var expression = BindExpression(syntax);
 
-        return BindConversion(syntax.Span, expression, type, allowExplicit);
+        return BindConversion(syntax.Location, expression, type, allowExplicit);
     }
 
-    private BoundExpression BindConversion(TextSpan diagnosticSpan, BoundExpression expression, TypeSymbol type,
+    private BoundExpression BindConversion(TextLocation diagnosticLocation, BoundExpression expression, TypeSymbol type,
         bool allowExplicit = false) {
         var conversion = Conversion.Classify(expression.Type, type);
 
         if (!conversion.Exists) {
             if (expression.Type != TypeSymbol.Error && type != TypeSymbol.Error)
-                Diagnostics.ReportCannotConvert(diagnosticSpan, expression.Type, type);
+                Diagnostics.ReportCannotConvert(diagnosticLocation, expression.Type, type);
 
             return new BoundErrorExpression();
         }
 
         if (!allowExplicit && conversion.IsExplicit)
-            Diagnostics.ReportCannotConvertImplicitly(diagnosticSpan, expression.Type, type);
+            Diagnostics.ReportCannotConvertImplicitly(diagnosticLocation, expression.Type, type);
 
         if (conversion.IsIdentity) return expression;
 
@@ -439,7 +446,7 @@ internal sealed class Binder {
 
         if (syntax.IdentifierToken.IsMissing) return new BoundErrorExpression();
 
-        var variable = BindVariableReference(name, syntax.IdentifierToken.Span);
+        var variable = BindVariableReference(syntax.IdentifierToken);
         if (variable == null)
 
             return new BoundErrorExpression();
@@ -447,17 +454,18 @@ internal sealed class Binder {
         return new BoundVariableExpression(variable);
     }
 
-    private VariableSymbol BindVariableReference(string name, TextSpan span) {
+    private VariableSymbol BindVariableReference(SyntaxToken identifier) {
+        var name = identifier.Text;
         switch (_scope.TryLookupSymbol(name)) {
             case VariableSymbol variable:
                 return variable;
 
             case null:
-                Diagnostics.ReportUndefinedVariable(span, name);
+                Diagnostics.ReportUndefinedVariable(identifier.Location, name);
                 return null;
 
             default:
-                Diagnostics.ReportNotAVariable(span, name);
+                Diagnostics.ReportNotAVariable(identifier.Location, name);
                 return null;
         }
     }
@@ -476,7 +484,7 @@ internal sealed class Binder {
         var boundOperator = BoundBinaryOperator.Bind(syntax.OperatorToken.Kind, boundLeft.Type, boundRight.Type);
 
         if (boundOperator == null) {
-            Diagnostics.ReportUndefinedBinaryOperator(syntax.OperatorToken.Span, syntax.OperatorToken.Text,
+            Diagnostics.ReportUndefinedBinaryOperator(syntax.OperatorToken.Location, syntax.OperatorToken.Text,
                 boundLeft.Type, boundRight.Type);
 
             return new BoundErrorExpression();
@@ -494,7 +502,7 @@ internal sealed class Binder {
         var boundOperator = BoundUnaryOperator.Bind(syntax.OperatorToken.Kind, boundOperand.Type);
 
         if (boundOperator == null) {
-            Diagnostics.ReportUndefinedUnaryOperator(syntax.OperatorToken.Span, syntax.OperatorToken.Text,
+            Diagnostics.ReportUndefinedUnaryOperator(syntax.OperatorToken.Location, syntax.OperatorToken.Text,
                 boundOperand.Type);
 
             return new BoundErrorExpression();
@@ -518,7 +526,7 @@ internal sealed class Binder {
 
         // should never happen because we just declared a new scope and it has no variables
         if (declare && !_scope.TryDeclareVariable(variable))
-            Diagnostics.ReportSymbolAlreadyDeclared(identifier.Span, name);
+            Diagnostics.ReportSymbolAlreadyDeclared(identifier.Location, name);
 
         return variable;
     }

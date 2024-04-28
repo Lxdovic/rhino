@@ -1,8 +1,8 @@
 namespace Rhino.CodeAnalysis.Syntax;
 
 public sealed class CallExpressionSyntax : ExpressionSyntax {
-    public CallExpressionSyntax(SyntaxToken identifierToken, SyntaxToken openParenthesissToken,
-        SeparatedSyntaxList<ExpressionSyntax> arguments, SyntaxToken closeParenthesissToken) {
+    public CallExpressionSyntax(SyntaxTree syntaxTree, SyntaxToken identifierToken, SyntaxToken openParenthesissToken,
+        SeparatedSyntaxList<ExpressionSyntax> arguments, SyntaxToken closeParenthesissToken) : base(syntaxTree) {
         Identifier = identifierToken;
         OpenParenthesissToken = openParenthesissToken;
         Arguments = arguments;

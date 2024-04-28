@@ -5,6 +5,7 @@ using Rhino.CodeAnalysis.Text;
 namespace Rhino.CodeAnalysis.Syntax;
 
 internal sealed class Lexer {
+    private readonly SyntaxTree _syntaxTree;
     private readonly SourceText _text;
 
     private SyntaxKind _kind;
@@ -12,8 +13,9 @@ internal sealed class Lexer {
     private int _start;
     private object _value;
 
-    public Lexer(SourceText text) {
-        _text = text;
+    public Lexer(SyntaxTree syntaxTree) {
+        _syntaxTree = syntaxTree;
+        _text = syntaxTree.Text;
     }
 
     public DiagnosticBag Diagnostics { get; } = new();
@@ -224,7 +226,9 @@ internal sealed class Lexer {
                 }
 
                 else {
-                    Diagnostics.ReportBadCharacter(_position, Current);
+                    var span = new TextSpan(_position, 1);
+                    var location = new TextLocation(_text, span);
+                    Diagnostics.ReportBadCharacter(location, Current);
                     _position++;
                 }
 
@@ -236,7 +240,7 @@ internal sealed class Lexer {
 
         if (text == null) text = _text.ToString(_start, length);
 
-        return new SyntaxToken(_kind, _start, text, _value);
+        return new SyntaxToken(_syntaxTree, _kind, _start, text, _value);
     }
 
     private void ReadString() {
@@ -251,7 +255,8 @@ internal sealed class Lexer {
                 case '\r':
                 case '\n':
                     var span = new TextSpan(_start, 1);
-                    Diagnostics.ReportUnterminatedString(span);
+                    var location = new TextLocation(_text, span);
+                    Diagnostics.ReportUnterminatedString(location);
                     isDone = true;
                     break;
                 case '"':
@@ -306,23 +311,32 @@ internal sealed class Lexer {
             if (Current == 'f') {
                 _position++;
 
-                if (!float.TryParse(text, out var value))
-                    Diagnostics.ReportInvalidNumber(new TextSpan(_start, length), text, TypeSymbol.Float);
+                if (!float.TryParse(text, out var value)) {
+                    var span = new TextSpan(_start, length);
+                    var location = new TextLocation(_text, span);
+                    Diagnostics.ReportInvalidNumber(location, text, TypeSymbol.Float);
+                }
 
                 _value = value;
             }
 
             else {
-                if (!double.TryParse(text, out var value))
-                    Diagnostics.ReportInvalidNumber(new TextSpan(_start, length), text, TypeSymbol.Float);
+                if (!double.TryParse(text, out var value)) {
+                    var span = new TextSpan(_start, length);
+                    var location = new TextLocation(_text, span);
+                    Diagnostics.ReportInvalidNumber(location, text, TypeSymbol.Double);
+                }
 
                 _value = value;
             }
         }
 
         if (numberOfDots == 0) {
-            if (!int.TryParse(text, out var value))
-                Diagnostics.ReportInvalidNumber(new TextSpan(_start, length), text, TypeSymbol.Int);
+            if (!int.TryParse(text, out var value)) {
+                var span = new TextSpan(_start, length);
+                var location = new TextLocation(_text, span);
+                Diagnostics.ReportInvalidNumber(location, text, TypeSymbol.Int);
+            }
 
             _value = value;
         }

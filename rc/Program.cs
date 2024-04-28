@@ -7,19 +7,24 @@ namespace rc;
 
 internal class Program {
     private static void Main(string[] args) {
-        if (args.Length == 0) {
-            Console.WriteLine("Usage: rc <filename>");
-            return;
-        }
+        // if (args.Length == 0) {
+        //     Console.WriteLine("Usage: rc <filename>");
+        //     return;
+        // }
 
-        if (args.Length > 1) {
-            Console.WriteLine("Error: only one path supported tight now");
-            return;
-        }
+        // if (args.Length > 1) {
+        //     Console.WriteLine("Error: only one path supported tight now");
+        //     return;
+        // }
 
-        var path = args.Single();
-        var text = File.ReadAllText(path);
-        var syntaxTree = SyntaxTree.Parse(text);
+        // var path = args.Single();
+
+        // if (!File.Exists(path)) {
+        //     Console.WriteLine($"ERROR: file {path} does not exist.");
+        //     return;
+        // }
+
+        var syntaxTree = SyntaxTree.Load("/home/ludovic/Documents/projects/rhino/samples/hello.ri");
         var compilation = new Compilation(syntaxTree);
         var result = compilation.Evaluate(new Dictionary<VariableSymbol, object>());
 

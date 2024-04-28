@@ -1,8 +1,9 @@
 namespace Rhino.CodeAnalysis.Syntax;
 
 public sealed class ParenthesizedExpressionSyntax : ExpressionSyntax {
-    public ParenthesizedExpressionSyntax(SyntaxToken openParenthesisToken, ExpressionSyntax expression,
-        SyntaxToken closeParenthesisToken) {
+    public ParenthesizedExpressionSyntax(SyntaxTree syntaxTree, SyntaxToken openParenthesisToken,
+        ExpressionSyntax expression,
+        SyntaxToken closeParenthesisToken) : base(syntaxTree) {
         OpenParenthesisToken = openParenthesisToken;
         Expression = expression;
         CloseParenthesisToken = closeParenthesisToken;

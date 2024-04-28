@@ -5,10 +5,13 @@ namespace Rhino.CodeAnalysis.Text;
 public sealed class SourceText {
     private readonly string _text;
 
-    public SourceText(string text) {
+    public SourceText(string text, string fileName) {
+        FileName = fileName;
         Lines = ParseLines(this, text);
         _text = text;
     }
+
+    public string FileName { get; }
 
     public ImmutableArray<TextLine> Lines { get; set; }
     public char this[int index] => _text[index];
@@ -74,8 +77,8 @@ public sealed class SourceText {
         return 0;
     }
 
-    public static SourceText From(string text) {
-        return new SourceText(text);
+    public static SourceText From(string text, string fileName = "") {
+        return new SourceText(text, fileName);
     }
 
     public override string ToString() {

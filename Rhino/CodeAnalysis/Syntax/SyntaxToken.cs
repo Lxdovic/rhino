@@ -3,7 +3,8 @@ using Rhino.CodeAnalysis.Text;
 namespace Rhino.CodeAnalysis.Syntax;
 
 public class SyntaxToken : SyntaxNode {
-    public SyntaxToken(SyntaxKind kind, int position, string? text = null, object? value = null) {
+    public SyntaxToken(SyntaxTree syntaxTree, SyntaxKind kind, int position, string? text = null, object? value = null)
+        : base(syntaxTree) {
         Kind = kind;
         Position = position;
         Text = text;
