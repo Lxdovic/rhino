@@ -91,6 +91,17 @@ public class EvaluationTests {
     }
 
     [Fact]
+    public void Evaluator_FunctionReturn_Missing() {
+        var text = @"
+            function [add](a: int, b: int): int {}";
+
+        var diagnostics = @"
+            ERROR: Not all code paths return a value for function 'add'.";
+
+        AssertDiagnostics(text, diagnostics);
+    }
+
+    [Fact]
     public void EvaluatorAssignmentExpressionReportsNotAVariable() {
         var text = @"[print] = 42";
 
