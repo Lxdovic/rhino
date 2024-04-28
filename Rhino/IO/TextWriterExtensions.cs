@@ -65,20 +65,20 @@ public static class TextWriterExtensions {
         writer.ResetColor();
     }
 
-    public static void WriteDiagnostics(this TextWriter writer, IEnumerable<Diagnostic> diagnostics,
-        SyntaxTree syntaxTree) {
+    public static void WriteDiagnostics(this TextWriter writer, IEnumerable<Diagnostic> diagnostics) {
         foreach (var diagnostic in diagnostics
                      .OrderBy(diag => diag.Location.FileName)
                      .ThenBy(diag => diag.Location.Span.Start)
                      .ThenBy(diag => diag.Location.Span.Length)) {
+            var text = diagnostic.Location.Text;
             var fileName = diagnostic.Location.FileName;
             var startLine = diagnostic.Location.StartLine + 1;
             var startCharacter = diagnostic.Location.StartCharacter + 1;
             var endLine = diagnostic.Location.EndLine + 1;
             var endCharacter = diagnostic.Location.EndCharacter + 1;
             var span = diagnostic.Location.Span;
-            var lineIndex = syntaxTree.Text.GetLineIndex(span.Start);
-            var line = syntaxTree.Text.Lines[lineIndex];
+            var lineIndex = text.GetLineIndex(span.Start);
+            var line = text.Lines[lineIndex];
 
             Console.WriteLine();
 
@@ -90,9 +90,9 @@ public static class TextWriterExtensions {
             var prefixSpan = TextSpan.FromBounds(line.Start, span.Start);
             var suffixSpan = TextSpan.FromBounds(span.End, line.End);
 
-            var prefix = syntaxTree.Text.ToString(prefixSpan);
-            var error = syntaxTree.Text.ToString(span);
-            var suffix = syntaxTree.Text.ToString(suffixSpan);
+            var prefix = text.ToString(prefixSpan);
+            var error = text.ToString(span);
+            var suffix = text.ToString(suffixSpan);
 
             Console.Write("    ");
             Console.Write(prefix);
