@@ -1,0 +1,3 @@
+println("What is your name?")
+let name = input()
+println("Hello " + name + "!")
