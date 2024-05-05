@@ -1,10 +1,31 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Reflection;
 
 namespace Rhino;
 
 internal abstract class Repl {
+    private readonly List<MetaCommand> _metaCommands = new();
     private bool _done;
+
+    protected Repl() {
+        InitializeMetaCommands();
+    }
+
+    private void InitializeMetaCommands() {
+        var methods = GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.NonPublic |
+                                           BindingFlags.Static | BindingFlags.FlattenHierarchy);
+
+        foreach (var method in methods) {
+            var attribute = method.GetCustomAttribute<MetaCommandAttribute>();
+
+            if (attribute == null) continue;
+
+            var metaCommand = new MetaCommand(attribute.Name, attribute.Description, method);
+
+            _metaCommands.Add(metaCommand);
+        }
+    }
 
     public void Run() {
         while (true) {
@@ -161,7 +182,7 @@ internal abstract class Repl {
         document[view.CurrentLine] = line.Insert(start, new string(' ', remainingSpaces));
         view.CurrentCharacter += remainingSpaces;
     }
-    
+
     private void HandleTyping(ObservableCollection<string> document, SubmissionView view, string text) {
         var lineIndex = view.CurrentLine;
         var start = view.CurrentCharacter;
@@ -173,7 +194,16 @@ internal abstract class Repl {
         Console.Write(line);
     }
 
-    protected virtual void EvaluateMetaCommand(string input) {
+    private void EvaluateMetaCommand(string input) {
+        var commandName = input.Substring(1);
+        var metaCommand = _metaCommands.SingleOrDefault(x => x.Name == commandName);
+
+        if (metaCommand != null) {
+            metaCommand.MethodInfo.Invoke(this, null);
+
+            return;
+        }
+
         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine($"Invalid command {input}.");
         Console.ResetColor();
@@ -182,6 +212,21 @@ internal abstract class Repl {
     protected abstract bool IsCompleteSubmission(string text);
 
     protected abstract void EvaluateSubmission(string text);
+
+    [MetaCommand("help", "Shows help.")]
+    protected void EvaluateHelp() {
+        Console.WriteLine("Available commands:");
+
+        var maxCommandLength = _metaCommands.Max(x => x.Name.Length);
+
+        foreach (var metaCommand in _metaCommands.OrderBy(x => x.Name)) {
+            var padding = new string(' ', maxCommandLength - metaCommand.Name.Length);
+
+            Console.WriteLine($"#{metaCommand.Name}{padding} - {metaCommand.Description}");
+        }
+
+        Console.WriteLine();
+    }
 
     private sealed class SubmissionView {
         private readonly int _cursorTop;
@@ -264,5 +309,28 @@ internal abstract class Repl {
             Console.CursorTop = _cursorTop + _currentLine;
             Console.CursorLeft = 2 + _currentCharacter;
         }
+    }
+
+    private sealed class MetaCommand {
+        public MetaCommand(string name, string description, MethodInfo methodInfo) {
+            Name = name;
+            MethodInfo = methodInfo;
+            Description = description;
+        }
+
+        public string Description { get; }
+        public string Name { get; }
+        public MethodInfo MethodInfo { get; }
+    }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    protected sealed class MetaCommandAttribute : Attribute {
+        public MetaCommandAttribute(string name, string description) {
+            Name = name;
+            Description = description;
+        }
+
+        public string Description { get; }
+        public string Name { get; }
     }
 }
