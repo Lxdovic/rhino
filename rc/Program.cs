@@ -6,10 +6,10 @@ using Rhino.IO;
 namespace rc;
 
 internal class Program {
-    private static void Main(string[] args) {
+    private static int Main(string[] args) {
         if (args.Length == 0) {
             Console.WriteLine("Usage: rc <filename>");
-            return;
+            return 1;
         }
 
         var paths = GetFilePaths(args);
@@ -18,7 +18,7 @@ internal class Program {
 
         foreach (var path in paths) {
             if (!File.Exists(path)) {
-                Console.WriteLine($"ERROR: file {path} does not exist.");
+                Console.Error.WriteLine($"ERROR: file {path} does not exist.");
                 hasErrors = true;
 
                 continue;
@@ -27,13 +27,17 @@ internal class Program {
             syntaxTrees.Add(SyntaxTree.Load(path));
         }
 
-        if (hasErrors) return;
+        if (hasErrors) return 1;
 
         var compilation = new Compilation(syntaxTrees.ToArray());
         var result = compilation.Evaluate(new Dictionary<VariableSymbol, object>());
 
-        if (result.Diagnostics.Any()) Console.Error.WriteDiagnostics(result.Diagnostics);
-        else if (result.Value is not null) Console.WriteLine(result.Value);
+        if (result.Diagnostics.Any()) {
+            Console.Error.WriteDiagnostics(result.Diagnostics);
+            return 1;
+        }
+        
+        return 0;
     }
 
     private static IEnumerable<string?> GetFilePaths(IEnumerable<string> args) {
