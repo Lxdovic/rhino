@@ -4,6 +4,10 @@ My first attempt at building a compiler. With the help
 of [Immo Landwerth's tutorial series](https://www.youtube.com/playlist?list=PLRAdsfhKI4OWNOSfS7EUu5GRAVmze1t2y) on
 building a compiler
 
+## Documentation
+
+You can find the documentation [here](https://github.com/Lxdovic/Rhino-docs)(WIP NOT HOSTED YET)
+
 ## Table of Contents
 - [Features](#run-locally)
   - [Operators](#operators)
